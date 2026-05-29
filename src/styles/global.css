@@ -1,1 +1,259 @@
 @import "tailwindcss";
+
+section {
+  position: relative;
+  overflow: clip;
+}
+
+html { font-size: 1rem; }
+@media screen and (max-width: 1920px) { html { font-size: 1rem; } }
+@media screen and (max-width: 1440px) { html { font-size: calc(0.3973214285714286rem + 0.6696428571428571vw); } }
+@media screen and (max-width: 992px)  { html { font-size: calc(0.7582846003898636rem + 0.38986354775828463vw); } }
+@media screen and (max-width: 479px)  { html { font-size: calc(0.7494769874476988rem + 0.8368200836820083vw); } }
+
+@theme {
+  /* ── Primitive Colors ─────────────────────── */
+
+  /* Blue */
+  --color-blue-600: #001c58;
+  --color-blue-500: #00367f;
+  --color-blue-400: #004294;
+  --color-blue-300: #55a1e5;
+  --color-blue-200: #cad6e6;
+  --color-blue-100: #f6f6ff;
+
+  /* Red */
+  --color-red-600: #b4000d;
+  --color-red-500: #d7000f;
+  --color-red-100: #ffd6d6;
+
+  /* Green */
+  --color-green-500: #c9face;
+
+  /* Black / Neutral */
+  --color-black-1000: #0a0f15;
+  --color-black-900:  #222631;
+  --color-black-800:  #36404c;
+  --color-black-700:  #4e5669;
+  --color-black-600:  #657084;
+  --color-black-500:  #bfc7d4;
+  --color-black-400:  #d2d6e1;
+  --color-black-300:  #e0e5eb;
+  --color-black-200:  #f0f1f5;
+  --color-black-150:  #f5f5f7;
+  --color-black-100:  #ffffff;
+
+  /* ── Semantic Colors ──────────────────────── */
+
+  /* Background */
+  --color-bg-primary:     var(--color-black-100);
+  --color-bg-secondary:   var(--color-black-200);
+  --color-bg-tertiary:    var(--color-blue-500);
+  --color-bg-quaternary:  var(--color-red-500);
+  --color-bg-quinary:     var(--color-blue-300);
+  --color-bg-alternative: var(--color-black-1000);
+  --color-bg-other:       var(--color-black-150);
+
+  /* Foreground */
+  --color-fg-primary:     var(--color-black-100);
+  --color-fg-secondary:   var(--color-black-200);
+  --color-fg-tertiary:    var(--color-blue-500);
+  --color-fg-quaternary:  var(--color-red-500);
+  --color-fg-quinary:     var(--color-blue-300);
+  --color-fg-alternative: var(--color-black-1000);
+  --color-fg-other-1:     var(--color-black-200);
+  --color-fg-other-2:     var(--color-green-500);
+  --color-fg-other-3:     var(--color-red-100);
+  --color-fg-other-4:     var(--color-blue-100);
+  --color-fg-other-5:     var(--color-black-600);
+
+  /* Button */
+  --color-btn-blue-default: var(--color-blue-500);
+  --color-btn-blue-hover:   var(--color-blue-600);
+  --color-btn-white-default: var(--color-black-100);
+  --color-btn-white-hover:   var(--color-black-200);
+  --color-btn-red-default:  var(--color-red-500);
+  --color-btn-red-hover:    var(--color-red-600);
+  --color-btn-black-default: var(--color-black-1000);
+  --color-btn-black-hover:   var(--color-black-900);
+
+  /* Border */
+  --color-border-primary:     var(--color-black-100);
+  --color-border-secondary:   var(--color-black-200);
+  --color-border-tertiary:    var(--color-blue-500);
+  --color-border-quaternary:  var(--color-red-500);
+  --color-border-quinary:     var(--color-blue-300);
+  --color-border-alternative: var(--color-black-1000);
+  --color-border-other-1:     var(--color-black-600);
+  --color-border-other-2:     var(--color-black-400);
+
+  /* Text */
+  --color-text-primary:     var(--color-black-100);
+  --color-text-secondary:   var(--color-black-200);
+  --color-text-tertiary:    var(--color-blue-500);
+  --color-text-quaternary:  var(--color-red-500);
+  --color-text-quinary:     var(--color-blue-300);
+  --color-text-alternative: var(--color-black-1000);
+  --color-text-other:       var(--color-black-600);
+
+  /* Links */
+  --color-link-primary:     var(--color-black-100);
+  --color-link-secondary:   var(--color-black-200);
+  --color-link-tertiary:    var(--color-blue-500);
+  --color-link-quaternary:  var(--color-red-500);
+  --color-link-quinary:     var(--color-blue-300);
+  --color-link-alternative: var(--color-black-1000);
+
+  /* ── Fonts ────────────────────────────────── */
+  --font-primary:   'Switzer', sans-serif;
+  --font-secondary: 'Geist', sans-serif;
+}
+
+@layer components {
+
+  /* Headings — Switzer */
+  .text-h1 {
+    font-family: var(--font-primary);
+    font-size: 4.5rem;
+    line-height: 1em;
+    letter-spacing: -0.125rem;
+    font-weight: 500;
+  }
+  .text-h2 {
+    font-family: var(--font-primary);
+    font-size: 3.5rem;
+    line-height: 0.857em;
+    letter-spacing: -0.125rem;
+    font-weight: 500;
+  }
+  .text-h3 {
+    font-family: var(--font-primary);
+    font-size: 3rem;
+    line-height: 0.833em;
+    letter-spacing: -0.125rem;
+    font-weight: 500;
+  }
+  .text-h4 {
+    font-family: var(--font-primary);
+    font-size: 2.5rem;
+    line-height: 0.8em;
+    letter-spacing: -0.0625rem;
+    font-weight: 500;
+  }
+  .text-h5 {
+    font-family: var(--font-primary);
+    font-size: 2rem;
+    line-height: 0.75em;
+    letter-spacing: -0.0625rem;
+    font-weight: 500;
+  }
+  .text-h6 {
+    font-family: var(--font-primary);
+    font-size: 1.5rem;
+    line-height: 1.167em;
+    letter-spacing: -0.03125rem;
+    font-weight: 500;
+  }
+  .text-h6-regular {
+    font-family: var(--font-primary);
+    font-size: 1.5rem;
+    line-height: 1.167em;
+    letter-spacing: -0.03125rem;
+    font-weight: 400;
+  }
+
+  /* Body — Geist */
+  .text-large {
+    font-family: var(--font-secondary);
+    font-size: 1.25rem;
+    line-height: 1.3em;
+    letter-spacing: -0.025rem;
+    font-weight: 400;
+  }
+  .text-large-medium {
+    font-family: var(--font-secondary);
+    font-size: 1.25rem;
+    line-height: 1.3em;
+    letter-spacing: -0.025rem;
+    font-weight: 500;
+  }
+  .text-medium {
+    font-family: var(--font-secondary);
+    font-size: 1.125rem;
+    line-height: 1.333em;
+    letter-spacing: -0.0225rem;
+    font-weight: 400;
+  }
+  .text-medium-medium {
+    font-family: var(--font-secondary);
+    font-size: 1.125rem;
+    line-height: 1.333em;
+    letter-spacing: -0.0225rem;
+    font-weight: 500;
+  }
+  .text-regular {
+    font-family: var(--font-secondary);
+    font-size: 1rem;
+    line-height: 1.375em;
+    letter-spacing: -0.03125rem;
+    font-weight: 400;
+  }
+  .text-regular-medium {
+    font-family: var(--font-secondary);
+    font-size: 1rem;
+    line-height: 1.375em;
+    letter-spacing: -0.03125rem;
+    font-weight: 500;
+  }
+  .text-small {
+    font-family: var(--font-secondary);
+    font-size: 0.875rem;
+    line-height: 1.429em;
+    letter-spacing: -0.0175rem;
+    font-weight: 400;
+  }
+  .text-small-medium {
+    font-family: var(--font-secondary);
+    font-size: 0.875rem;
+    line-height: 1.429em;
+    letter-spacing: -0.0175rem;
+    font-weight: 500;
+  }
+  .text-small-caps {
+    font-family: var(--font-secondary);
+    font-size: 0.875rem;
+    line-height: 1.429em;
+    letter-spacing: -0.0175rem;
+    font-weight: 500;
+    text-transform: uppercase;
+  }
+  .text-tiny {
+    font-family: var(--font-secondary);
+    font-size: 0.75rem;
+    line-height: 1.333em;
+    letter-spacing: -0.03125rem;
+    font-weight: 400;
+  }
+  .text-tiny-medium {
+    font-family: var(--font-secondary);
+    font-size: 0.75rem;
+    line-height: 1.333em;
+    letter-spacing: -0.03125rem;
+    font-weight: 500;
+  }
+
+  /* Layout */
+  .global-padding {
+    @apply relative z-[2] px-4 md:px-10;
+  }
+  .container-xl {
+    @apply max-w-[1200px] mx-auto;
+  }
+  .section-bg {
+    @apply absolute inset-0 z-[1] overflow-hidden;
+  }
+  .section-bg img,
+  .section-bg video {
+    @apply w-full h-full object-cover;
+  }
+}

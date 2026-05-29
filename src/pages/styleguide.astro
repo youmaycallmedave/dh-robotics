@@ -1,0 +1,170 @@
+---
+import Layout from '../layouts/Layout.astro'
+import Section from '../components/ui/Section.astro'
+
+const headings = [
+  { cls: 'text-h1',         spec: 'H1 — 72 / 72 / -2px / 500' },
+  { cls: 'text-h2',         spec: 'H2 — 56 / 48 / -2px / 500' },
+  { cls: 'text-h3',         spec: 'H3 — 48 / 40 / -2px / 500' },
+  { cls: 'text-h4',         spec: 'H4 — 40 / 32 / -1px / 500' },
+  { cls: 'text-h5',         spec: 'H5 — 32 / 24 / -1px / 500' },
+  { cls: 'text-h6',         spec: 'H6 — 24 / 28 / -0.5px / 500' },
+  { cls: 'text-h6-regular', spec: 'H6 Regular — 24 / 28 / -0.5px / 400' },
+]
+
+const bodyStyles = [
+  { cls: 'text-large',          spec: '20 / 26 / -0.4px / 400' },
+  { cls: 'text-large-medium',   spec: '20 / 26 / -0.4px / 500' },
+  { cls: 'text-medium',         spec: '18 / 24 / -0.36px / 400' },
+  { cls: 'text-medium-medium',  spec: '18 / 24 / -0.36px / 500' },
+  { cls: 'text-regular',        spec: '16 / 22 / -0.5px / 400' },
+  { cls: 'text-regular-medium', spec: '16 / 22 / -0.5px / 500' },
+  { cls: 'text-small',          spec: '14 / 20 / -0.28px / 400' },
+  { cls: 'text-small-medium',   spec: '14 / 20 / -0.28px / 500' },
+  { cls: 'text-small-caps',     spec: '14 / 20 / uppercase / 500' },
+  { cls: 'text-tiny',           spec: '12 / 16 / -0.5px / 400' },
+  { cls: 'text-tiny-medium',    spec: '12 / 16 / -0.5px / 500' },
+]
+
+const primitiveColors = [
+  { group: 'Blue', colors: [
+    { name: 'blue-600', hex: '#001c58' },
+    { name: 'blue-500', hex: '#00367f' },
+    { name: 'blue-400', hex: '#004294' },
+    { name: 'blue-300', hex: '#55a1e5' },
+    { name: 'blue-200', hex: '#cad6e6' },
+    { name: 'blue-100', hex: '#f6f6ff' },
+  ]},
+  { group: 'Red', colors: [
+    { name: 'red-600', hex: '#b4000d' },
+    { name: 'red-500', hex: '#d7000f' },
+    { name: 'red-100', hex: '#ffd6d6' },
+  ]},
+  { group: 'Green', colors: [
+    { name: 'green-500', hex: '#c9face' },
+  ]},
+  { group: 'Black / Neutral', colors: [
+    { name: 'black-1000', hex: '#0a0f15' },
+    { name: 'black-900',  hex: '#222631' },
+    { name: 'black-800',  hex: '#36404c' },
+    { name: 'black-700',  hex: '#4e5669' },
+    { name: 'black-600',  hex: '#657084' },
+    { name: 'black-500',  hex: '#bfc7d4' },
+    { name: 'black-400',  hex: '#d2d6e1' },
+    { name: 'black-300',  hex: '#e0e5eb' },
+    { name: 'black-200',  hex: '#f0f1f5' },
+    { name: 'black-150',  hex: '#f5f5f7' },
+    { name: 'black-100',  hex: '#ffffff' },
+  ]},
+]
+
+const semanticColors = [
+  { group: 'Background', colors: [
+    { name: 'bg-primary',     token: 'black/100',  hex: '#ffffff' },
+    { name: 'bg-secondary',   token: 'black/200',  hex: '#f0f1f5' },
+    { name: 'bg-tertiary',    token: 'blue/500',   hex: '#00367f' },
+    { name: 'bg-quaternary',  token: 'red/500',    hex: '#d7000f' },
+    { name: 'bg-quinary',     token: 'blue/300',   hex: '#55a1e5' },
+    { name: 'bg-alternative', token: 'black/1000', hex: '#0a0f15' },
+    { name: 'bg-other',       token: 'black/150',  hex: '#f5f5f7' },
+  ]},
+  { group: 'Text', colors: [
+    { name: 'text-alternative', token: 'black/1000', hex: '#0a0f15' },
+    { name: 'text-other',       token: 'black/600',  hex: '#657084' },
+    { name: 'text-tertiary',    token: 'blue/500',   hex: '#00367f' },
+    { name: 'text-quaternary',  token: 'red/500',    hex: '#d7000f' },
+    { name: 'text-primary',     token: 'black/100',  hex: '#ffffff' },
+    { name: 'text-secondary',   token: 'black/200',  hex: '#f0f1f5' },
+    { name: 'text-quinary',     token: 'blue/300',   hex: '#55a1e5' },
+  ]},
+  { group: 'Button', colors: [
+    { name: 'btn-blue-default',  token: 'blue/500',   hex: '#00367f' },
+    { name: 'btn-blue-hover',    token: 'blue/600',   hex: '#001c58' },
+    { name: 'btn-black-default', token: 'black/1000', hex: '#0a0f15' },
+    { name: 'btn-black-hover',   token: 'black/900',  hex: '#222631' },
+    { name: 'btn-red-default',   token: 'red/500',    hex: '#d7000f' },
+    { name: 'btn-red-hover',     token: 'red/600',    hex: '#b4000d' },
+    { name: 'btn-white-default', token: 'black/100',  hex: '#ffffff' },
+    { name: 'btn-white-hover',   token: 'black/200',  hex: '#f0f1f5' },
+  ]},
+  { group: 'Border', colors: [
+    { name: 'border-other-2',     token: 'black/400',  hex: '#d2d6e1' },
+    { name: 'border-other-1',     token: 'black/600',  hex: '#657084' },
+    { name: 'border-tertiary',    token: 'blue/500',   hex: '#00367f' },
+    { name: 'border-quaternary',  token: 'red/500',    hex: '#d7000f' },
+    { name: 'border-alternative', token: 'black/1000', hex: '#0a0f15' },
+  ]},
+]
+---
+<Layout title="Style Guide">
+  <Section>
+    <div class="py-16 flex flex-col gap-20">
+
+      <div class="flex flex-col gap-2">
+        <p class="text-small-caps" class="text-text-other">Design System</p>
+        <h1 class="text-h2" class="text-text-alternative">Style Guide</h1>
+      </div>
+
+      <!-- Headings -->
+      <div class="flex flex-col gap-8">
+        <p class="text-large-medium pb-4 border-b" class="text-text-other">Headings — Switzer</p>
+        {headings.map(({ cls, spec }) => (
+          <div class="pb-6 border-b" >
+            <p class={cls} class="text-text-alternative">Heading</p>
+            <p class="text-tiny mt-1" class="text-text-tertiary">{spec}</p>
+          </div>
+        ))}
+      </div>
+
+      <!-- Body -->
+      <div class="flex flex-col gap-6">
+        <p class="text-large-medium pb-4 border-b" class="text-text-other">Body — Geist</p>
+        {bodyStyles.map(({ cls, spec }) => (
+          <div class="pb-4 border-b" >
+            <p class={cls} class="text-text-alternative">The quick brown fox jumps over the lazy dog</p>
+            <p class="text-tiny mt-1" class="text-text-tertiary">{cls} — {spec}</p>
+          </div>
+        ))}
+      </div>
+
+      <!-- Primitive Colors -->
+      <div class="flex flex-col gap-10">
+        <p class="text-large-medium pb-4 border-b" class="text-text-other">Primitive Colors</p>
+        {primitiveColors.map(({ group, colors }) => (
+          <div class="flex flex-col gap-4">
+            <p class="text-small-medium" class="text-text-other">{group}</p>
+            <div class="flex gap-3 flex-wrap">
+              {colors.map(({ name, hex }) => (
+                <div class="flex flex-col gap-1 w-[84px]">
+                  <div class="w-full h-14 rounded border" style={`background: ${hex}; `}></div>
+                  <p class="text-tiny-medium" class="text-text-alternative">{name}</p>
+                  <p class="text-tiny" class="text-text-other">{hex}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <!-- Semantic Colors -->
+      <div class="flex flex-col gap-10">
+        <p class="text-large-medium pb-4 border-b" class="text-text-other">Semantic Colors</p>
+        {semanticColors.map(({ group, colors }) => (
+          <div class="flex flex-col gap-4">
+            <p class="text-small-medium" class="text-text-other">{group}</p>
+            <div class="flex gap-3 flex-wrap">
+              {colors.map(({ name, token, hex }) => (
+                <div class="flex flex-col gap-1 w-[120px]">
+                  <div class="w-full h-14 rounded border" style={`background: ${hex}; `}></div>
+                  <p class="text-tiny-medium" class="text-text-alternative">{name}</p>
+                  <p class="text-tiny" class="text-text-tertiary">→ {token}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        ))}
+      </div>
+
+    </div>
+  </Section>
+</Layout>

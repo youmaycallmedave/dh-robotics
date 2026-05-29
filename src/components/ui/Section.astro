@@ -1,11 +1,36 @@
 ---
 interface Props {
+  size?: 'sm' | 'md' | 'lg' | 'xl' | 'full'
   class?: string
+  hasBg?: boolean
 }
-const { class: className } = Astro.props
+
+const {
+  size = 'lg',
+  class: className,
+  hasBg = false,
+} = Astro.props
+
+const containerSizes = {
+  sm:   'max-w-[800px]',
+  md:   'max-w-[1000px]',
+  lg:   'max-w-[1200px]',
+  xl:   'max-w-[1440px]',
+  full: 'max-w-none',
+}
 ---
-<section class:list={["px-[5%] py-16", className]}>
-  <div class="max-w-[1280px] mx-auto">
-    <slot />
+<section class:list={[className]}>
+
+  {hasBg && (
+    <div class="section-bg">
+      <slot name="bg" />
+    </div>
+  )}
+
+  <div class="global-padding">
+    <div class:list={["mx-auto", containerSizes[size]]}>
+      <slot />
+    </div>
   </div>
+
 </section>
