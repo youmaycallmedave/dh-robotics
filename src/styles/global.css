@@ -5,6 +5,34 @@ section {
   overflow: clip;
 }
 
+:is(
+  h1, h2, h3, h4, h5, h6, p,
+  .text-h1, .text-h2, .text-h3, .text-h4, .text-h5, .text-h6, .text-h6-regular,
+  .text-large, .text-large-medium,
+  .text-medium, .text-medium-medium,
+  .text-regular, .text-regular-medium,
+  .text-small, .text-small-medium, .text-small-caps,
+  .text-tiny, .text-tiny-medium
+):not(.text-trim-off)::before {
+  content: "";
+  display: table;
+  margin-bottom: calc(-0.5lh + 0.38em);
+}
+
+:is(
+  h1, h2, h3, h4, h5, h6, p,
+  .text-h1, .text-h2, .text-h3, .text-h4, .text-h5, .text-h6, .text-h6-regular,
+  .text-large, .text-large-medium,
+  .text-medium, .text-medium-medium,
+  .text-regular, .text-regular-medium,
+  .text-small, .text-small-medium, .text-small-caps,
+  .text-tiny, .text-tiny-medium
+):not(.text-trim-off)::after {
+  content: "";
+  display: table;
+  margin-bottom: calc(-0.5lh + 0.38em);
+}
+
 html { font-size: 1rem; }
 @media screen and (max-width: 1920px) { html { font-size: 1rem; } }
 @media screen and (max-width: 1440px) { html { font-size: calc(0.3973214285714286rem + 0.6696428571428571vw); } }
