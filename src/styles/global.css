@@ -111,41 +111,64 @@ html { font-size: 1rem; }
 
 @layer components {
 
-  /* Headings — Switzer */
+  /* Headings — Switzer (mobile-first) */
   .text-h1 {
     font-family: var(--font-primary);
-    font-size: 4.5rem;
+    font-size: 3rem;
     line-height: 1em;
-    letter-spacing: -0.125rem;
+    letter-spacing: -0.0625rem;
     font-weight: 500;
+    @media (min-width: 768px) {
+      font-size: 4.5rem;
+      letter-spacing: -0.125rem;
+    }
   }
   .text-h2 {
     font-family: var(--font-primary);
-    font-size: 3.5rem;
-    line-height: 0.857em;
-    letter-spacing: -0.125rem;
+    font-size: 3rem;
+    line-height: 1em;
+    letter-spacing: -0.0625rem;
     font-weight: 500;
+    @media (min-width: 768px) {
+      font-size: 3.5rem;
+      line-height: 0.857em;
+      letter-spacing: -0.125rem;
+    }
   }
   .text-h3 {
     font-family: var(--font-primary);
-    font-size: 3rem;
-    line-height: 0.833em;
-    letter-spacing: -0.125rem;
+    font-size: 2.5rem;
+    line-height: 1em;
+    letter-spacing: -0.0625rem;
     font-weight: 500;
+    @media (min-width: 768px) {
+      font-size: 3rem;
+      line-height: 0.833em;
+      letter-spacing: -0.125rem;
+    }
   }
   .text-h4 {
     font-family: var(--font-primary);
-    font-size: 2.5rem;
-    line-height: 0.8em;
+    font-size: 2rem;
+    line-height: 1em;
     letter-spacing: -0.0625rem;
     font-weight: 500;
+    @media (min-width: 768px) {
+      font-size: 2.5rem;
+      line-height: 0.8em;
+    }
   }
   .text-h5 {
     font-family: var(--font-primary);
-    font-size: 2rem;
-    line-height: 0.75em;
-    letter-spacing: -0.0625rem;
+    font-size: 1.5rem;
+    line-height: 1em;
+    letter-spacing: -0.03125rem;
     font-weight: 500;
+    @media (min-width: 768px) {
+      font-size: 2rem;
+      line-height: 0.75em;
+      letter-spacing: -0.0625rem;
+    }
   }
   .text-h6 {
     font-family: var(--font-primary);
