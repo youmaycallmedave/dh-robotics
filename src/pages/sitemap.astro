@@ -2,55 +2,71 @@
 import Layout from '../layouts/Layout.astro'
 import Section from '../components/ui/Section.astro'
 ---
-<Layout title="Home">
+<Layout title="Sitemap">
   <Section>
-    <h1>DH Robotics</h1>
+    <div class="py-16 flex flex-col gap-10">
 
-    <h2>Home</h2>
-    <ul>
-      <li><a href="/">Home</a></li>
-      <li><a href="/styleguide">Style Guide</a></li>
-    </ul>
+      <h1 class="text-h2 text-text-primary">DH Robotics — Sitemap</h1>
 
-    <h2>Products (?)</h2>
-    <ul>
-      <li><a href="/products">Products</a></li>
-      <li><a href="/products/category">Products — Category</a></li>
-      <li><a href="/products/series">Products — Series</a></li>
-      <li><a href="/products/product">Products — Single Product</a></li>
-    </ul>
+      <div class="flex flex-col gap-3">
+        <h2 class="text-h5 text-text-primary border-b border-border-other-2 pb-2">Home</h2>
+        <ul class="flex flex-col gap-1">
+          <li><a href="/" class="text-regular text-text-tertiary hover:underline">Home</a></li>
+          <li><a href="/styleguide" class="text-regular text-text-tertiary hover:underline">Style Guide</a></li>
+        </ul>
+      </div>
 
-    <h2>Applications (?)</h2>
-    <ul>
-      <li><a href="/applications">Applications</a></li>
-      <li><a href="/applications/industry/template">Industry — Template</a></li>
-      <li><a href="/applications/processes/template">Processes — Template</a></li>
-    </ul>
+      <div class="flex flex-col gap-3">
+        <h2 class="text-h5 text-text-primary border-b border-border-other-2 pb-2">Products</h2>
+        <ul class="flex flex-col gap-1">
+          <li><a href="/products" class="text-regular text-text-tertiary hover:underline">Products — Index</a></li>
+          <li><a href="/products/category" class="text-regular text-text-tertiary hover:underline">Products — Category</a></li>
+          <li><a href="/products/series" class="text-regular text-text-tertiary hover:underline">Products — Series</a></li>
+          <li><a href="/products/product" class="text-regular text-text-tertiary hover:underline">Products — Single Product</a></li>
+        </ul>
+      </div>
 
-    <h2>Services</h2>
-    <ul>
-      <li><a href="/services">Services</a></li>
-      <li><a href="/services/technology">Technology</a></li>
-      <li><a href="/services/software">Software</a></li>
-    </ul>
+      <div class="flex flex-col gap-3">
+        <h2 class="text-h5 text-text-primary border-b border-border-other-2 pb-2">Applications</h2>
+        <ul class="flex flex-col gap-1">
+          <li><a href="/applications" class="text-regular text-text-tertiary hover:underline">Applications — Index</a></li>
+          <li><a href="/applications/industry/template" class="text-regular text-text-tertiary hover:underline">Industry — Template</a></li>
+          <li><a href="/applications/processes/template" class="text-regular text-text-tertiary hover:underline">Processes — Template</a></li>
+        </ul>
+      </div>
 
-    <h2>Resources</h2>
-    <ul>
-      <li><a href="/news">News — Index</a></li>
-      <li><a href="/news/template">News — Template</a></li>
-      <li><a href="/events">Events — Index</a></li>
-      <li><a href="/events/template">Events — Template</a></li>
-      <li><a href="/cases">Cases — Index</a></li>
-      <li><a href="/cases/template">Cases — Template</a></li>
-      <li><a href="/resources/downloads">Downloads</a></li>
-      <li><a href="/resources/faq">FAQ</a></li>
-    </ul>
+      <div class="flex flex-col gap-3">
+        <h2 class="text-h5 text-text-primary border-b border-border-other-2 pb-2">Services</h2>
+        <ul class="flex flex-col gap-1">
+          <li><a href="/services" class="text-regular text-text-tertiary hover:underline">Services</a></li>
+          <li><a href="/services/technology" class="text-regular text-text-tertiary hover:underline">Technology</a></li>
+          <li><a href="/services/software" class="text-regular text-text-tertiary hover:underline">Software</a></li>
+        </ul>
+      </div>
 
-    <h2>Other</h2>
-    <ul>
-      <li><a href="/contact">Contact us</a></li>
-      <li><a href="/privacy-policy">Privacy Policy</a></li>
-      <li><a href="/404">404</a></li>
-    </ul>
+      <div class="flex flex-col gap-3">
+        <h2 class="text-h5 text-text-primary border-b border-border-other-2 pb-2">Resources</h2>
+        <ul class="flex flex-col gap-1">
+          <li><a href="/news" class="text-regular text-text-tertiary hover:underline">News — Index</a></li>
+          <li><a href="/news/template" class="text-regular text-text-tertiary hover:underline">News — Template</a></li>
+          <li><a href="/events" class="text-regular text-text-tertiary hover:underline">Events — Index</a></li>
+          <li><a href="/events/template" class="text-regular text-text-tertiary hover:underline">Events — Template</a></li>
+          <li><a href="/cases" class="text-regular text-text-tertiary hover:underline">Cases — Index</a></li>
+          <li><a href="/cases/template" class="text-regular text-text-tertiary hover:underline">Cases — Template</a></li>
+          <li><a href="/resources/downloads" class="text-regular text-text-tertiary hover:underline">Downloads</a></li>
+          <li><a href="/resources/faq" class="text-regular text-text-tertiary hover:underline">FAQ</a></li>
+        </ul>
+      </div>
+
+      <div class="flex flex-col gap-3">
+        <h2 class="text-h5 text-text-primary border-b border-border-other-2 pb-2">Other</h2>
+        <ul class="flex flex-col gap-1">
+          <li class="text-regular" style="color: #22c55e"><a href="/contact" style="color: #22c55e">Contact us</a> ✓</li>
+          <li class="text-regular" style="color: #22c55e"><a href="/privacy-policy" style="color: #22c55e">Privacy Policy</a> ✓</li>
+          <li class="text-regular" style="color: #22c55e"><a href="/404" style="color: #22c55e">404</a> ✓</li>
+        </ul>
+      </div>
+
+    </div>
   </Section>
 </Layout>
