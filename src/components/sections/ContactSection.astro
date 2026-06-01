@@ -1,0 +1,302 @@
+---
+import Section from '../ui/Section.astro'
+---
+
+<Section class="bg-bg-primary pt-[208px] pb-[160px] max-md:pt-[120px] max-md:pb-[120px]">
+
+  <!-- Row 1: Title/description | Phone/Email — grid 2 cols -->
+  <div class="grid grid-cols-2 gap-x-4 mb-[72px] max-md:grid-cols-1">
+
+    <div class="flex flex-col max-md:mb-[32px]">
+      <h1 class="text-h1 text-text-primary mb-[40px]">Contact us</h1>
+      <p class="text-h6-regular text-text-primary">
+        Regardless of whether you require general advice or specific support, we are happy to help you.
+      </p>
+    </div>
+
+    <div class="flex flex-col self-end">
+      <a href="tel:+8618814357627" class="link-hover text-h4 text-text-primary mb-6 max-md:mb-5"><span class="link-underline">+86 18814357627</span></a>
+      <a href="mailto:info@dh-robotics.com" class="link-hover text-h4 text-text-primary"><span class="link-underline">info@dh-robotics.com</span></a>
+    </div>
+
+  </div>
+
+  <!-- Row 2: Map | Form — same grid 2 cols -->
+  <div class="grid grid-cols-2 gap-x-4 max-md:grid-cols-1">
+
+    <!-- Map -->
+    <div class="relative h-[440px] overflow-hidden max-md:h-[343px] max-md:mb-4">
+      <img src="/images/map.svg" alt="" class="absolute inset-0 w-full h-full object-cover" aria-hidden="true" />
+
+      <!-- East China Office pin -->
+      <div class="absolute left-[418px] top-[140px] size-8 max-md:left-[288px] max-md:top-[136px]" aria-hidden="true">
+        <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+          <path d="M16 4C11.582 4 8 7.582 8 12C8 18.5 16 28 16 28C16 28 24 18.5 24 12C24 7.582 20.418 4 16 4Z" fill="#D7000F"/>
+          <circle cx="16" cy="12" r="3.5" fill="white"/>
+        </svg>
+      </div>
+
+      <!-- South China Office pin -->
+      <div class="absolute left-[309px] top-[317px] size-8 max-md:left-[203px] max-md:top-[299px]" aria-hidden="true">
+        <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+          <path d="M16 4C11.582 4 8 7.582 8 12C8 18.5 16 28 16 28C16 28 24 18.5 24 12C24 7.582 20.418 4 16 4Z" fill="#D7000F"/>
+          <circle cx="16" cy="12" r="3.5" fill="white"/>
+        </svg>
+      </div>
+
+      <!-- East China Office card -->
+      <div class="absolute top-0 left-[215px] max-md:left-[85px] border border-border-other-2 bg-bg-primary p-4 flex flex-col">
+        <p class="text-small-medium text-text-primary mb-3 whitespace-nowrap">East China Office</p>
+        <p class="text-tiny text-text-primary mb-3 w-[203px]">6 buildings 303, Creative Industry Park, No. 328 Xinghu Street, Suzhou Industrial Park, Jiangsu Province, China.</p>
+        <a href="#" class="text-tiny text-text-tertiary underline w-[203px]">Google map →</a>
+      </div>
+
+      <!-- South China Office card -->
+      <div class="absolute top-[193px] left-[106px] max-md:top-[179px] max-md:left-0 border border-border-other-2 bg-bg-primary p-4 flex flex-col">
+        <p class="text-small-medium text-text-primary mb-3 whitespace-nowrap">South China Office</p>
+        <p class="text-tiny text-text-primary mb-3 w-[203px]">14th Floor, Building A4, Nanshan Smart Park, No.1001 Xueyuan Avenue, Nanshan District, Shenzhen, China</p>
+        <a href="#" class="text-tiny text-text-tertiary underline w-[203px]">Google map →</a>
+      </div>
+    </div>
+
+    <!-- Form -->
+    <form id="contact-form" class="flex flex-col" novalidate>
+
+      <div class="flex flex-wrap gap-x-4 gap-y-8 mb-8 max-md:flex-col max-md:gap-y-8">
+
+        <div class="contact-field w-[calc(50%-8px)] max-md:w-full">
+          <label for="f-name" class="text-small text-text-primary mb-[2px] block">
+            Name<span class="text-text-quinary">*</span>
+          </label>
+          <div class="input-row border-b py-4 flex items-center">
+            <input id="f-name" type="text" name="name" placeholder="Enter your name..."
+              class="flex-1 min-w-0 text-regular text-text-primary bg-transparent outline-none placeholder:text-text-secondary placeholder:opacity-50"
+              required />
+          </div>
+          <p class="error-msg text-tiny text-text-quaternary mt-2 hidden">This field is required</p>
+        </div>
+
+        <div class="contact-field w-[calc(50%-8px)] max-md:w-full">
+          <label for="f-company" class="text-small text-text-primary mb-[2px] block">
+            Company<span class="text-text-quinary">*</span>
+          </label>
+          <div class="input-row border-b py-4 flex items-center">
+            <input id="f-company" type="text" name="company" placeholder="Enter your company..."
+              class="flex-1 min-w-0 text-regular text-text-primary bg-transparent outline-none placeholder:text-text-secondary placeholder:opacity-50"
+              required />
+          </div>
+          <p class="error-msg text-tiny text-text-quaternary mt-2 hidden">This field is required</p>
+        </div>
+
+        <div class="contact-field w-[calc(50%-8px)] max-md:w-full">
+          <label for="f-email" class="text-small text-text-primary mb-[2px] block">
+            Email<span class="text-text-quinary">*</span>
+          </label>
+          <div class="input-row border-b py-4 flex items-center">
+            <input id="f-email" type="email" name="email" placeholder="Enter your email..."
+              class="flex-1 min-w-0 text-regular text-text-primary bg-transparent outline-none placeholder:text-text-secondary placeholder:opacity-50"
+              required />
+          </div>
+          <p class="error-msg text-tiny text-text-quaternary mt-2 hidden">Enter a valid email</p>
+        </div>
+
+        <div class="contact-field w-[calc(50%-8px)] max-md:w-full">
+          <label for="f-phone" class="text-small text-text-primary mb-[2px] block">Phone</label>
+          <div class="input-row border-b py-4 flex items-center">
+            <input id="f-phone" type="tel" name="phone" placeholder="Enter your phone..."
+              class="flex-1 min-w-0 text-regular text-text-primary bg-transparent outline-none placeholder:text-text-secondary placeholder:opacity-50" />
+          </div>
+        </div>
+
+        <div class="contact-field w-[calc(50%-8px)] max-md:w-full">
+          <label for="f-country" class="text-small text-text-primary mb-[2px] block">
+            Country/Region<span class="text-text-quinary">*</span>
+          </label>
+          <div class="input-row border-b py-4 flex items-center">
+            <input id="f-country" type="text" name="country" placeholder="Enter your country/region..."
+              class="flex-1 min-w-0 text-regular text-text-primary bg-transparent outline-none placeholder:text-text-secondary placeholder:opacity-50"
+              required />
+          </div>
+          <p class="error-msg text-tiny text-text-quaternary mt-2 hidden">This field is required</p>
+        </div>
+
+        <div class="contact-field w-[calc(50%-8px)] max-md:w-full" id="need-field">
+          <label for="need-trigger" class="text-small text-text-primary mb-[2px] block">
+            You need<span class="text-text-quinary">*</span>
+          </label>
+          <input type="hidden" name="need" id="need-value" />
+          <div class="relative">
+            <div class="input-row border-b py-4 flex items-center cursor-pointer select-none" id="need-trigger">
+              <span id="need-display" class="flex-1 text-regular text-text-secondary opacity-50">Select...</span>
+              <svg id="need-chevron" class="shrink-0 text-text-primary transition-transform duration-200" width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="M6 9L12 15L18 9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </div>
+            <div id="need-dropdown" class="absolute top-full left-0 w-full z-20 hidden">
+              <div class="border-2 border-border-quinary">
+                <div class="border border-border-tertiary bg-bg-primary p-3 max-md:p-2 flex flex-col">
+                  {[
+                    { value: 'inquiry-price', label: 'Inquiry price' },
+                    { value: 'technical-support', label: 'Technical support' },
+                    { value: 'partnership', label: 'Partnership' },
+                    { value: 'other', label: 'Other' },
+                  ].map(opt => (
+                    <button type="button" data-value={opt.value}
+                      class="dropdown-option text-trim-off flex items-center gap-4 text-left px-2 py-2 max-md:py-1.5 text-regular text-text-secondary rounded-[4px] hover:bg-fg-other-4 hover:text-text-primary transition-colors w-full cursor-pointer">
+                      <span class="flex-1">{opt.label}</span>
+                      <span class="check-badge bg-bg-tertiary p-[2px] rounded-full opacity-0 shrink-0">
+                        <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+                          <path d="M2 6L5 9L10 3" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                      </span>
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+          <p class="error-msg text-tiny text-text-quaternary mt-2 hidden">This field is required</p>
+        </div>
+
+      </div>
+
+      <div class="contact-field mb-8">
+        <label for="f-content" class="text-small text-text-primary mb-[2px] block">Content</label>
+        <div class="input-row border-b py-4">
+          <textarea id="f-content" name="content" placeholder="Enter your message..." rows="1"
+            class="w-full text-regular text-text-primary bg-transparent outline-none resize-y placeholder:text-text-secondary placeholder:opacity-50"></textarea>
+        </div>
+      </div>
+
+      <button type="submit"
+        class="self-start inline-flex items-center gap-6 pl-4 pr-2 py-2 rounded-[2px] text-small-caps bg-btn-black-default hover:bg-btn-black-hover text-text-alternate transition-colors">
+        <span>Submit</span>
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="M9 18L15 12L9 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+
+    </form>
+
+  </div>
+
+</Section>
+
+<script>
+  // Custom dropdown
+  const trigger = document.getElementById('need-trigger')
+  const dropdown = document.getElementById('need-dropdown')
+  const display = document.getElementById('need-display')
+  const chevron = document.getElementById('need-chevron')
+  const hiddenInput = document.getElementById('need-value') as HTMLInputElement
+
+  function openDropdown() {
+    dropdown?.classList.remove('hidden')
+    chevron?.classList.add('rotate-180')
+    trigger?.closest('.contact-field')?.querySelector('.input-row')?.classList.add('is-focused-custom')
+  }
+  function closeDropdown() {
+    dropdown?.classList.add('hidden')
+    chevron?.classList.remove('rotate-180')
+    trigger?.closest('.contact-field')?.querySelector('.input-row')?.classList.remove('is-focused-custom')
+  }
+
+  trigger?.addEventListener('click', () => {
+    dropdown?.classList.contains('hidden') ? openDropdown() : closeDropdown()
+  })
+
+  dropdown?.querySelectorAll('.dropdown-option').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const value = (btn as HTMLElement).dataset.value || ''
+      const label = btn.textContent?.trim() || ''
+      hiddenInput.value = value
+      if (display) {
+        display.textContent = label
+        display.classList.remove('opacity-50', 'text-text-secondary')
+        display.classList.add('text-text-primary', 'font-medium')
+      }
+      dropdown?.querySelectorAll('.dropdown-option').forEach(b => {
+        b.classList.remove('bg-fg-other-4', 'text-text-primary', 'rounded-[2px]')
+        b.classList.add('text-text-secondary', 'rounded-[4px]')
+        const badge = b.querySelector('.check-badge') as HTMLElement | null
+        if (badge) badge.style.opacity = '0'
+      })
+      btn.classList.add('bg-fg-other-4', 'text-text-primary', 'rounded-[2px]')
+      btn.classList.remove('text-text-secondary', 'rounded-[4px]')
+      const selectedBadge = btn.querySelector('.check-badge') as HTMLElement | null
+      if (selectedBadge) selectedBadge.style.opacity = '1'
+      closeDropdown()
+      // clear error if set
+      const field = document.getElementById('need-field')
+      field?.classList.remove('has-error')
+      field?.querySelector('.input-row')?.classList.remove('is-error')
+      field?.querySelector('.error-msg')?.classList.add('hidden')
+    })
+  })
+
+  document.addEventListener('click', (e) => {
+    if (!trigger?.contains(e.target as Node) && !dropdown?.contains(e.target as Node)) {
+      closeDropdown()
+    }
+  })
+
+  const form = document.getElementById('contact-form') as HTMLFormElement
+  if (form) {
+    const requiredFields = form.querySelectorAll<HTMLInputElement | HTMLSelectElement>('[required]')
+
+    function validateField(field: HTMLInputElement | HTMLSelectElement) {
+      const wrapper = field.closest('.contact-field')
+      if (!wrapper) return true
+      const inputRow = wrapper.querySelector('.input-row')
+      const errorMsg = wrapper.querySelector('.error-msg')
+
+      let valid = field.value.trim() !== ''
+      if (valid && field.type === 'email') {
+        valid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(field.value)
+      }
+
+      if (!valid) {
+        wrapper.classList.add('has-error')
+        inputRow?.classList.add('is-error')
+        errorMsg?.classList.remove('hidden')
+      } else {
+        wrapper.classList.remove('has-error')
+        inputRow?.classList.remove('is-error')
+        errorMsg?.classList.add('hidden')
+      }
+
+      return valid
+    }
+
+    requiredFields.forEach(field => {
+      field.addEventListener('blur', () => validateField(field))
+      field.addEventListener('input', () => {
+        if (field.closest('.contact-field')?.classList.contains('has-error')) {
+          validateField(field)
+        }
+      })
+    })
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault()
+      let allValid = true
+      requiredFields.forEach(field => {
+        if (!validateField(field)) allValid = false
+      })
+      // validate custom dropdown
+      const needField = document.getElementById('need-field')
+      const needInputRow = needField?.querySelector('.input-row')
+      const needError = needField?.querySelector('.error-msg')
+      if (!hiddenInput.value) {
+        allValid = false
+        needField?.classList.add('has-error')
+        needInputRow?.classList.add('is-error')
+        needError?.classList.remove('hidden')
+      }
+      if (allValid) {
+        // TODO: wire up integration
+        console.log('Form ready', Object.fromEntries(new FormData(form)))
+      }
+    })
+  }
+</script>

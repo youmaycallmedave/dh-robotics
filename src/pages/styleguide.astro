@@ -69,13 +69,13 @@ const semanticColors = [
     { name: 'bg-other',       token: 'black/150',  hex: '#f5f5f7' },
   ]},
   { group: 'Text', colors: [
-    { name: 'text-alternative', token: 'black/1000', hex: '#0a0f15' },
-    { name: 'text-other',       token: 'black/600',  hex: '#657084' },
+    { name: 'text-primary',     token: 'black/1000', hex: '#0a0f15' },
+    { name: 'text-secondary',   token: 'black/600',  hex: '#657084' },
     { name: 'text-tertiary',    token: 'blue/500',   hex: '#00367f' },
     { name: 'text-quaternary',  token: 'red/500',    hex: '#d7000f' },
-    { name: 'text-primary',     token: 'black/100',  hex: '#ffffff' },
-    { name: 'text-secondary',   token: 'black/200',  hex: '#f0f1f5' },
     { name: 'text-quinary',     token: 'blue/300',   hex: '#55a1e5' },
+    { name: 'text-other',       token: 'black/200',  hex: '#f0f1f5' },
+    { name: 'text-alternate',   token: 'black/100',  hex: '#ffffff' },
   ]},
   { group: 'Button', colors: [
     { name: 'btn-blue-default',  token: 'blue/500',   hex: '#00367f' },
@@ -102,7 +102,7 @@ const semanticColors = [
 
       <div class="flex flex-col gap-2">
         <p class="text-small-caps" class="text-text-other">Design System</p>
-        <h1 class="text-h2" class="text-text-alternative">Style Guide</h1>
+        <h1 class="text-h2" class="text-text-primary">Style Guide</h1>
       </div>
 
       <!-- Headings -->
@@ -110,7 +110,7 @@ const semanticColors = [
         <p class="text-large-medium pb-4 border-b" class="text-text-other">Headings — Switzer</p>
         {headings.map(({ cls, spec }) => (
           <div class="pb-6 border-b" >
-            <p class={cls} class="text-text-alternative">Heading</p>
+            <p class={cls} class="text-text-primary">Heading</p>
             <p class="text-tiny mt-1" class="text-text-tertiary">{spec}</p>
           </div>
         ))}
@@ -121,7 +121,7 @@ const semanticColors = [
         <p class="text-large-medium pb-4 border-b" class="text-text-other">Body — Geist</p>
         {bodyStyles.map(({ cls, spec }) => (
           <div class="pb-4 border-b" >
-            <p class={cls} class="text-text-alternative">The quick brown fox jumps over the lazy dog</p>
+            <p class={cls} class="text-text-primary">The quick brown fox jumps over the lazy dog</p>
             <p class="text-tiny mt-1" class="text-text-tertiary">{cls} — {spec}</p>
           </div>
         ))}
@@ -137,7 +137,7 @@ const semanticColors = [
               {colors.map(({ name, hex }) => (
                 <div class="flex flex-col gap-1 w-[84px]">
                   <div class="w-full h-14 rounded border" style={`background: ${hex}; `}></div>
-                  <p class="text-tiny-medium" class="text-text-alternative">{name}</p>
+                  <p class="text-tiny-medium" class="text-text-primary">{name}</p>
                   <p class="text-tiny" class="text-text-other">{hex}</p>
                 </div>
               ))}
@@ -156,7 +156,7 @@ const semanticColors = [
               {colors.map(({ name, token, hex }) => (
                 <div class="flex flex-col gap-1 w-[120px]">
                   <div class="w-full h-14 rounded border" style={`background: ${hex}; `}></div>
-                  <p class="text-tiny-medium" class="text-text-alternative">{name}</p>
+                  <p class="text-tiny-medium" class="text-text-primary">{name}</p>
                   <p class="text-tiny" class="text-text-tertiary">→ {token}</p>
                 </div>
               ))}
