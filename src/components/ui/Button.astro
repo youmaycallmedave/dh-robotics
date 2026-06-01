@@ -4,6 +4,7 @@ interface Props {
   href?: string
   variant?: 'black' | 'blue' | 'red' | 'white'
   class?: string
+  type?: 'submit' | 'button' | 'reset'
 }
 
 const {
@@ -11,6 +12,7 @@ const {
   href = '/',
   variant = 'black',
   class: className,
+  type,
 } = Astro.props
 
 const variants = {
@@ -19,18 +21,33 @@ const variants = {
   red:   'bg-btn-red-default   hover:bg-btn-red-hover   text-text-alternate',
   white: 'bg-btn-white-default hover:bg-btn-white-hover text-text-primary',
 }
+
+const baseClass = [
+  'self-start inline-flex items-center gap-6 pl-4 pr-2 rounded-[2px] min-h-[40px]',
+  'text-small-caps text-trim-off no-underline transition-colors cursor-pointer',
+  'disabled:opacity-40 disabled:cursor-not-allowed',
+  variants[variant],
+  className,
+]
 ---
-<a
-  href={href}
-  class:list={[
-    'inline-flex items-center gap-6 pl-4 pr-2 py-2 rounded-[2px]',
-    'text-small-caps no-underline transition-colors',
-    variants[variant],
-    className,
-  ]}
->
-  <span>{label}</span>
-  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-    <path d="M9 18L15 12L9 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-  </svg>
-</a>
+{type ? (
+  <button
+    type={type}
+    class:list={baseClass}
+  >
+    <span>{label}</span>
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path d="M9 18L15 12L9 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  </button>
+) : (
+  <a
+    href={href}
+    class:list={baseClass}
+  >
+    <span>{label}</span>
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path d="M9 18L15 12L9 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  </a>
+)}

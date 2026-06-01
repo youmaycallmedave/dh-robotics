@@ -1,5 +1,6 @@
 ---
 import Section from '../ui/Section.astro'
+import Button from '../ui/Button.astro'
 ---
 
 <Section class="bg-bg-primary pt-[208px] pb-[160px] max-md:pt-[120px] max-md:pb-[120px]">
@@ -48,14 +49,14 @@ import Section from '../ui/Section.astro'
       <div class="absolute top-0 left-[215px] max-md:left-[85px] border border-border-other-2 bg-bg-primary p-4 flex flex-col">
         <p class="text-small-medium text-text-primary mb-3 whitespace-nowrap">East China Office</p>
         <p class="text-tiny text-text-primary mb-3 w-[203px]">6 buildings 303, Creative Industry Park, No. 328 Xinghu Street, Suzhou Industrial Park, Jiangsu Province, China.</p>
-        <a href="#" class="text-tiny text-text-tertiary underline w-[203px]">Google map →</a>
+        <a href="#" class="text-trim-off text-tiny text-text-tertiary w-fit"><span class="link-underline-out">Google map →</span></a>
       </div>
 
       <!-- South China Office card -->
       <div class="absolute top-[193px] left-[106px] max-md:top-[179px] max-md:left-0 border border-border-other-2 bg-bg-primary p-4 flex flex-col">
         <p class="text-small-medium text-text-primary mb-3 whitespace-nowrap">South China Office</p>
         <p class="text-tiny text-text-primary mb-3 w-[203px]">14th Floor, Building A4, Nanshan Smart Park, No.1001 Xueyuan Avenue, Nanshan District, Shenzhen, China</p>
-        <a href="#" class="text-tiny text-text-tertiary underline w-[203px]">Google map →</a>
+        <a href="#" class="text-trim-off text-tiny text-text-tertiary w-fit"><span class="link-underline-out">Google map →</span></a>
       </div>
     </div>
 
@@ -168,15 +169,18 @@ import Section from '../ui/Section.astro'
         </div>
       </div>
 
-      <button type="submit"
-        class="self-start inline-flex items-center gap-6 pl-4 pr-2 py-2 rounded-[2px] text-small-caps bg-btn-black-default hover:bg-btn-black-hover text-text-alternate transition-colors">
-        <span>Submit</span>
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-          <path d="M9 18L15 12L9 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
-      </button>
+      <Button label="Submit" variant="black" type="submit" />
 
     </form>
+
+    <!-- Success state -->
+    <div id="contact-success" class="hidden border border-border-other-2 bg-bg-primary p-12 flex flex-col justify-between h-[440px] max-md:h-auto max-md:p-8">
+      <img src="/images/logotype-dh-robotics.svg" alt="DH Robotics" class="h-[140px] w-auto self-start" />
+      <div>
+        <h2 class="text-h3 text-text-primary mb-8">Request Received!</h2>
+        <p class="text-large text-text-secondary">Thank you for your interest in DH-Robotics solutions. A technical specialist is already reviewing your request and will prepare a commercial offer within 24 hours.</p>
+      </div>
+    </div>
 
   </div>
 
@@ -189,6 +193,16 @@ import Section from '../ui/Section.astro'
   const display = document.getElementById('need-display')
   const chevron = document.getElementById('need-chevron')
   const hiddenInput = document.getElementById('need-value') as HTMLInputElement
+  const form = document.getElementById('contact-form') as HTMLFormElement
+  const submitBtn = form?.querySelector('button[type="submit"]') as HTMLButtonElement
+  const requiredFields = form?.querySelectorAll<HTMLInputElement | HTMLSelectElement>('[required]')
+  if (submitBtn) submitBtn.disabled = true
+
+  function checkFormValidity() {
+    const allFilled = requiredFields ? Array.from(requiredFields).every(f => f.value.trim() !== '') : false
+    const needFilled = hiddenInput.value !== ''
+    if (submitBtn) submitBtn.disabled = !(allFilled && needFilled)
+  }
 
   function openDropdown() {
     dropdown?.classList.remove('hidden')
@@ -225,6 +239,7 @@ import Section from '../ui/Section.astro'
       btn.classList.remove('text-text-secondary', 'rounded-[4px]')
       const selectedBadge = btn.querySelector('.check-badge') as HTMLElement | null
       if (selectedBadge) selectedBadge.style.opacity = '1'
+      checkFormValidity()
       closeDropdown()
       // clear error if set
       const field = document.getElementById('need-field')
@@ -240,9 +255,10 @@ import Section from '../ui/Section.astro'
     }
   })
 
-  const form = document.getElementById('contact-form') as HTMLFormElement
   if (form) {
-    const requiredFields = form.querySelectorAll<HTMLInputElement | HTMLSelectElement>('[required]')
+    requiredFields?.forEach(field => {
+      field.addEventListener('input', checkFormValidity)
+    })
 
     function validateField(field: HTMLInputElement | HTMLSelectElement) {
       const wrapper = field.closest('.contact-field')
@@ -295,7 +311,9 @@ import Section from '../ui/Section.astro'
       }
       if (allValid) {
         // TODO: wire up integration
-        console.log('Form ready', Object.fromEntries(new FormData(form)))
+        form.classList.add('hidden')
+        document.getElementById('contact-success')?.classList.remove('hidden')
+        document.getElementById('contact-success')?.classList.add('flex')
       }
     })
   }

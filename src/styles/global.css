@@ -328,6 +328,25 @@ html { font-size: 1rem; }
     box-shadow: none;
   }
 
+  .link-underline-out {
+    position: relative;
+  }
+  .link-underline-out::after {
+    content: '';
+    position: absolute;
+    bottom: -1px;
+    left: 0;
+    width: 100%;
+    height: 1px;
+    background-color: currentColor;
+    transform: scaleX(1);
+    transform-origin: right;
+    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  a:hover .link-underline-out::after {
+    transform: scaleX(0);
+  }
+
   .link-hover {
     color: inherit;
     text-decoration: none;
