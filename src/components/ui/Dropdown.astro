@@ -1,0 +1,132 @@
+---
+interface Option {
+  value: string
+  label: string
+}
+
+interface Props {
+  id: string
+  label: string
+  placeholder?: string
+  defaultValue?: string
+  options: Option[]
+  class?: string
+}
+
+const {
+  id,
+  label,
+  placeholder = 'Select...',
+  defaultValue,
+  options,
+  class: className,
+} = Astro.props
+
+const defaultOption = defaultValue !== undefined
+  ? options.find(o => o.value === defaultValue)
+  : undefined
+---
+
+<div class:list={["dropdown-field flex flex-col gap-[2px]", className]} data-dropdown={id}>
+  <span class="text-small text-text-primary">{label}</span>
+  <input type="hidden" data-dropdown-value value={defaultOption?.value ?? ''} />
+  <div class="relative">
+    <div
+      class="input-row border-b py-4 flex items-center gap-4 cursor-pointer select-none"
+      data-dropdown-trigger
+      aria-haspopup="listbox"
+      aria-expanded="false"
+    >
+      <span data-dropdown-display class:list={["flex-1 text-regular-medium", defaultOption ? "text-text-primary" : "text-text-secondary opacity-50"]}>
+        {defaultOption ? defaultOption.label : placeholder}
+      </span>
+      <svg data-dropdown-chevron class="shrink-0 text-text-primary transition-transform duration-200" width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <path d="M6 9L12 15L18 9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </div>
+
+    <div data-dropdown-panel class="absolute top-full left-0 w-full z-20 hidden" role="listbox">
+      <div class="border-2 border-border-quinary">
+        <div class="border border-border-tertiary bg-bg-primary p-3 flex flex-col">
+          {options.map(opt => (
+            <button
+              type="button"
+              data-dropdown-option
+              data-value={opt.value}
+              class:list={[
+                "flex items-center gap-4 text-left px-2 py-2 text-regular rounded-[4px] hover:bg-fg-other-4 hover:text-text-primary transition-colors w-full cursor-pointer",
+                opt.value === (defaultOption?.value ?? null) ? "bg-fg-other-4 text-text-primary" : "text-text-secondary",
+              ]}
+              role="option"
+              aria-selected={opt.value === (defaultOption?.value ?? null) ? "true" : "false"}
+            >
+              <span class="flex-1">{opt.label}</span>
+              <span class:list={["check-badge bg-bg-tertiary p-[2px] rounded-full shrink-0", opt.value === (defaultOption?.value ?? null) ? "opacity-100" : "opacity-0"]}>
+                <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+                  <path d="M2 6L5 9L10 3" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </span>
+            </button>
+          ))}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  function initDropdowns() {
+    document.querySelectorAll<HTMLElement>('[data-dropdown]:not([data-dropdown-init])').forEach(field => {
+      field.dataset.dropdownInit = '1'
+      const id       = field.dataset.dropdown!
+      const trigger  = field.querySelector<HTMLElement>('[data-dropdown-trigger]')!
+      const panel    = field.querySelector<HTMLElement>('[data-dropdown-panel]')!
+      const display  = field.querySelector<HTMLElement>('[data-dropdown-display]')!
+      const chevron  = field.querySelector<HTMLElement>('[data-dropdown-chevron]')!
+      const hidden   = field.querySelector<HTMLInputElement>('[data-dropdown-value]')!
+      const options  = field.querySelectorAll<HTMLButtonElement>('[data-dropdown-option]')
+
+      const open  = () => { panel.classList.remove('hidden'); chevron.classList.add('rotate-180'); trigger.setAttribute('aria-expanded', 'true') }
+      const close = () => { panel.classList.add('hidden');    chevron.classList.remove('rotate-180'); trigger.setAttribute('aria-expanded', 'false') }
+
+      trigger.addEventListener('click', (e) => {
+        e.stopPropagation()
+        panel.classList.contains('hidden') ? open() : close()
+      })
+
+      options.forEach(btn => {
+        btn.addEventListener('click', () => {
+          const value = btn.dataset.value ?? ''
+          const label = btn.querySelector('span')?.textContent?.trim() ?? ''
+
+          hidden.value = value
+          display.textContent = label
+          display.classList.remove('opacity-50', 'text-text-secondary')
+          display.classList.add('text-text-primary')
+
+          options.forEach(b => {
+            b.classList.remove('bg-fg-other-4', 'text-text-primary')
+            b.classList.add('text-text-secondary')
+            b.setAttribute('aria-selected', 'false');
+            (b.querySelector('.check-badge') as HTMLElement).style.opacity = '0'
+          })
+          btn.classList.add('bg-fg-other-4', 'text-text-primary')
+          btn.classList.remove('text-text-secondary')
+          btn.setAttribute('aria-selected', 'true');
+          (btn.querySelector('.check-badge') as HTMLElement).style.opacity = '1'
+
+          trigger.dispatchEvent(new CustomEvent('dropdown:change', { detail: { id, value, label }, bubbles: true }))
+          close()
+        })
+      })
+
+      document.addEventListener('click', (e) => {
+        if (!field.contains(e.target as Node)) close()
+      })
+    })
+  }
+
+  // Run on initial load and after Astro page transitions
+  initDropdowns()
+  document.addEventListener('astro:page-load', initDropdowns)
+</script>

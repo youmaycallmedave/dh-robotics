@@ -1,0 +1,275 @@
+---
+import Button from '../ui/Button.astro'
+import Dropdown from '../ui/Dropdown.astro'
+
+type DownloadTab = 'all' | 'product-manuals' | '3d-model' | 'user-guides' | 'plugin' | 'dexterous-hand'
+
+type DownloadItem = {
+  title: string
+  version: string
+  format: string
+  date: string
+  href: string
+  tab: DownloadTab
+}
+
+const tabs: { id: DownloadTab; label: string }[] = [
+  { id: 'all', label: 'All' },
+  { id: 'product-manuals', label: 'Product Manuals' },
+  { id: '3d-model', label: '3D Model' },
+  { id: 'user-guides', label: 'User Guides' },
+  { id: 'plugin', label: 'Plugin' },
+  { id: 'dexterous-hand', label: 'Dexterous Hand' },
+]
+
+const downloads: DownloadItem[] = [
+  { title: 'Servo Electric Gripper Catalog', version: '20250911', format: 'PDF', date: '2024-07-11', href: '#', tab: 'product-manuals' },
+  { title: 'AG Series', version: 'CN.2405', format: 'PDF', date: '2024-06-20', href: '#', tab: 'product-manuals' },
+  { title: 'PGC-140 User Guide', version: '1.3.0', format: 'PDF', date: '2024-05-15', href: '#', tab: 'user-guides' },
+  { title: 'AE.1 3D Model Files', version: '2.0', format: 'STEP', date: '2024-04-01', href: '#', tab: '3d-model' },
+  { title: 'DH-Robotics SDK Plugin v2', version: '2.1.4', format: 'ZIP', date: '2024-03-10', href: '#', tab: 'plugin' },
+  { title: 'DH-5 Dexterous Hand Manual', version: '1.0', format: 'PDF', date: '2024-02-28', href: '#', tab: 'dexterous-hand' },
+  { title: 'EFG Series Product Manual', version: 'EN.2406', format: 'PDF', date: '2024-06-01', href: '#', tab: 'product-manuals' },
+  { title: 'RGI Series 3D Files', version: '1.1', format: 'STEP', date: '2024-01-20', href: '#', tab: '3d-model' },
+  { title: 'Control Software User Guide', version: '3.0', format: 'PDF', date: '2023-12-15', href: '#', tab: 'user-guides' },
+  { title: 'AG-95 Product Manual', version: 'EN.2403', format: 'PDF', date: '2024-03-05', href: '#', tab: 'product-manuals' },
+]
+---
+
+<!-- Hero -->
+<section class="bg-bg-primary pt-[208px] pb-[120px] max-lg:pt-20 max-lg:pb-16">
+  <div class="global-padding">
+    <div class="mx-auto max-w-[1200px] flex items-start justify-between gap-10 max-lg:flex-col">
+
+      <!-- Left: title + desc -->
+      <div class="flex flex-col justify-between h-[360px] max-lg:h-auto max-lg:gap-8 shrink-0 w-[491px] max-lg:w-full">
+        <div class="flex flex-col gap-10">
+          <h1 class="text-h1 text-text-primary">Download Center</h1>
+          <p class="text-h6-regular text-text-primary max-w-[390px]">
+            With deep technical background, DH-Robotics has developed the robotic and precision motion control technologies for many years.
+          </p>
+        </div>
+        <a href="#downloads-content" class="inline-flex items-center gap-3 text-tiny text-text-secondary hover:text-text-primary transition-colors duration-200">
+          <svg class="size-3" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+            <circle cx="6" cy="6" r="5" stroke="currentColor" stroke-width="1.2"/>
+            <path d="M6 4v4M4 7l2 2 2-2" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          View more
+        </a>
+      </div>
+
+      <!-- Right: decorative image -->
+      <div class="bg-bg-secondary rounded-[8px] overflow-hidden shrink-0 w-[592px] h-[360px] max-lg:w-full max-lg:h-auto max-lg:aspect-video">
+        <img
+          src="https://www.figma.com/api/mcp/asset/92148eb6-c027-4479-b8d5-83460911b97e"
+          alt="DH-Robotics products"
+          class="w-full h-full object-cover"
+        />
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- Filters + Downloads -->
+<section id="downloads-content" class="bg-bg-primary pb-[120px] max-lg:pb-20">
+  <div class="global-padding">
+    <div class="mx-auto max-w-[1200px] flex flex-col gap-[120px] max-lg:gap-16 items-center">
+
+      <!-- External filters row -->
+      <div class="flex gap-4 items-end w-full max-lg:flex-col max-lg:items-stretch max-lg:gap-3">
+
+        <Dropdown
+          id="filter-category"
+          label="Product Category"
+          placeholder="All Categories"
+          defaultValue=""
+          class="flex-1 min-w-0"
+          options={[
+            { value: '', label: 'All Categories' },
+            { value: 'grippers', label: 'Grippers' },
+            { value: 'linear-actuators', label: 'Linear Actuators' },
+            { value: 'dexterous-hands', label: 'Dexterous Hands' },
+            { value: 'voice-coil', label: 'Voice Coil Actuators' },
+          ]}
+        />
+
+        <Dropdown
+          id="filter-product"
+          label="Product"
+          placeholder="All Product Types"
+          defaultValue=""
+          class="flex-1 min-w-0"
+          options={[
+            { value: '', label: 'All Products' },
+            { value: 'ag-series', label: 'AG Series' },
+            { value: 'pgc-series', label: 'PGC Series' },
+            { value: 'efg-series', label: 'EFG Series' },
+            { value: 'rgi-series', label: 'RGI Series' },
+            { value: 'dh5', label: 'DH-5 Dexterous Hand' },
+            { value: 'ae1', label: 'AE.1' },
+          ]}
+        />
+
+        <Dropdown
+          id="filter-model"
+          label="Product Model"
+          placeholder="All Product Models"
+          defaultValue=""
+          class="flex-1 min-w-0"
+          options={[
+            { value: '', label: 'All Models' },
+            { value: 'ag-95', label: 'AG-95' },
+            { value: 'ag-145', label: 'AG-145' },
+            { value: 'pgc-140', label: 'PGC-140' },
+            { value: 'efg-100', label: 'EFG-100' },
+          ]}
+        />
+
+        <!-- Search -->
+        <div class="flex flex-col gap-[2px] flex-1 min-w-0">
+          <label for="downloads-search" class="text-small text-text-primary">Search</label>
+          <div class="input-row border-b flex items-center gap-4 py-4">
+            <input
+              id="downloads-search"
+              type="text"
+              placeholder="Enter keywords..."
+              class="text-regular text-text-primary flex-1 bg-transparent outline-none placeholder:text-text-secondary placeholder:opacity-50"
+            />
+          </div>
+        </div>
+
+        <!-- Search button (icon only) -->
+        <button class="bg-btn-black-default hover:bg-btn-black-hover text-text-alternate rounded-[2px] shrink-0 size-10 flex items-center justify-center transition-colors">
+          <svg class="size-5" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+            <circle cx="9" cy="9" r="6" stroke="currentColor" stroke-width="1.5"/>
+            <path d="M13.5 13.5L17 17" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+        </button>
+
+      </div>
+
+      <!-- Tabs + list -->
+      <div class="w-[999px] max-xl:w-full flex flex-col gap-0" id="downloads-list-wrap">
+
+        <!-- Tabs: on mobile break out of container to 100dvw -->
+        <div class="max-md:-mx-4 max-lg:-mx-10 lg:mx-0">
+          <div class="flex items-start justify-between overflow-x-auto gap-6 max-md:px-4 max-lg:px-10 lg:px-0 border-b border-border-other-2 relative z-[2] pb-[1px]" id="downloads-tabs" style="scrollbar-width: none">
+            {tabs.map((tab) => (
+              <button
+                class:list={[
+                  "text-tiny-medium text-trim-off whitespace-nowrap transition-colors duration-200 shrink-0 cursor-pointer pb-4 relative",
+                  tab.id === 'all'
+                    ? 'text-text-primary after:absolute after:bottom-[-1px] after:left-0 after:w-full after:h-px after:bg-text-primary downloads-tab-active'
+                    : 'text-text-secondary hover:text-text-primary',
+                ]}
+                data-tab={tab.id}
+              >
+                {tab.label}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        <!-- Download items: mt-[-1px] overlaps tabs border, z-[1] below tabs -->
+        <div id="downloads-items" class="relative z-[1] mt-[-1px]">
+          {downloads.map((item) => (
+            <div
+              class="border-t border-border-other-2 flex items-center justify-between py-8 gap-4 downloads-item"
+              data-tab={item.tab}
+            >
+              <div class="flex flex-col gap-5">
+                <p class="text-h6 text-text-primary">{item.title}</p>
+                <p class="text-regular text-text-secondary">
+                  Version {item.version} ・ Format {item.format} ・ Date {item.date}
+                </p>
+              </div>
+              <Button label="Download" href={item.href} variant="black" class="shrink-0" />
+            </div>
+          ))}
+        </div>
+
+        <!-- Empty state — from Figma -->
+        <div id="downloads-empty" class="hidden flex items-center justify-center py-[120px]">
+          <div class="flex items-start gap-[72px]">
+            <!-- Magnifying glass + red X badge -->
+            <div class="relative shrink-0 size-16">
+              <svg class="size-16 text-text-primary" viewBox="0 0 64 64" fill="none" aria-hidden="true">
+                <circle cx="26" cy="26" r="18" stroke="currentColor" stroke-width="3"/>
+                <path d="M39 39L56 56" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+              </svg>
+              <!-- Red badge -->
+              <div class="absolute top-0 right-0 size-6 bg-bg-quaternary rounded-full border-2 border-bg-primary flex items-center justify-center">
+                <svg class="size-3" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+                  <path d="M3 3l6 6M9 3l-6 6" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
+                </svg>
+              </div>
+            </div>
+            <!-- Text -->
+            <p class="text-h5 text-text-primary">
+              Sorry, no matches found.<br/>Try entering a new query or using a filter.
+            </p>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<script>
+  const tabButtons = document.querySelectorAll<HTMLButtonElement>('[data-tab]')
+  const items = document.querySelectorAll<HTMLElement>('.downloads-item')
+  const emptyState = document.getElementById('downloads-empty')
+  const searchInput = document.getElementById('downloads-search') as HTMLInputElement
+
+  let activeTab = 'all'
+  let searchQuery = ''
+
+  function filterItems() {
+    let visible = 0
+
+    items.forEach(item => {
+      const tab = item.dataset.tab || 'all'
+      const title = item.querySelector('p')?.textContent?.toLowerCase() || ''
+      const matchesTab = activeTab === 'all' || tab === activeTab
+      const matchesSearch = !searchQuery || title.includes(searchQuery)
+      const show = matchesTab && matchesSearch
+      item.style.display = show ? '' : 'none'
+      if (show) visible++
+    })
+
+    if (emptyState) emptyState.style.display = visible === 0 ? 'flex' : 'none'
+  }
+
+  // Smooth scroll for "View more"
+  document.querySelector<HTMLAnchorElement>('[href="#downloads-content"]')
+    ?.addEventListener('click', (e) => {
+      e.preventDefault()
+      document.getElementById('downloads-content')?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    })
+
+  tabButtons.forEach(btn => {
+    if (!btn.closest('#downloads-tabs')) return
+    btn.addEventListener('click', (e) => {
+      e.preventDefault()
+      tabButtons.forEach(b => {
+        if (!b.closest('#downloads-tabs')) return
+        b.classList.remove('text-text-primary', 'after:absolute', 'after:bottom-[-1px]', 'after:left-0', 'after:w-full', 'after:h-px', 'after:bg-text-primary', 'downloads-tab-active')
+        b.classList.add('text-text-secondary')
+      })
+      btn.classList.remove('text-text-secondary')
+      btn.classList.add('text-text-primary', 'after:absolute', 'after:bottom-[-1px]', 'after:left-0', 'after:w-full', 'after:h-px', 'after:bg-text-primary', 'downloads-tab-active')
+      activeTab = btn.dataset.tab || 'all'
+      filterItems()
+    })
+  })
+
+  searchInput?.addEventListener('input', (e) => {
+    searchQuery = (e.target as HTMLInputElement).value.toLowerCase()
+    filterItems()
+  })
+
+  filterItems()
+</script>
