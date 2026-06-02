@@ -1,14 +1,7 @@
 ---
 import Layout from '../../layouts/Layout.astro'
-import Section from '../../components/ui/Section.astro'
+import EventsSection from '../../components/sections/EventsSection.astro'
 ---
 <Layout title="Events">
-  <Section>
-    <h1>Events</h1>
-    <ul>
-      <li>1. Hero — заголовок + счётчик общего количества ивентов</li>
-      <li>2. Листинг ивентов (из CMS) — карточка: бейдж "Upcoming", заголовок, картинка, кнопка, локация, дата и время</li>
-      <li>3. Кнопка "More" — подгружает следующую порцию ивентов</li>
-    </ul>
-  </Section>
+  <EventsSection />
 </Layout>

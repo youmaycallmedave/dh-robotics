@@ -1,18 +1,7 @@
 ---
 import Layout from '../../layouts/Layout.astro'
-import Section from '../../components/ui/Section.astro'
+import FaqSection from '../../components/sections/FaqSection.astro'
 ---
 <Layout title="FAQ">
-  <Section>
-    <h1>FAQ</h1>
-    <ul>
-      <li>1. Sticky заголовок слева — прилипает при скролле внутри секции, показывает название текущей группы</li>
-      <li>2. Группы вопросов (5 групп, ~5 вопросов каждая, из CMS):
-        <ul>
-          <li>— Заголовок группы</li>
-          <li>— Аккордеон: вопрос + ответ (раскрывается по клику)</li>
-        </ul>
-      </li>
-    </ul>
-  </Section>
+  <FaqSection />
 </Layout>

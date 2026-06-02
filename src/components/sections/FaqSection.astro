@@ -1,0 +1,157 @@
+---
+import Section from '../ui/Section.astro'
+
+const groups = [
+  {
+    title: '01. AE.1™ Details & Specs',
+    items: [
+      { question: 'What is an Electric Linear Actuator?', answer: 'An electric linear actuator converts electrical energy into precise linear motion, ensuring desired movement in a straight line. Compared to pneumatic or hydraulic systems, electric systems provide more efficient and cleaner high-accuracy motion control.' },
+      { question: 'How Does a Linear Electric Actuator Work?', answer: 'An electric linear can convert electrical energy into precise linear motion, thus ensuring desired movement in a straight line. Compared to pneumatic or hydraulic systems, electric systems provide more efficient and cleaner high-accuracy motion control. Featuring high precision and repeatability, it has a wide application in industrial automation, robotics, and intelligent manufacturing.' },
+      { question: 'Industrial Applications for Electric Linear Actuators', answer: 'Electric linear actuators are widely used in industrial automation, robotics, semiconductor manufacturing, medical equipment, and precision assembly lines where repeatable, accurate linear motion is required.' },
+      { question: 'Why Choose DH-Robotics Linear Electric Actuators?', answer: 'DH-Robotics actuators offer industry-leading precision, reliability, and integration with modern control systems. Our products are designed for demanding industrial environments and backed by comprehensive technical support.' },
+    ],
+  },
+  {
+    title: '02. Charging & Energy',
+    items: [
+      { question: 'What is an Electric Linear Actuator?', answer: 'An electric linear actuator converts electrical energy into precise linear motion.' },
+      { question: 'How Does a Linear Electric Actuator Work?', answer: 'Electric energy is converted to mechanical motion via a motor and lead screw or belt mechanism.' },
+      { question: 'Industrial Applications for Electric Linear Actuators', answer: 'Used across automation, robotics, and precision manufacturing sectors.' },
+      { question: 'Why Choose DH-Robotics Linear Electric Actuators?', answer: 'Superior precision, reliability, and support from our engineering team.' },
+    ],
+  },
+  {
+    title: '03. Ownership & Service',
+    items: [
+      { question: 'What is an Electric Linear Actuator?', answer: 'An electric linear actuator converts electrical energy into precise linear motion.' },
+      { question: 'How Does a Linear Electric Actuator Work?', answer: 'Via a motor driving a lead screw or belt system to produce controlled linear displacement.' },
+      { question: 'Industrial Applications for Electric Linear Actuators', answer: 'Automation, robotics, medical devices, and semiconductor equipment.' },
+      { question: 'Why Choose DH-Robotics Linear Electric Actuators?', answer: 'Quality, precision, and a dedicated service network worldwide.' },
+    ],
+  },
+  {
+    title: '04. Purchasing',
+    items: [
+      { question: 'What is an Electric Linear Actuator?', answer: 'A device that produces linear motion from electrical input.' },
+      { question: 'How Does a Linear Electric Actuator Work?', answer: 'A motor drives a screw or belt which translates rotational motion into linear displacement.' },
+      { question: 'Industrial Applications for Electric Linear Actuators', answer: 'Widely used across manufacturing, robotics, and automation.' },
+      { question: 'Why Choose DH-Robotics Linear Electric Actuators?', answer: 'Best-in-class performance with flexible purchasing options.' },
+    ],
+  },
+  {
+    title: '05. Company Information',
+    items: [
+      { question: 'What is an Electric Linear Actuator?', answer: 'A device converting electrical energy to precise linear motion.' },
+      { question: 'How Does a Linear Electric Actuator Work?', answer: 'Through a motor-driven mechanism that translates rotation into linear movement.' },
+      { question: 'Industrial Applications for Electric Linear Actuators', answer: 'Automation, robotics, medical, semiconductor, and precision assembly.' },
+      { question: 'Why Choose DH-Robotics Linear Electric Actuators?', answer: 'DH-Robotics is a leading provider of precision motion control solutions trusted by global manufacturers.' },
+    ],
+  },
+]
+---
+
+<Section class="bg-bg-primary pt-[208px] pb-[160px] max-md:pt-14 max-md:pb-14" size="xl">
+
+  <h1 class="text-h1 text-text-primary mb-14">FAQ</h1>
+
+  <div class="flex flex-col">
+    {groups.map((group, gi) => (
+      <div class:list={[
+        "grid gap-x-4 grid-cols-1 md:grid-cols-[180px_1fr] lg:grid-cols-[1fr_795px]",
+        gi < groups.length - 1 ? "mb-16 md:mb-20 lg:mb-[160px]" : ""
+      ]}>
+
+        <!-- Left: sticky title -->
+        <div class="mb-6 md:mb-0 md:sticky md:top-[5vh] md:self-start">
+          <p class="faq-nav-title text-large text-text-primary inline-block relative" data-nav={gi}>
+            {group.title}
+            <span class="faq-nav-line absolute bottom-[-2px] left-0 h-[1px] bg-text-primary w-full origin-left scale-x-0 transition-transform duration-1000 ease-[cubic-bezier(0.4,0,0.2,1)]"></span>
+          </p>
+        </div>
+
+        <!-- Right: title + accordion -->
+        <div data-group={gi}>
+          <h2 class="text-h3 text-text-primary mb-[40px] hidden md:block">{group.title}</h2>
+          <div>
+            {group.items.map((item) => (
+              <div
+                class="faq-item relative border-b border-border-other-2 cursor-pointer"
+                data-open="false"
+              >
+                <div class="faq-header flex items-center justify-between px-3 py-5 md:px-4 md:py-7">
+                  <p class="faq-question text-h6 text-text-primary text-trim-off flex-1 min-w-0 pr-4">{item.question}</p>
+                  <span class="faq-icon relative shrink-0 size-6 text-text-primary">
+                    <span class="absolute left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2 w-4 h-px bg-current rounded-full"></span>
+                    <span class="faq-vline absolute left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2 w-4 h-px bg-current rounded-full rotate-90 transition-[rotate] duration-300 ease-in-out"></span>
+                  </span>
+                </div>
+                <div class="faq-body grid transition-[grid-template-rows] duration-300 ease-in-out" style="grid-template-rows: 0fr">
+                  <div class="overflow-hidden">
+                    <p class="text-regular text-text-primary px-3 pb-5 md:px-4 md:pb-7">{item.answer}</p>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+      </div>
+    ))}
+  </div>
+
+</Section>
+
+
+<script>
+  // Active section underline via scroll
+  const groups = Array.from(document.querySelectorAll<HTMLElement>('[data-group]'))
+  const navLines = Array.from(document.querySelectorAll<HTMLElement>('.faq-nav-line'))
+
+  function updateActive() {
+    const trigger = window.innerHeight * 0.15
+    let activeIndex = 0
+
+    groups.forEach((group, i) => {
+      const top = group.getBoundingClientRect().top
+      if (top <= trigger) activeIndex = i
+    })
+
+    navLines.forEach((line, i) => {
+      if (i === activeIndex) {
+        line.classList.remove('scale-x-0')
+        line.classList.add('scale-x-100')
+      } else {
+        line.classList.remove('scale-x-100')
+        line.classList.add('scale-x-0')
+      }
+    })
+  }
+
+  window.addEventListener('scroll', updateActive, { passive: true })
+  updateActive()
+
+  document.querySelectorAll('.faq-item').forEach(item => {
+    const header = item.querySelector('.faq-header')
+    const body = item.querySelector('.faq-body')
+    const vline = item.querySelector<HTMLElement>('.faq-vline')
+
+    if (!header) return
+
+    header.addEventListener('click', () => {
+      const isOpen = item.getAttribute('data-open') === 'true'
+      const bodyEl = body as HTMLElement | null
+
+      if (isOpen) {
+        item.setAttribute('data-open', 'false')
+        item.classList.remove('bg-fg-other-4')
+        if (bodyEl) bodyEl.style.gridTemplateRows = '0fr'
+        if (vline) vline.style.rotate = '90deg'
+      } else {
+        item.setAttribute('data-open', 'true')
+        item.classList.add('bg-fg-other-4')
+        if (bodyEl) bodyEl.style.gridTemplateRows = '1fr'
+        if (vline) vline.style.rotate = '0deg'
+      }
+    })
+  })
+</script>

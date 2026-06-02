@@ -1,0 +1,206 @@
+---
+import Section from '../ui/Section.astro'
+import Button from '../ui/Button.astro'
+
+type EventTag = 'future' | 'past'
+
+type EventItem = {
+  date: string
+  tag: EventTag
+  image: string
+  alt: string
+  title: string
+  location: string
+  eventDate: string
+  time: string
+  href: string
+}
+
+const events: EventItem[] = [
+  {
+    date: 'Mar 31, 2025',
+    tag: 'future',
+    image: 'https://www.figma.com/api/mcp/asset/651ffb27-b57a-49fd-9f61-2470b7b9c1f3',
+    alt: 'DH-Robotics at Productronica China',
+    title: 'DH-Robotics Shines at Productronica China, Pioneering Smart Manufacturing Breakthroughs!',
+    location: 'New York',
+    eventDate: 'Mar 31, 2025',
+    time: '8:00 am – 9:00 am',
+    href: '/events/template',
+  },
+  {
+    date: 'Mar 31, 2025',
+    tag: 'past',
+    image: 'https://www.figma.com/api/mcp/asset/19e7db52-4706-41cb-bfca-47d4652b10fc',
+    alt: 'Agile Manipulation Challenge',
+    title: "The University of Hong Kong Team Wins the Agile Manipulation Challenge! Using DH-Robotics' PGC Collaborative Electric Gripper",
+    location: 'New York',
+    eventDate: 'Mar 31, 2025',
+    time: '8:00 am – 9:00 am',
+    href: '/events/template',
+  },
+  {
+    date: 'Mar 31, 2025',
+    tag: 'past',
+    image: 'https://www.figma.com/api/mcp/asset/af771c44-c3a7-4a69-8118-334afe544bb6',
+    alt: 'World Robot Conference 2022',
+    title: 'Here comes the representative of domestic core components! DH-Robotics at the 2022 World Robot Conference',
+    location: 'New York',
+    eventDate: 'Mar 31, 2025',
+    time: '8:00 am – 9:00 am',
+    href: '/events/template',
+  },
+  {
+    date: 'Mar 31, 2025',
+    tag: 'past',
+    image: 'https://www.figma.com/api/mcp/asset/651ffb27-b57a-49fd-9f61-2470b7b9c1f3',
+    alt: 'DH-Robotics at Productronica China',
+    title: 'DH-Robotics Shines at Productronica China, Pioneering Smart Manufacturing Breakthroughs!',
+    location: 'New York',
+    eventDate: 'Mar 31, 2025',
+    time: '8:00 am – 9:00 am',
+    href: '/events/template',
+  },
+  {
+    date: 'Mar 31, 2025',
+    tag: 'past',
+    image: 'https://www.figma.com/api/mcp/asset/19e7db52-4706-41cb-bfca-47d4652b10fc',
+    alt: 'Agile Manipulation Challenge',
+    title: "The University of Hong Kong Team Wins the Agile Manipulation Challenge! Using DH-Robotics' PGC Collaborative Electric Gripper",
+    location: 'New York',
+    eventDate: 'Mar 31, 2025',
+    time: '8:00 am – 9:00 am',
+    href: '/events/template',
+  },
+  {
+    date: 'Mar 31, 2025',
+    tag: 'past',
+    image: 'https://www.figma.com/api/mcp/asset/af771c44-c3a7-4a69-8118-334afe544bb6',
+    alt: 'World Robot Conference 2022',
+    title: 'Here comes the representative of domestic core components! DH-Robotics at the 2022 World Robot Conference',
+    location: 'New York',
+    eventDate: 'Mar 31, 2025',
+    time: '8:00 am – 9:00 am',
+    href: '/events/template',
+  },
+  {
+    date: 'Mar 31, 2025',
+    tag: 'past',
+    image: 'https://www.figma.com/api/mcp/asset/651ffb27-b57a-49fd-9f61-2470b7b9c1f3',
+    alt: 'DH-Robotics at Productronica China',
+    title: 'DH-Robotics Shines at Productronica China, Pioneering Smart Manufacturing Breakthroughs!',
+    location: 'New York',
+    eventDate: 'Mar 31, 2025',
+    time: '8:00 am – 9:00 am',
+    href: '/events/template',
+  },
+]
+---
+
+<Section class="bg-bg-primary pt-[208px] pb-[160px] max-md:pt-20 max-md:pb-20">
+
+  <!-- Title row -->
+  <div class="flex items-start justify-between mb-14 max-md:mb-10">
+    <h1 class="text-h1 text-text-primary">Events</h1>
+    <span class="text-h1 text-text-secondary">{events.length}</span>
+  </div>
+
+  <!-- Column labels — desktop only (≥1024px) -->
+  <div class="hidden lg:flex text-regular text-text-secondary mb-4 pr-6">
+    <span class="shrink-0" style="width: calc(10rem + 1rem + 390px + 1rem)">Date</span>
+    <span>Event</span>
+  </div>
+
+  <!-- Events list -->
+  <div class="flex flex-col gap-12 max-md:gap-6">
+    {events.map((event, i) => (
+      <div class:list={[
+        "relative group border-t border-border-other-2 pt-12 px-6 flex gap-3 items-start",
+        "max-lg:flex-col max-lg:pt-8 max-lg:px-0",
+        "max-md:pt-6",
+        i === events.length - 1 ? "pb-12 max-lg:pb-8 max-md:pb-6" : "",
+      ]}>
+
+        <!-- Stretched link — covers entire card, z-0 -->
+        <a href={event.href} class="absolute inset-0 z-0" aria-label={event.title}></a>
+
+        <!-- Date + tag: vertical on desktop, horizontal on tablet/mobile -->
+        <div class="flex flex-col items-start gap-4 shrink-0 w-[10rem] max-lg:flex-row max-lg:items-center max-lg:gap-2 max-lg:w-auto">
+          <span class="text-regular text-text-primary">{event.date}</span>
+          <span class:list={[
+            "inline-flex items-center px-2 py-2 rounded-[4px] text-small text-text-primary leading-none whitespace-nowrap",
+            event.tag === 'future' ? 'bg-fg-other-2' : 'bg-fg-other-1',
+          ]}>
+            {event.tag === 'future' ? 'Future event' : 'Past event'}
+          </span>
+        </div>
+
+        <!-- Image + text -->
+        <div class="flex flex-1 gap-4 items-start min-w-0 max-lg:flex-col max-lg:w-full">
+
+          <!-- Image: overflow-hidden clips scale -->
+          <div class="relative z-[1] bg-bg-secondary rounded-[4px] overflow-hidden shrink-0 w-[390px] h-[216px] max-lg:w-full max-lg:h-auto max-lg:aspect-video">
+            <img
+              src={event.image}
+              alt={event.alt}
+              class="w-full h-full object-cover transition-transform duration-700 ease-in-out lg:group-hover:scale-110"
+              loading="lazy"
+            />
+          </div>
+
+          <!-- Text: title top, meta bottom -->
+          <div class="flex flex-col justify-between self-stretch flex-1 min-w-0 max-lg:gap-4">
+            <p class="text-h6 text-text-primary text-trim-off pr-[10rem] max-lg:pr-0">{event.title}</p>
+
+            <!-- Location / Date / Time -->
+            <div class="flex gap-x-14 lg:group-hover:gap-x-8 transition-all duration-300 ease-in-out max-md:gap-x-5 max-md:flex-wrap">
+
+              <!-- Location -->
+              <div class="flex flex-col gap-2">
+                <span class="text-small text-text-secondary max-md:hidden">Location</span>
+                <div class="flex items-center gap-3 max-md:gap-2">
+                  <img src="/images/icons/location.svg" alt="" class="shrink-0 size-5 max-md:size-4" aria-hidden="true" />
+                  <span class="text-regular max-md:text-small text-text-primary whitespace-nowrap">{event.location}</span>
+                </div>
+              </div>
+
+              <!-- Date -->
+              <div class="flex flex-col gap-2">
+                <span class="text-small text-text-secondary max-md:hidden">Date</span>
+                <div class="flex items-center gap-3 max-md:gap-2">
+                  <img src="/images/icons/date.svg" alt="" class="shrink-0 size-5 max-md:size-4" aria-hidden="true" />
+                  <span class="text-regular max-md:text-small text-text-primary whitespace-nowrap">{event.eventDate}</span>
+                </div>
+              </div>
+
+              <!-- Time -->
+              <div class="flex flex-col gap-2">
+                <span class="text-small text-text-secondary max-md:hidden">Time</span>
+                <div class="flex items-center gap-3 max-md:gap-2">
+                  <img src="/images/icons/time.svg" alt="" class="shrink-0 size-5 max-md:size-4" aria-hidden="true" />
+                  <span class="text-regular max-md:text-small text-text-primary whitespace-nowrap">{event.time}</span>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+        <!-- Details button: desktop hover / tablet+mobile always visible -->
+        <div class="hidden lg:block absolute top-12 right-6 z-[1] opacity-0 lg:group-hover:opacity-100 transition-opacity duration-500 ease-in-out">
+          <Button label="Details" href={event.href} variant="black" />
+        </div>
+        <div class="relative z-[1] lg:hidden mt-2 max-md:mt-1">
+          <Button label="Details" href={event.href} variant="black" />
+        </div>
+
+      </div>
+    ))}
+  </div>
+
+  <!-- More -->
+  <button class="w-full text-h3 text-text-primary text-center mt-12 cursor-pointer hover:text-text-secondary transition-colors duration-200">
+    More ↓
+  </button>
+
+</Section>
