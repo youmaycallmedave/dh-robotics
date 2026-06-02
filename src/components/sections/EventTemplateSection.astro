@@ -1,0 +1,362 @@
+---
+import Button from '../ui/Button.astro'
+
+type EventTag = 'future' | 'past'
+
+type ContentBlock = {
+  heading?: string
+  headingLevel?: 'h2' | 'h4'
+  text?: string
+  image?: string
+  imageAlt?: string
+}
+
+type EventTemplateProps = {
+  title: string
+  tag: EventTag
+  date: string
+  location: string
+  time: string
+  registrationHref?: string
+  heroImage: string
+  heroImageAlt: string
+  content: ContentBlock[]
+}
+
+const event: EventTemplateProps = {
+  title: 'DH-Robotics Shines at Productronica China, Pioneering Smart Manufacturing Breakthroughs!',
+  tag: 'future',
+  date: 'Mar 31, 2025',
+  location: 'New York',
+  time: '8:00 am – 9:00 am',
+  registrationHref: '#',
+  heroImage: 'https://www.figma.com/api/mcp/asset/31e50cfa-272d-4d40-acf2-96e5c2daf413',
+  heroImageAlt: 'DH-Robotics at Productronica China',
+  content: [
+    {
+      text: 'On March 26, 2025, the three-day Productronica China officially kicked off at the Shanghai New International Expo Centre, bringing together cutting-edge technologies and an electrifying atmosphere that captivated attendees.',
+    },
+    {
+      text: 'As a pioneer in intelligent manufacturing, DH-Robotics showcased its groundbreaking innovations, including "Dexterous Intelligence with Dual-Hand Coordination," the iFM Intelligent Flexible Motion System, Universal Plug-and-Play Automation, and High-Speed Precision Compound Motion Demonstrations. With state-of-the-art technology and dynamic live demonstrations, DH-Robotics drew a large crowd, becoming one of the key highlights of the event.',
+    },
+    {
+      headingLevel: 'h4',
+      heading: 'Driving Innovation, Leading the Future of Smart Manufacturing',
+      text: 'As intelligent manufacturing reaches new heights, companies must compete not only in speed but also in flexibility and precision. As an expert in core components for industrial smart manufacturing, DH-Robotics integrates precision control, force control, embedded integration, and intelligent technology to develop electric end-effector solutions that are more dexterous, more precise, and faster.',
+    },
+    {
+      headingLevel: 'h4',
+      heading: 'Precision Collaboration: Left Hand Holds a Fork, Right Hand Serves a Bowl',
+      text: 'One DH-5 Dexterous Hand firmly gripped a fork, while another balanced a bowl of Sachima, smoothly serving "food" to spectators. The crowd was amazed, with one visitor exclaiming: "It feeds better than I do!" Many eagerly lined up to experience the hand\'s flexibility and precision firsthand.',
+    },
+    {
+      headingLevel: 'h4',
+      heading: 'Lifelike Hand Gesture Performance',
+      text: 'In another captivating demonstration, two DH-5 Dexterous Hands waved, gestured, and danced with seamless coordination, mimicking human-like movement. With independent drive and control units for each finger, powered by high-precision force control algorithms, the DH-5 achieved remarkably realistic hand movements.',
+    },
+    {
+      headingLevel: 'h2',
+      heading: 'Cutting-Edge Innovations on Display',
+    },
+    {
+      headingLevel: 'h4',
+      heading: 'iFM Intelligent Flexible Motion System – The "LEGO Master" of Industrial Automation',
+      text: 'The iFM System showcased high-speed precision, modular design, and flexible configuration, allowing industries to "build automation like LEGO." This highly adaptable system is ideal for 3C electronics, new energy, automotive, and semiconductor industries, setting a new benchmark for flexible manufacturing.',
+    },
+    {
+      headingLevel: 'h4',
+      heading: 'AG Series Electric Grippers – Precision Insertion, Adaptive Handling',
+      text: 'With precise force control, adaptive gripping, and intelligent feedback, the AG Series Electric Grippers excelled in 3C electronics, automotive, medical, and semiconductor assembly. During the demo, an AG Gripper mounted on a robotic arm seamlessly executed blind insertion tasks for connectors, screws, and precision components—without external vision sensors.',
+    },
+    {
+      image: 'https://www.figma.com/api/mcp/asset/d9008c0e-5a48-49f6-bfec-5e2add3be87b',
+      imageAlt: 'DH-Robotics exhibition booth',
+    },
+    {
+      headingLevel: 'h4',
+      heading: 'Universal Plug-and-Play Automation – From Production to Delivery in 15 Minutes',
+      text: 'Through standardized interfaces and universal components, this system reduces configuration time from hours to just 15 minutes, significantly cutting labor costs and increasing production flexibility.',
+    },
+  ],
+}
+---
+
+<section class="bg-bg-primary pt-[208px] pb-[160px] max-lg:pt-20 max-lg:pb-20">
+
+  <!-- Header: back + title + meta -->
+  <div class="global-padding">
+    <div class="mx-auto max-w-[1200px]">
+
+      <!-- Back link -->
+      <a href="/events" class="inline-flex items-center gap-2 text-small-caps text-text-primary mb-10 max-lg:mb-8 group lg:mx-auto lg:flex lg:w-fit">
+        <svg class="size-4 rotate-180 transition-transform duration-200 group-hover:-translate-x-1" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+          <path d="M6 12l4-4-4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        Back all events
+      </a>
+
+      <!-- Title -->
+      <h1 class="text-h1 text-text-primary text-center mx-auto max-w-[998px] mb-12 max-lg:text-left max-lg:mb-8 max-md:mb-6">{event.title}</h1>
+
+      <!-- Meta bar: tag | date/location/time | registration -->
+      <div id="event-meta-trigger" class="flex items-center justify-between gap-4 mb-12 max-lg:flex-col max-lg:items-start max-lg:gap-6 max-lg:mb-10">
+
+        <!-- Tag -->
+        <span class:list={[
+          "inline-flex items-center px-2 py-2 rounded-[4px] text-small text-text-primary leading-none whitespace-nowrap shrink-0",
+          event.tag === 'future' ? 'bg-fg-other-2' : 'bg-fg-other-1',
+        ]}>
+          {event.tag === 'future' ? 'Future event' : 'Past event'}
+        </span>
+
+        <!-- Date / Location / Time -->
+        <div class="flex gap-3 max-lg:gap-x-4 max-lg:flex-wrap max-lg:gap-y-3">
+          <div class="flex flex-col gap-2 lg:w-[200px]">
+            <span class="text-small text-text-secondary max-lg:hidden">Date</span>
+            <div class="flex items-center gap-3 max-md:flex-col max-md:items-start max-md:gap-3">
+              <img src="/images/icons/date.svg" alt="" class="shrink-0 size-5 max-lg:size-4" aria-hidden="true" />
+              <span class="text-regular max-lg:text-small text-text-primary whitespace-nowrap">{event.date}</span>
+            </div>
+          </div>
+          <div class="flex flex-col gap-2 lg:w-[200px]">
+            <span class="text-small text-text-secondary max-lg:hidden">Location</span>
+            <div class="flex items-center gap-3 max-md:flex-col max-md:items-start max-md:gap-3">
+              <img src="/images/icons/location.svg" alt="" class="shrink-0 size-5 max-lg:size-4" aria-hidden="true" />
+              <span class="text-regular max-lg:text-small text-text-primary whitespace-nowrap">{event.location}</span>
+            </div>
+          </div>
+          <div class="flex flex-col gap-2 lg:w-[200px]">
+            <span class="text-small text-text-secondary max-lg:hidden">Time</span>
+            <div class="flex items-center gap-3 max-md:flex-col max-md:items-start max-md:gap-3">
+              <img src="/images/icons/time.svg" alt="" class="shrink-0 size-5 max-lg:size-4" aria-hidden="true" />
+              <span class="text-regular max-lg:text-small text-text-primary whitespace-nowrap">{event.time}</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Registration button -->
+        {event.registrationHref && (
+          <Button label="Registration" href={event.registrationHref} variant="blue" class="shrink-0" />
+        )}
+
+      </div>
+    </div>
+  </div>
+
+  <!-- Article content -->
+  <div class="global-padding">
+    <div class="mx-auto max-w-[795px] flex flex-col gap-[72px] max-lg:gap-14">
+
+      <!-- Hero image -->
+      <div class="bg-bg-secondary rounded-[8px] overflow-hidden w-full h-[440px] max-lg:h-auto max-lg:aspect-video">
+        <img
+          src={event.heroImage}
+          alt={event.heroImageAlt}
+          class="w-full h-full object-cover"
+        />
+      </div>
+
+      <!-- Content blocks -->
+      <div class="flex flex-col gap-12">
+        {event.content.map((block) => (
+          <div class="flex flex-col gap-8">
+            {block.headingLevel === 'h2' && (
+              <h2 class="text-h2 text-text-primary">{block.heading}</h2>
+            )}
+            {block.headingLevel === 'h4' && (
+              <h4 class="text-h4 text-text-primary">{block.heading}</h4>
+            )}
+            {block.image && (
+              <div class="bg-bg-secondary rounded-[8px] overflow-hidden w-full aspect-video">
+                <img src={block.image} alt={block.imageAlt || ''} class="w-full h-full object-cover" loading="lazy" />
+              </div>
+            )}
+            {block.text && (
+              <p class="text-large text-text-primary">{block.text}</p>
+            )}
+          </div>
+        ))}
+      </div>
+
+    </div>
+  </div>
+
+</section>
+
+<!-- More Events section -->
+<section id="more-events-section" class="bg-bg-primary py-[160px] max-lg:py-20">
+  <div class="global-padding">
+    <div class="mx-auto max-w-[1200px] flex flex-col gap-14">
+
+      <!-- Title row -->
+      <div class="flex items-end justify-between">
+        <h2 class="text-h2 text-text-primary">More events</h2>
+        <Button label="More events" href="/events" variant="black" class="max-lg:hidden" />
+      </div>
+
+      <!-- Column labels — desktop only -->
+      <div class="hidden lg:flex text-regular text-text-secondary pr-6">
+        <span class="shrink-0" style="width: calc(10rem + 1rem + 390px + 1rem)">Date</span>
+        <span>Event</span>
+      </div>
+
+      <!-- Single related event -->
+      <div class="relative group border-t border-border-other-2 pt-12 px-6 flex gap-3 items-start pb-12
+                  max-lg:flex-col max-lg:pt-8 max-lg:px-0 max-lg:pb-8">
+
+        <div class="flex flex-col items-start justify-center gap-4 shrink-0 w-[10rem] max-lg:flex-row max-lg:items-center max-lg:gap-2 max-lg:w-auto">
+          <span class="text-regular text-text-primary">Mar 31, 2025</span>
+          <span class="inline-flex items-center px-2 py-2 rounded-[4px] text-small text-text-primary leading-none whitespace-nowrap bg-fg-other-1">
+            Past event
+          </span>
+        </div>
+
+        <div class="flex flex-1 gap-4 items-start min-w-0 max-lg:flex-col max-lg:w-full">
+          <a href="/events/template" class="bg-bg-secondary rounded-[4px] overflow-hidden shrink-0 w-[390px] h-[216px] max-lg:w-full max-lg:h-auto max-lg:aspect-video block">
+            <img
+              src="https://www.figma.com/api/mcp/asset/369a3018-acfd-4c71-96f3-b777f78f905a"
+              alt="Related event"
+              class="w-full h-full object-cover transition-transform duration-700 ease-in-out lg:group-hover:scale-110"
+              loading="lazy"
+            />
+          </a>
+          <div class="flex flex-col justify-between self-stretch flex-1 min-w-0 max-lg:gap-4">
+            <a href="/events/template" class="text-h6 text-text-primary text-trim-off pr-[10rem] max-lg:pr-0 hover:text-text-tertiary transition-colors duration-200">
+              The University of Hong Kong Team Wins the Agile Manipulation Challenge! Using DH-Robotics' PGC Collaborative Electric Gripper
+            </a>
+            <div class="flex gap-x-14 lg:group-hover:gap-x-8 transition-all duration-300 ease-in-out max-md:gap-x-5 max-md:flex-wrap">
+              <div class="flex flex-col gap-2">
+                <span class="text-small text-text-secondary max-md:hidden">Location</span>
+                <div class="flex items-center gap-3 max-md:flex-col max-md:items-start max-md:gap-3">
+                  <img src="/images/icons/location.svg" alt="" class="shrink-0 size-5 max-md:size-4" aria-hidden="true" />
+                  <span class="text-regular max-md:text-small text-text-primary whitespace-nowrap">New York</span>
+                </div>
+              </div>
+              <div class="flex flex-col gap-2">
+                <span class="text-small text-text-secondary max-md:hidden">Date</span>
+                <div class="flex items-center gap-3 max-md:flex-col max-md:items-start max-md:gap-3">
+                  <img src="/images/icons/date.svg" alt="" class="shrink-0 size-5 max-md:size-4" aria-hidden="true" />
+                  <span class="text-regular max-md:text-small text-text-primary whitespace-nowrap">Mar 31, 2025</span>
+                </div>
+              </div>
+              <div class="flex flex-col gap-2">
+                <span class="text-small text-text-secondary max-md:hidden">Time</span>
+                <div class="flex items-center gap-3 max-md:flex-col max-md:items-start max-md:gap-3">
+                  <img src="/images/icons/time.svg" alt="" class="shrink-0 size-5 max-md:size-4" aria-hidden="true" />
+                  <span class="text-regular max-md:text-small text-text-primary whitespace-nowrap">8:00 am – 9:00 am</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="hidden lg:block absolute top-12 right-6 z-[1] opacity-0 lg:group-hover:opacity-100 transition-opacity duration-500 ease-in-out">
+          <Button label="Details" href="/events/template" variant="black" />
+        </div>
+        <div class="relative z-[1] lg:hidden mt-2">
+          <Button label="Details" href="/events/template" variant="black" />
+        </div>
+
+      </div>
+
+      <!-- More events button — tablet/mobile only, below card -->
+      <div class="hidden max-lg:flex max-lg:justify-center">
+        <Button label="More events" href="/events" variant="black" />
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- Floating meta bar wrapper -->
+<div
+  id="event-floating-bar"
+  class="fixed inset-x-0 bottom-3 z-50 flex justify-center px-4
+         opacity-0 pointer-events-none max-lg:hidden"
+  aria-hidden="true"
+>
+<div class="bg-bg-primary border border-border-other-2
+            flex items-center justify-between pl-4 pr-2 py-2
+            pointer-events-auto w-fit">
+  <!-- Tag: self-stretch, w-[126px] -->
+  <div class="flex items-center self-stretch shrink-0 w-[126px] mr-12">
+    <span class:list={[
+      "inline-flex items-center w-full h-full justify-center px-2 rounded-[4px] text-small text-text-primary leading-none whitespace-nowrap",
+      event.tag === 'future' ? 'bg-fg-other-2' : 'bg-fg-other-1',
+    ]}>
+      {event.tag === 'future' ? 'Future event' : 'Past event'}
+    </span>
+  </div>
+
+  <!-- Date / Location / Time: gap-3 = 12px -->
+  <div class="flex flex-wrap gap-x-3 gap-y-2">
+    <div class="flex flex-col gap-2 lg:w-[200px]">
+      <span class="text-small text-text-secondary">Date</span>
+      <div class="flex items-center gap-3">
+        <img src="/images/icons/date.svg" alt="" class="shrink-0 size-5" aria-hidden="true" />
+        <span class="text-regular text-text-primary whitespace-nowrap">{event.date}</span>
+      </div>
+    </div>
+    <div class="flex flex-col gap-2 lg:w-[200px] max-md:hidden">
+      <span class="text-small text-text-secondary">Location</span>
+      <div class="flex items-center gap-3">
+        <img src="/images/icons/location.svg" alt="" class="shrink-0 size-5" aria-hidden="true" />
+        <span class="text-regular text-text-primary whitespace-nowrap">{event.location}</span>
+      </div>
+    </div>
+    <div class="flex flex-col gap-2 lg:w-[200px]">
+      <span class="text-small text-text-secondary">Time</span>
+      <div class="flex items-center gap-3">
+        <img src="/images/icons/time.svg" alt="" class="shrink-0 size-5" aria-hidden="true" />
+        <span class="text-regular text-text-primary whitespace-nowrap">{event.time}</span>
+      </div>
+    </div>
+  </div>
+
+  {event.registrationHref && (
+    <Button label="Registration" href={event.registrationHref} variant="blue" class="shrink-0 ml-4" />
+  )}
+</div>
+</div>
+
+<script>
+  import gsap from 'gsap'
+  import { ScrollTrigger } from 'gsap/ScrollTrigger'
+
+  gsap.registerPlugin(ScrollTrigger)
+
+  const metaTrigger = document.getElementById('event-meta-trigger')
+  const moreSection = document.getElementById('more-events-section')
+  const bar = document.getElementById('event-floating-bar')
+
+  if (metaTrigger && bar) {
+    gsap.set(bar, { y: 16 })
+
+    const showBar = () => {
+      bar.style.pointerEvents = 'auto'
+      gsap.to(bar, { opacity: 1, y: 0, duration: 0.4, ease: 'power2.out' })
+    }
+    const hideBar = () => {
+      bar.style.pointerEvents = 'none'
+      gsap.to(bar, { opacity: 0, y: 16, duration: 0.3, ease: 'power2.in' })
+    }
+
+    // Show when meta bar scrolls out of view
+    ScrollTrigger.create({
+      trigger: metaTrigger,
+      start: 'bottom top',
+      onEnter: showBar,
+      onLeaveBack: hideBar,
+    })
+
+    // Hide when entering "More events" section
+    if (moreSection) {
+      ScrollTrigger.create({
+        trigger: moreSection,
+        start: 'top bottom',
+        onEnter: hideBar,
+        onLeaveBack: showBar,
+      })
+    }
+  }
+</script>
