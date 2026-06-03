@@ -1,5 +1,6 @@
 ---
 import Button from '../ui/Button.astro'
+import FilterTabs from '../ui/FilterTabs.astro'
 
 type NewsCategory = 'news' | 'insights'
 type CardSize = 'featured' | 'medium' | 'small'
@@ -112,7 +113,7 @@ const tabs = [
         <div class="flex items-end justify-between gap-8 max-lg:flex-col max-lg:items-start max-lg:gap-4">
           <h1 class="text-h1 text-text-primary shrink-0">News</h1>
           <div class="flex items-center gap-8 max-lg:items-start">
-            <p class="text-medium text-text-secondary text-right max-w-[320px] max-lg:text-left">
+            <p class="text-medium text-text-secondary max-w-[320px]">
               Browse most recent company news, press coverage, and media resources
             </p>
             <svg class="shrink-0 size-6 text-text-secondary max-lg:hidden" viewBox="0 0 24 24" fill="none" aria-hidden="true">
@@ -147,23 +148,7 @@ const tabs = [
       <div class="flex flex-col gap-[72px] w-full max-w-[999px] max-lg:gap-12" id="news-content">
 
         <!-- Tabs -->
-        <div class="relative">
-          <div class="flex gap-16 border-b border-border-other-2 pb-4 max-md:-mx-4 max-lg:-mx-10 lg:mx-0 max-md:px-4 max-lg:px-10 overflow-x-auto" id="news-tabs" style="scrollbar-width: none">
-            {tabs.map(tab => (
-              <button
-                class:list={[
-                  "text-small-medium text-trim-off whitespace-nowrap transition-colors duration-200 shrink-0 cursor-pointer relative",
-                  tab.id === 'all'
-                    ? 'text-text-primary after:absolute after:bottom-[-1px] after:left-0 after:w-full after:h-px after:bg-text-primary news-tab-active'
-                    : 'text-text-secondary hover:text-text-primary',
-                ]}
-                data-tab={tab.id}
-              >
-                {tab.label}
-              </button>
-            ))}
-          </div>
-        </div>
+        <FilterTabs id="news-tabs" tabs={tabs} />
 
         <!-- Row 1: 2 medium cards -->
         <div class="flex gap-4 max-lg:flex-col" id="news-medium-1">
@@ -277,27 +262,12 @@ const tabs = [
 </section>
 
 <script>
-  const tabBtns = document.querySelectorAll<HTMLButtonElement>('[data-tab]')
   const cards = document.querySelectorAll<HTMLElement>('.news-card')
 
-  tabBtns.forEach(btn => {
-    if (!btn.closest('#news-tabs')) return
-    btn.addEventListener('click', (e) => {
-      e.preventDefault()
-
-      tabBtns.forEach(b => {
-        if (!b.closest('#news-tabs')) return
-        b.classList.remove('text-text-primary', 'after:absolute', 'after:bottom-[-1px]', 'after:left-0', 'after:w-full', 'after:h-px', 'after:bg-text-primary', 'news-tab-active')
-        b.classList.add('text-text-secondary')
-      })
-      btn.classList.remove('text-text-secondary')
-      btn.classList.add('text-text-primary', 'after:absolute', 'after:bottom-[-1px]', 'after:left-0', 'after:w-full', 'after:h-px', 'after:bg-text-primary', 'news-tab-active')
-
-      const active = btn.dataset.tab || 'all'
-      cards.forEach(card => {
-        const cat = card.dataset.category
-        card.style.display = (active === 'all' || cat === active) ? '' : 'none'
-      })
+  document.getElementById('news-tabs')?.addEventListener('tabchange', (e) => {
+    const active = (e as CustomEvent<{ tab: string }>).detail.tab || 'all'
+    cards.forEach(card => {
+      card.style.display = (active === 'all' || card.dataset.category === active) ? '' : 'none'
     })
   })
 </script>
