@@ -234,7 +234,8 @@ const downloads: DownloadItem[] = [
       document.getElementById('downloads-content')?.scrollIntoView({ behavior: 'smooth', block: 'start' })
     })
 
-  document.getElementById('downloads-tabs')?.addEventListener('tabchange', (e) => {
+  document.addEventListener('tabchange', (e) => {
+    if ((e.target as HTMLElement).id !== 'downloads-tabs') return
     activeTab = (e as CustomEvent<{ tab: string }>).detail.tab || 'all'
     filterItems()
   })

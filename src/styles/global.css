@@ -193,7 +193,7 @@ html { font-size: 1rem; }
     font-weight: 500;
     @media (min-width: 768px) {
       font-size: 2rem;
-      line-height: 0.75em;
+      line-height: 1em;
       letter-spacing: -0.0625rem;
     }
   }
@@ -372,5 +372,19 @@ html { font-size: 1rem; }
     transform: scaleX(0);
     transform-origin: left;
     transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  /* Единый класс для пагинаций и кнопок "More" */
+  .text-pagination {
+    font-family: var(--font-primary);
+    font-size: 1.5rem;
+    line-height: 1em;
+    letter-spacing: -0.03125rem;
+    font-weight: 500;
+    @media (min-width: 1024px) {
+      font-size: 3rem;
+      line-height: 0.833em;
+      letter-spacing: -0.125rem;
+    }
   }
 }
