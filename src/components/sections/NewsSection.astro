@@ -1,0 +1,303 @@
+---
+import Button from '../ui/Button.astro'
+
+type NewsCategory = 'news' | 'insights'
+type CardSize = 'featured' | 'medium' | 'small'
+
+type NewsItem = {
+  title: string
+  date: string
+  image: string
+  alt: string
+  category: NewsCategory
+  href: string
+  size: CardSize
+}
+
+const news: NewsItem[] = [
+  {
+    title: 'DH-Robotics First Launched high-precision "zero backlash" rotary Electric Gripper breaks the product application boundary',
+    date: '11 Jan 2022',
+    image: 'https://www.figma.com/api/mcp/asset/d6929362-0218-4bf7-8dc0-3df7ddb430f5',
+    alt: 'DH-Robotics rotary gripper',
+    category: 'news',
+    href: '/news/template',
+    size: 'featured',
+  },
+  {
+    title: 'DH-Robotics AG Adaptive Gripper: A Versatile Solution from Precision Industry to Embodied Intelligence',
+    date: '11 Jan 2022',
+    image: 'https://www.figma.com/api/mcp/asset/4efb2a45-aeda-401e-a19e-e806492406dd',
+    alt: 'AG Adaptive Gripper',
+    category: 'news',
+    href: '/news/template',
+    size: 'medium',
+  },
+  {
+    title: 'AG Adaptive Grippers Supporting Robotics Training at Kranti\'s Automation Lab in Bangladesh',
+    date: '11 Jan 2022',
+    image: 'https://www.figma.com/api/mcp/asset/db8045dd-26c0-4ba6-954b-5ea012ca55a1',
+    alt: 'AG Grippers in Bangladesh',
+    category: 'news',
+    href: '/news/template',
+    size: 'medium',
+  },
+  {
+    title: 'How Does an Electric Gripper Work?',
+    date: '11 Jan 2022',
+    image: 'https://www.figma.com/api/mcp/asset/4efb2a45-aeda-401e-a19e-e806492406dd',
+    alt: 'Electric Gripper',
+    category: 'insights',
+    href: '/news/template',
+    size: 'small',
+  },
+  {
+    title: 'The Future of Remote Handling with Advanced Dexterous Hands',
+    date: '11 Jan 2022',
+    image: 'https://www.figma.com/api/mcp/asset/ae8628b2-4ab2-4399-bd57-7ad55b670f50',
+    alt: 'Dexterous Hands',
+    category: 'insights',
+    href: '/news/template',
+    size: 'small',
+  },
+  {
+    title: 'Enhancing Dexterity with Neural Network-Based Motion Planning in Robotic Hands',
+    date: '11 Jan 2022',
+    image: 'https://www.figma.com/api/mcp/asset/d2a68fc9-f65d-4e1b-9f2c-c0bdc65216df',
+    alt: 'Neural Network Robotic Hands',
+    category: 'insights',
+    href: '/news/template',
+    size: 'small',
+  },
+  {
+    title: 'Enhancing Dexterity with Real-Time Haptic Feedback in Robotic Hands',
+    date: '11 Jan 2022',
+    image: 'https://www.figma.com/api/mcp/asset/aaaabb44-18a3-4c47-bacf-0cd85bd199f6',
+    alt: 'Haptic Feedback Robotic Hands',
+    category: 'news',
+    href: '/news/template',
+    size: 'medium',
+  },
+  {
+    title: 'Learning from Demonstration: Teaching Dexterous Hands Through Human Motion Capture',
+    date: '11 Jan 2022',
+    image: 'https://www.figma.com/api/mcp/asset/9953a836-7c6c-4b33-bd07-8440efff0024',
+    alt: 'Motion Capture Robotic Hands',
+    category: 'news',
+    href: '/news/template',
+    size: 'medium',
+  },
+]
+
+const featured = news.find(n => n.size === 'featured')!
+const medium1 = news.filter(n => n.size === 'medium').slice(0, 2)
+const small = news.filter(n => n.size === 'small')
+const medium2 = news.filter(n => n.size === 'medium').slice(2, 4)
+
+const tabs = [
+  { id: 'all', label: 'All' },
+  { id: 'news', label: 'News' },
+  { id: 'insights', label: 'Insights' },
+]
+---
+
+<section class="bg-bg-primary pt-[208px] pb-[160px] max-lg:pt-20 max-lg:pb-20">
+  <div class="global-padding">
+    <div class="mx-auto max-w-[1200px] flex flex-col gap-14 items-center">
+
+      <!-- Title row + featured card -->
+      <div class="flex flex-col gap-14 w-full max-w-[999px]">
+
+        <!-- Title -->
+        <div class="flex items-end justify-between gap-8 max-lg:flex-col max-lg:items-start max-lg:gap-4">
+          <h1 class="text-h1 text-text-primary shrink-0">News</h1>
+          <div class="flex items-center gap-8 max-lg:items-start">
+            <p class="text-medium text-text-secondary text-right max-w-[320px] max-lg:text-left">
+              Browse most recent company news, press coverage, and media resources
+            </p>
+            <svg class="shrink-0 size-6 text-text-secondary max-lg:hidden" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path d="M12 3v15" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+              <path d="M6 13l6 6 6-6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+        </div>
+
+        <!-- Featured card -->
+        <a href={featured.href} class="group border border-border-other-2 flex overflow-hidden max-lg:flex-col">
+          <!-- Image -->
+          <div class="relative shrink-0 w-[593px] h-[335px] max-lg:w-full max-lg:h-auto max-lg:aspect-video overflow-hidden bg-bg-secondary">
+            <img
+              src={featured.image}
+              alt={featured.alt}
+              class="w-full h-full object-cover transition-transform duration-700 ease-in-out lg:group-hover:scale-105"
+            />
+            <span class="absolute top-10 left-10 bg-fg-alternative text-text-alternate text-small-caps px-2 py-2 max-lg:top-6 max-lg:left-6">
+              {featured.category === 'news' ? 'News' : 'Insights'}
+            </span>
+          </div>
+          <!-- Text -->
+          <div class="flex flex-col justify-between flex-1 p-8 max-lg:p-6 gap-4">
+            <p class="text-small text-text-primary">{featured.date}</p>
+            <p class="text-h5 text-text-primary">{featured.title}</p>
+          </div>
+        </a>
+      </div>
+
+      <!-- Tabs + cards -->
+      <div class="flex flex-col gap-[72px] w-full max-w-[999px] max-lg:gap-12" id="news-content">
+
+        <!-- Tabs -->
+        <div class="relative">
+          <div class="flex gap-16 border-b border-border-other-2 pb-4 max-md:-mx-4 max-lg:-mx-10 lg:mx-0 max-md:px-4 max-lg:px-10 overflow-x-auto" id="news-tabs" style="scrollbar-width: none">
+            {tabs.map(tab => (
+              <button
+                class:list={[
+                  "text-small-medium text-trim-off whitespace-nowrap transition-colors duration-200 shrink-0 cursor-pointer relative",
+                  tab.id === 'all'
+                    ? 'text-text-primary after:absolute after:bottom-[-1px] after:left-0 after:w-full after:h-px after:bg-text-primary news-tab-active'
+                    : 'text-text-secondary hover:text-text-primary',
+                ]}
+                data-tab={tab.id}
+              >
+                {tab.label}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        <!-- Row 1: 2 medium cards -->
+        <div class="flex gap-4 max-lg:flex-col" id="news-medium-1">
+          {medium1.map(item => (
+            <a href={item.href} class="news-card group border border-border-other-2 flex flex-col flex-1 min-w-0 overflow-hidden" data-category={item.category}>
+              <div class="flex flex-col gap-4 p-8 max-lg:p-6">
+                <p class="text-small text-text-primary">{item.date}</p>
+                <p class="text-h6 text-text-primary">{item.title}</p>
+              </div>
+              <div class="relative h-[282px] max-lg:h-auto max-lg:aspect-video overflow-hidden bg-bg-secondary shrink-0">
+                <img
+                  src={item.image}
+                  alt={item.alt}
+                  class="w-full h-full object-cover transition-transform duration-700 ease-in-out lg:group-hover:scale-105"
+                  loading="lazy"
+                />
+                <span class="absolute top-8 left-8 bg-fg-alternative text-text-alternate text-small-caps px-2 py-2 max-lg:top-4 max-lg:left-4">
+                  {item.category === 'news' ? 'News' : 'Insights'}
+                </span>
+              </div>
+            </a>
+          ))}
+        </div>
+
+        <!-- Subscribe section -->
+        <div class="border border-border-other-2 px-[120px] py-20 max-lg:px-8 max-lg:py-10">
+          <div class="max-w-[795px] mx-auto flex gap-4 items-center max-lg:flex-col max-lg:gap-8">
+            <div class="flex flex-col gap-6 flex-1 min-w-0">
+              <h4 class="text-h4 text-text-primary">Subscribe to News Alerts</h4>
+              <p class="text-regular text-text-primary">
+                Get email alerts when new press releases are published, and stay up to date on company news.
+              </p>
+            </div>
+            <div class="flex flex-col gap-8 flex-1 min-w-0 w-full">
+              <div class="flex flex-col gap-[2px]">
+                <label for="news-email" class="text-small text-text-primary">E-mail</label>
+                <div class="input-row border-b flex items-center gap-4 py-4">
+                  <input
+                    id="news-email"
+                    type="email"
+                    placeholder="Enter your e-mail..."
+                    class="flex-1 min-w-0 text-regular text-text-primary bg-transparent outline-none placeholder:text-text-secondary placeholder:opacity-50"
+                  />
+                </div>
+              </div>
+              <div class="flex items-start gap-4 max-md:flex-col">
+                <p class="text-tiny text-text-primary flex-1 min-w-0">
+                  By subscribing you agree to our <a href="/privacy-policy" class="text-text-tertiary underline">Privacy Policy</a> and provide consent to receive updates from DH-Robotics.
+                </p>
+                <Button label="Subscribe" href="#" variant="black" class="shrink-0" />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Row 2: 3 small cards -->
+        <div class="flex gap-4 max-lg:flex-col" id="news-small">
+          {small.map(item => (
+            <a href={item.href} class="news-card group border border-border-other-2 flex flex-col flex-1 min-w-0 overflow-hidden" data-category={item.category}>
+              <div class="flex flex-col gap-4 p-6">
+                <p class="text-small text-text-primary">{item.date}</p>
+                <p class="text-medium-medium text-text-primary">{item.title}</p>
+              </div>
+              <div class="relative h-[188px] max-lg:h-auto max-lg:aspect-video overflow-hidden bg-bg-secondary shrink-0">
+                <img
+                  src={item.image}
+                  alt={item.alt}
+                  class="w-full h-full object-cover transition-transform duration-700 ease-in-out lg:group-hover:scale-105"
+                  loading="lazy"
+                />
+                <span class="absolute top-6 left-6 bg-fg-alternative text-text-alternate text-small-caps px-2 py-2 max-lg:top-4 max-lg:left-4">
+                  {item.category === 'news' ? 'News' : 'Insights'}
+                </span>
+              </div>
+            </a>
+          ))}
+        </div>
+
+        <!-- Row 3: 2 medium cards -->
+        <div class="flex gap-4 max-lg:flex-col" id="news-medium-2">
+          {medium2.map(item => (
+            <a href={item.href} class="news-card group border border-border-other-2 flex flex-col flex-1 min-w-0 overflow-hidden" data-category={item.category}>
+              <div class="flex flex-col gap-4 p-8 max-lg:p-6">
+                <p class="text-small text-text-primary">{item.date}</p>
+                <p class="text-h6 text-text-primary">{item.title}</p>
+              </div>
+              <div class="relative h-[282px] max-lg:h-auto max-lg:aspect-video overflow-hidden bg-bg-secondary shrink-0">
+                <img
+                  src={item.image}
+                  alt={item.alt}
+                  class="w-full h-full object-cover transition-transform duration-700 ease-in-out lg:group-hover:scale-105"
+                  loading="lazy"
+                />
+                <span class="absolute top-8 left-8 bg-fg-alternative text-text-alternate text-small-caps px-2 py-2 max-lg:top-4 max-lg:left-4">
+                  {item.category === 'news' ? 'News' : 'Insights'}
+                </span>
+              </div>
+            </a>
+          ))}
+        </div>
+
+        <!-- Pagination -->
+        <div class="flex items-center gap-16 justify-center">
+          <span class="text-h3 text-text-secondary opacity-40 cursor-not-allowed">← Preview</span>
+          <a href="#" class="text-h3 text-text-primary hover:text-text-secondary transition-colors duration-200">Next →</a>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  const tabBtns = document.querySelectorAll<HTMLButtonElement>('[data-tab]')
+  const cards = document.querySelectorAll<HTMLElement>('.news-card')
+
+  tabBtns.forEach(btn => {
+    if (!btn.closest('#news-tabs')) return
+    btn.addEventListener('click', (e) => {
+      e.preventDefault()
+
+      tabBtns.forEach(b => {
+        if (!b.closest('#news-tabs')) return
+        b.classList.remove('text-text-primary', 'after:absolute', 'after:bottom-[-1px]', 'after:left-0', 'after:w-full', 'after:h-px', 'after:bg-text-primary', 'news-tab-active')
+        b.classList.add('text-text-secondary')
+      })
+      btn.classList.remove('text-text-secondary')
+      btn.classList.add('text-text-primary', 'after:absolute', 'after:bottom-[-1px]', 'after:left-0', 'after:w-full', 'after:h-px', 'after:bg-text-primary', 'news-tab-active')
+
+      const active = btn.dataset.tab || 'all'
+      cards.forEach(card => {
+        const cat = card.dataset.category
+        card.style.display = (active === 'all' || cat === active) ? '' : 'none'
+      })
+    })
+  })
+</script>
