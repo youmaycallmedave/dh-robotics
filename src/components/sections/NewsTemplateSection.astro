@@ -1,0 +1,604 @@
+---
+import 'swiper/css'
+
+type NewsCategory = 'news' | 'insights'
+
+type ListItem = string
+
+type ContentBlock =
+  | { type: 'text'; heading?: string; paragraphs: string[] }
+  | { type: 'image'; src: string; alt: string }
+  | { type: 'video'; src: string; alt: string }
+  | { type: 'callout'; text: string }
+  | { type: 'list'; heading?: string; intro?: string; items: ListItem[]; ordered?: boolean }
+
+type NewsArticle = {
+  title: string
+  category: NewsCategory
+  date: string
+  heroImage: string
+  heroImageAlt: string
+  content: ContentBlock[]
+}
+
+const article: NewsArticle = {
+  title: 'DH-Robotics First Launched high-precision "zero backlash" rotary Electric Gripper breaks the product application boundary',
+  category: 'news',
+  date: 'Mar 31, 2025',
+  heroImage: 'https://www.figma.com/api/mcp/asset/000deea2-d48a-40a9-823a-ec1c74c985d4',
+  heroImageAlt: 'DH-Robotics products',
+  content: [
+    {
+      type: 'text',
+      heading: 'Embodied AI Is Moving Into Real Industrial Environments',
+      paragraphs: [
+        'Embodied AI is rapidly evolving from research concepts into practical industrial applications. As humanoid robots, dexterous hands, and intelligent manipulation systems continue to advance, manufacturers are beginning to explore how these technologies can improve productivity, flexibility, and automation efficiency.',
+        'At DH-Robotics, we are seeing this transition happen in real time.',
+        'Our dexterous hands, electric grippers, and adaptive gripping solutions are already being integrated into embodied AI projects across automotive manufacturing, 3C electronics assembly, logistics handling, research platforms, and humanoid robot applications.',
+        'This video showcases a collection of DH-Robotics embodied intelligence cases — highlighting how robotic manipulation is becoming a real productivity tool inside industrial automation environments.',
+      ],
+    },
+    {
+      type: 'video',
+      src: 'https://www.figma.com/api/mcp/asset/ef67a9ea-e829-40d5-a539-6fcae50acb47',
+      alt: 'DH-Robotics Embodied AI Case Collection video',
+    },
+    {
+      type: 'text',
+      heading: 'Watch the Video: DH-Robotics Embodied AI Case Collection',
+      paragraphs: [
+        'From precision gripping to flexible manipulation, these robots are no longer limited to laboratory demonstrations. They are beginning to perform real industrial tasks in real production scenarios.',
+      ],
+    },
+    {
+      type: 'list',
+      intro: 'The video includes applications such as:',
+      items: [
+        'Humanoid robot manipulation',
+        'Dual-arm coordinated operation',
+        'Precision gripping and force control',
+        'Flexible assembly tasks',
+        'Logistics handling and transportation',
+        'Industrial automation integration',
+        'Teleoperation and remote manipulation',
+        'Adaptive gripping in complex environments',
+      ],
+    },
+    {
+      type: 'callout',
+      text: 'DH-Robotics specializes in electric grippers, dexterous hands, force-controlled gripping solutions, and intelligent end-effectors for industrial automation and embodied AI applications.',
+    },
+    {
+      type: 'text',
+      heading: 'Precision Gripping for Industrial Automation',
+      paragraphs: [
+        'Reliable gripping is one of the core technologies behind embodied intelligence.',
+        'DH-Robotics electric grippers are designed to provide:',
+      ],
+    },
+    {
+      type: 'list',
+      items: [
+        'High repeatability and positioning accuracy',
+        'Real-time force control',
+        'Stable gripping performance',
+        'Flexible adaptation to different object shapes',
+        'Compact integration for robotic arms and humanoid robots',
+      ],
+    },
+    {
+      type: 'text',
+      paragraphs: [
+        'In industrial automation environments, these capabilities help robots complete repetitive and highly precise operations more efficiently.',
+        'Applications include:',
+      ],
+    },
+    {
+      type: 'list',
+      items: [
+        'Automotive component handling',
+        'Battery cell gripping and transfer',
+        '3C electronics assembly',
+        'Material loading and unloading',
+        'Sorting and logistics automation',
+      ],
+    },
+    {
+      type: 'text',
+      heading: 'Dexterous Hands Enable More Human-Like Manipulation',
+      paragraphs: [
+        'As embodied AI develops, dexterous manipulation becomes increasingly important.',
+        'DH-Robotics dexterous hands are designed to support more advanced robotic interaction with the physical world. Through multi-finger coordination, precise motion control, and adaptive grasping capabilities, robots can perform tasks that require greater flexibility and interaction.',
+        'Typical embodied AI scenarios include:',
+      ],
+    },
+    {
+      type: 'list',
+      ordered: true,
+      items: [
+        'Humanoid robot operation',
+        'Remote manipulation and teleoperation',
+        'Research and AI data collection',
+        'Human-robot interaction',
+        'Flexible object handling',
+      ],
+    },
+    {
+      type: 'text',
+      paragraphs: [
+        'These technologies help robots move beyond simple pick-and-place actions toward more intelligent and adaptive operation.',
+      ],
+    },
+  ],
+}
+
+const otherArticles = [
+  {
+    title: 'DH-Robotics RGI series – Industrial Rotary Electric Gripper',
+    category: 'news' as NewsCategory,
+    date: '11 Jan 2022',
+    image: 'https://www.figma.com/api/mcp/asset/aa8fd255-7694-4cb5-b16e-497993ef3b49',
+    href: '/news/template',
+  },
+  {
+    title: 'DH-Robotics Shines at Productronica China, Pioneering Smart Manufacturing Breakthroughs!',
+    category: 'news' as NewsCategory,
+    date: '11 Jan 2022',
+    image: 'https://www.figma.com/api/mcp/asset/5a1780cd-b6cf-4787-ba08-696e911f68a7',
+    href: '/news/template',
+  },
+  {
+    title: 'Unlocking the Future of Precision with DH-Robotics DH-5-6 Dexterous Robotic Hand',
+    category: 'news' as NewsCategory,
+    date: '11 Jan 2022',
+    image: 'https://www.figma.com/api/mcp/asset/ada1602e-c819-4409-b633-53d73acfcd1a',
+    href: '/news/template',
+  },
+  {
+    title: 'How Electric Actuators Are Transforming Modern Industrial Automation Workflows',
+    category: 'insights' as NewsCategory,
+    date: '15 Mar 2023',
+    image: 'https://www.figma.com/api/mcp/asset/aa8fd255-7694-4cb5-b16e-497993ef3b49',
+    href: '/news/template',
+  },
+  {
+    title: 'The Science of Force Control: Why Precision Matters in Modern Assembly',
+    category: 'insights' as NewsCategory,
+    date: '20 Feb 2023',
+    image: 'https://www.figma.com/api/mcp/asset/5a1780cd-b6cf-4787-ba08-696e911f68a7',
+    href: '/news/template',
+  },
+]
+---
+
+<section class="bg-bg-primary pt-[208px] pb-0 max-lg:pt-20">
+
+  <!-- Back + Title -->
+  <div class="global-padding mb-10 max-lg:mb-8">
+    <div class="mx-auto max-w-[999px] flex flex-col items-center gap-10 max-lg:items-start max-lg:gap-8">
+
+      <a href="/news" class="inline-flex items-center gap-2 text-small-caps text-text-primary group">
+        <svg class="size-[14px] rotate-180 transition-transform duration-200 group-hover:-translate-x-1" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+          <path d="M5 11l4-4-4-4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        Back all news
+      </a>
+
+      <h1 class="text-h1 max-lg:text-h2 text-text-primary text-center max-lg:text-left">{article.title}</h1>
+
+    </div>
+  </div>
+
+  <!-- Meta row -->
+  <div class="global-padding mb-[72px] max-lg:mb-14">
+    <div class="mx-auto max-w-[795px] flex items-start justify-between gap-6 max-lg:flex-col max-lg:gap-6">
+
+      <!-- Category -->
+      <div class="flex flex-col gap-3">
+        <span class="text-small text-text-secondary">Categories:</span>
+        <span class="inline-flex items-center px-2 py-2 bg-fg-alternative text-text-alternate text-small-caps leading-none whitespace-nowrap">
+          {article.category === 'news' ? 'News' : 'Insights'}
+        </span>
+      </div>
+
+      <!-- Date -->
+      <div class="flex flex-col gap-4">
+        <span class="text-small text-text-secondary">Date</span>
+        <div class="flex items-center gap-3">
+          <svg class="shrink-0 size-[18px] text-text-primary" viewBox="0 0 18 20" fill="none" aria-hidden="true">
+            <rect x="1" y="3" width="16" height="16" rx="1" stroke="currentColor" stroke-width="1.3"/>
+            <path d="M1 7h16" stroke="currentColor" stroke-width="1.3"/>
+            <path d="M5 1v4M13 1v4" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/>
+          </svg>
+          <span class="text-regular text-text-primary whitespace-nowrap">{article.date}</span>
+        </div>
+      </div>
+
+      <!-- Share -->
+      <div class="flex items-center gap-4">
+        <span class="text-regular-medium text-text-primary">Share:</span>
+        <div class="flex items-center gap-2">
+
+          <!-- Copy link -->
+          <button
+            id="news-share-link"
+            class="border border-border-other-2 rounded-[4px] p-3 flex items-center justify-center hover:border-border-alternative transition-colors duration-200 cursor-pointer"
+            aria-label="Copy link"
+          >
+            <svg class="size-6 text-text-primary" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+
+          <!-- LinkedIn -->
+          <a
+            href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent('https://dh-robotics.vercel.app/news/template')}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="border border-border-other-2 rounded-[4px] p-3 flex items-center justify-center hover:border-border-alternative transition-colors duration-200"
+            aria-label="Share on LinkedIn"
+          >
+            <svg class="size-6 text-text-primary" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+              <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/>
+              <rect x="2" y="9" width="4" height="12"/>
+              <circle cx="4" cy="4" r="2"/>
+            </svg>
+          </a>
+
+          <!-- X / Twitter -->
+          <a
+            href={`https://twitter.com/intent/tweet?url=${encodeURIComponent('https://dh-robotics.vercel.app/news/template')}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="border border-border-other-2 rounded-[4px] p-3 flex items-center justify-center hover:border-border-alternative transition-colors duration-200"
+            aria-label="Share on X"
+          >
+            <svg class="size-6 text-text-primary" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+              <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+            </svg>
+          </a>
+
+          <!-- Facebook -->
+          <a
+            href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent('https://dh-robotics.vercel.app/news/template')}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="border border-border-other-2 rounded-[4px] p-3 flex items-center justify-center hover:border-border-alternative transition-colors duration-200"
+            aria-label="Share on Facebook"
+          >
+            <svg class="size-6 text-text-primary" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+              <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/>
+            </svg>
+          </a>
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Content -->
+  <div class="global-padding pb-[160px] max-lg:pb-20">
+    <div class="mx-auto max-w-[795px] flex flex-col gap-[72px] max-lg:gap-14">
+
+      <!-- Hero image -->
+      <div class="bg-bg-secondary overflow-hidden w-full h-[398px] max-lg:h-auto max-lg:aspect-video">
+        <img
+          src={article.heroImage}
+          alt={article.heroImageAlt}
+          class="w-full h-full object-cover"
+        />
+      </div>
+
+      <!-- Dynamic content blocks -->
+      {article.content.map((block) => {
+        if (block.type === 'text') return (
+          <div class="flex flex-col gap-8">
+            {block.heading && <h4 class="text-h4 text-text-primary">{block.heading}</h4>}
+            <div class="flex flex-col gap-0">
+              {block.paragraphs.map(p => (
+                <p class="text-large text-text-primary mb-[26px] last:mb-0">{p}</p>
+              ))}
+            </div>
+          </div>
+        )
+
+        if (block.type === 'image') return (
+          <div class="bg-bg-secondary rounded-[8px] overflow-hidden w-full h-[440px] max-lg:h-auto max-lg:aspect-video">
+            <img src={block.src} alt={block.alt} class="w-full h-full object-cover" loading="lazy" />
+          </div>
+        )
+
+        if (block.type === 'video') return (
+          <div class="relative bg-bg-secondary rounded-[8px] overflow-hidden w-full h-[440px] max-lg:h-auto max-lg:aspect-video group cursor-pointer">
+            <img src={block.src} alt={block.alt} class="w-full h-full object-cover" loading="lazy" />
+            <div class="absolute inset-0 flex items-center justify-center">
+              <div class="size-[100px] max-lg:size-20 flex items-center justify-center transition-transform duration-300 group-hover:scale-110">
+                <svg viewBox="0 0 100 71" fill="none" class="w-full h-auto" aria-hidden="true">
+                  <rect width="100" height="70.588" rx="8" fill="#FF0000"/>
+                  <path d="M40 20L65 35.294L40 50.588V20Z" fill="white"/>
+                </svg>
+              </div>
+            </div>
+          </div>
+        )
+
+        if (block.type === 'callout') return (
+          <div class="bg-bg-tertiary p-10 max-lg:p-8">
+            <p class="text-h6 text-text-alternate">{block.text}</p>
+          </div>
+        )
+
+        if (block.type === 'list') return (
+          <div class="flex flex-col gap-6">
+            {block.intro && <p class="text-large-medium text-text-primary">{block.intro}</p>}
+            {block.ordered
+              ? (
+                <ol class="list-decimal pl-6 flex flex-col gap-2">
+                  {block.items.map(item => (
+                    <li class="text-large text-text-primary text-trim-off">{item}</li>
+                  ))}
+                </ol>
+              )
+              : (
+                <ul class="list-disc pl-6 flex flex-col gap-2">
+                  {block.items.map(item => (
+                    <li class="text-large text-text-primary text-trim-off">{item}</li>
+                  ))}
+                </ul>
+              )
+            }
+          </div>
+        )
+      })}
+
+      <!-- Subscribe -->
+      <div class="border-t border-b border-border-other-2 py-20 max-lg:py-14">
+        <div class="flex gap-4 items-center max-lg:flex-col max-lg:items-start max-lg:gap-8" id="news-template-subscribe-form">
+          <div class="flex flex-col gap-6 flex-1 min-w-0">
+            <h4 class="text-h4 text-text-primary text-balance">Subscribe to News Alerts</h4>
+            <p class="text-regular text-text-primary text-balance">
+              Get email alerts when new press releases are published, and stay up to date on company news.
+            </p>
+          </div>
+          <div class="flex flex-col gap-8 flex-1 min-w-0 w-full">
+          <div class="flex flex-col gap-[2px]" id="news-template-email-field">
+            <label for="news-template-email" class="text-small text-text-primary">E-mail</label>
+            <div class="input-row border-b flex items-center gap-4 py-4">
+              <input
+                id="news-template-email"
+                type="email"
+                placeholder="Enter your e-mail..."
+                class="flex-1 min-w-0 text-regular text-text-primary bg-transparent outline-none placeholder:text-text-secondary placeholder:opacity-50"
+              />
+            </div>
+            <p class="error-msg text-tiny text-text-quaternary mt-2 hidden">Enter a valid email address</p>
+          </div>
+          <div class="flex items-start gap-4 max-md:flex-col">
+            <p class="text-tiny text-text-primary flex-1 min-w-0">
+              By subscribing you agree to our <a href="/privacy-policy" class="text-text-tertiary underline">Privacy Policy</a> and provide consent to receive updates from DH-Robotics.
+            </p>
+            <button
+              id="news-template-subscribe-btn"
+              type="button"
+              class="self-start inline-flex items-center gap-6 pl-4 pr-2 rounded-[2px] min-h-[40px] text-small-caps text-trim-off transition-colors cursor-pointer bg-btn-black-default hover:bg-btn-black-hover text-text-alternate shrink-0"
+            >
+              <span>Subscribe</span>
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="M9 18L15 12L9 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <div class="hidden flex-col gap-6" id="news-template-subscribe-success">
+          <h4 class="text-h4 text-text-primary">You're subscribed!</h4>
+          <p class="text-regular text-text-secondary">
+            Thank you — you'll receive the latest DH-Robotics news and insights directly to your inbox.
+          </p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</section>
+
+<!-- Other articles -->
+<section class="bg-bg-primary py-[160px] max-lg:py-20">
+  <div class="global-padding">
+    <div class="mx-auto max-w-[1200px]">
+
+      <!-- Title row -->
+      <div class="flex items-center justify-between mb-10 max-lg:mb-8">
+        <h2 class="text-h2 text-text-primary">Other articles</h2>
+        <a
+          href="/news"
+          class="max-lg:hidden inline-flex items-center gap-6 pl-4 pr-2 py-2 rounded-[2px] bg-btn-black-default hover:bg-btn-black-hover text-text-alternate text-small-caps transition-colors duration-200 shrink-0"
+        >
+          <span>More articles</span>
+          <svg class="size-6" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M9 18l6-6-6-6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </a>
+      </div>
+
+      <!-- Swiper — starts at container left, overflows right (clipped by section overflow-hidden) -->
+      <div class="swiper news-other-swiper cursor-grab active:cursor-grabbing">
+        <div class="swiper-wrapper">
+
+          {otherArticles.map(card => (
+            <div class="swiper-slide !w-[562px] max-md:!w-[320px]">
+              <a href={card.href} class="group border border-border-other-2 flex flex-col overflow-hidden h-full relative">
+                <div class="news-fill-bg"></div>
+                <div class="card-info flex flex-col gap-5 px-10 py-9 max-lg:px-6 max-lg:py-6 relative z-[1]">
+                  <div class="flex items-center justify-between">
+                    <span class="inline-flex items-center px-2 py-2 bg-fg-alternative text-text-alternate text-small-caps leading-none whitespace-nowrap">
+                      {card.category === 'news' ? 'News' : 'Insights'}
+                    </span>
+                    <span class="card-date text-small text-text-primary">{card.date}</span>
+                  </div>
+                  <p class="card-title text-h6 text-text-primary line-clamp-2">{card.title}</p>
+                </div>
+                <div class="relative overflow-hidden h-[316px] max-lg:h-[200px] shrink-0 bg-bg-secondary mt-auto z-[1]">
+                  <img
+                    src={card.image}
+                    alt={card.title}
+                    class="w-full h-full object-cover transition-transform duration-700 ease-in-out lg:group-hover:scale-105"
+                    loading="lazy"
+                  />
+                </div>
+              </a>
+            </div>
+          ))}
+
+        </div>
+      </div>
+
+      <!-- Controls -->
+      <div class="flex items-center gap-10 mt-10 max-lg:mt-8">
+
+        <div class="flex-1 h-px bg-border-other-2 relative">
+          <div id="news-other-progress" class="absolute left-0 top-0 h-px bg-fg-alternative transition-all duration-300 ease-out" style="width: 33%"></div>
+        </div>
+
+        <div class="flex items-center gap-4 shrink-0">
+          <button
+            id="news-other-prev"
+            class="size-8 border border-border-other-2 rounded-[4px] flex items-center justify-center hover:border-border-alternative transition-colors duration-200 cursor-pointer"
+            aria-label="Previous"
+          >
+            <svg class="size-4" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <path d="M10 12L6 8l4-4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+          <button
+            id="news-other-next"
+            class="size-8 border border-border-other-2 rounded-[4px] flex items-center justify-center hover:border-border-alternative transition-colors duration-200 cursor-pointer"
+            aria-label="Next"
+          >
+            <svg class="size-4" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <path d="M6 4l4 4-4 4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+        </div>
+
+        <a href="/news" class="inline-flex items-center gap-2 text-small-caps text-text-primary hover:text-text-secondary transition-colors duration-200 shrink-0">
+          <span>View more</span>
+          <svg class="size-4" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+            <path d="M6 4l4 4-4 4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </a>
+
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<style>
+  .news-other-swiper {
+    overflow: visible !important;
+  }
+
+  .news-fill-bg {
+    position: absolute;
+    inset: 0;
+    background-color: var(--color-bg-other);
+    opacity: 0.5;
+    transform: scaleY(0);
+    transform-origin: top;
+    transition: transform 0.8s ease;
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  @media (min-width: 1024px) {
+    .group:hover .news-fill-bg {
+      transform: scaleY(1);
+    }
+
+  }
+
+  .news-other-swiper .swiper-wrapper {
+    align-items: stretch;
+  }
+  .news-other-swiper .swiper-slide {
+    height: auto;
+    margin-right: -1px;
+  }
+</style>
+
+<script>
+  // Copy link
+  document.getElementById('news-share-link')?.addEventListener('click', async () => {
+    try {
+      await navigator.clipboard.writeText(window.location.href)
+    } catch {
+      // fallback: do nothing silently
+    }
+  })
+
+  // Subscribe
+  const emailInput   = document.getElementById('news-template-email') as HTMLInputElement | null
+  const emailField   = document.getElementById('news-template-email-field')
+  const emailRow     = emailField?.querySelector<HTMLElement>('.input-row')
+  const emailError   = emailField?.querySelector<HTMLElement>('.error-msg')
+  const subscribeBtn = document.getElementById('news-template-subscribe-btn')
+  const subscribeForm    = document.getElementById('news-template-subscribe-form')
+  const subscribeSuccess = document.getElementById('news-template-subscribe-success')
+
+  function isValidEmail(v: string) {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)
+  }
+
+  subscribeBtn?.addEventListener('click', () => {
+    const val = emailInput?.value.trim() ?? ''
+    if (!isValidEmail(val)) {
+      emailRow?.classList.add('is-error')
+      emailError?.classList.remove('hidden')
+      emailInput?.focus()
+      return
+    }
+    subscribeForm?.classList.add('hidden')
+    subscribeSuccess?.classList.remove('hidden')
+    subscribeSuccess?.classList.add('flex')
+  })
+
+  emailInput?.addEventListener('input', () => {
+    if (emailRow?.classList.contains('is-error') && isValidEmail(emailInput.value.trim())) {
+      emailRow.classList.remove('is-error')
+      emailError?.classList.add('hidden')
+    }
+  })
+
+  // Swiper — Other articles
+  import Swiper from 'swiper'
+  import { Navigation } from 'swiper/modules'
+
+  const swiper = new Swiper('.news-other-swiper', {
+    modules: [Navigation],
+    slidesPerView: 'auto',
+    spaceBetween: 0,
+    grabCursor: true,
+    navigation: {
+      prevEl: '#news-other-prev',
+      nextEl: '#news-other-next',
+    },
+    on: {
+      slideChange(s) {
+        const progress = document.getElementById('news-other-progress')
+        if (progress) {
+          const pct = ((s.activeIndex + 1) / s.slides.length) * 100
+          progress.style.width = `${Math.min(pct, 100)}%`
+        }
+      },
+    },
+  })
+
+  const progressEl = document.getElementById('news-other-progress')
+  if (progressEl && swiper.slides.length) {
+    progressEl.style.width = `${(1 / swiper.slides.length) * 100}%`
+  }
+</script>

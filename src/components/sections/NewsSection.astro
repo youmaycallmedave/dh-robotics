@@ -127,8 +127,9 @@ const tabs = [
           </div>
         </div>
 
-        <a href={featured.href} class="group border border-border-other-2 flex overflow-hidden max-lg:flex-col">
-          <div class="relative shrink-0 w-[593px] h-[335px] max-lg:w-full max-lg:h-auto max-lg:aspect-video overflow-hidden bg-bg-secondary">
+        <a href={featured.href} class="group border border-border-other-2 flex overflow-hidden max-lg:flex-col relative">
+          <div class="news-fill-bg"></div>
+          <div class="relative shrink-0 w-[593px] h-[335px] max-lg:w-full max-lg:h-auto max-lg:aspect-video overflow-hidden bg-bg-secondary z-[1]">
             <img
               src={featured.image}
               alt={featured.alt}
@@ -138,7 +139,7 @@ const tabs = [
               {featured.category === 'news' ? 'News' : 'Insights'}
             </span>
           </div>
-          <div class="flex flex-col justify-between flex-1 p-8 max-lg:p-6 gap-4">
+          <div class="relative flex flex-col justify-between flex-1 p-8 max-lg:p-6 gap-4 z-[1]">
             <p class="text-small text-text-primary">{featured.date}</p>
             <p class="text-h5 text-text-primary">{featured.title}</p>
           </div>
@@ -148,7 +149,7 @@ const tabs = [
       <!-- Tabs + flat grid -->
       <div class="flex flex-col gap-[72px] w-full max-w-[999px] max-lg:gap-8" id="news-content">
 
-        <FilterTabs id="news-tabs" tabs={tabs} />
+        <FilterTabs id="news-tabs" tabs={tabs} fit />
 
         <div id="news-grid">
           {gridCards.map((item, i) => {
@@ -156,10 +157,11 @@ const tabs = [
             return (
               <a
                 href={item.href}
-                class:list={['news-card group border border-border-other-2 lg:hover:border-border-alternative transition-colors duration-300 flex flex-col overflow-hidden', pos <= 2 ? 'is-large' : 'is-small']}
+                class:list={['news-card group border border-border-other-2 flex flex-col overflow-hidden relative', pos <= 2 ? 'is-large' : 'is-small']}
                 data-category={item.category}
               >
-                <div class="card-text flex flex-col gap-4 flex-1">
+                <div class="news-fill-bg"></div>
+                <div class="card-text flex flex-col gap-4 flex-1 relative z-[1]">
                   <p class="card-date text-small text-text-primary">{item.date}</p>
                   <p class="card-title text-text-primary text-trim-off line-clamp-3">{item.title}</p>
                 </div>
@@ -187,61 +189,86 @@ const tabs = [
 
       </div>
 
-      <!-- Subscribe -->
-      <div class="w-full max-w-[999px] border border-border-other-2 px-14 py-14 max-lg:px-8 max-lg:py-10" id="news-subscribe">
-
-        <div class="flex gap-16 items-center max-lg:flex-col max-lg:gap-8" id="news-subscribe-form">
-          <div class="flex flex-col gap-6 flex-1 min-w-0">
-            <h4 class="text-h4 text-text-primary text-balance">Subscribe to News Alerts</h4>
-            <p class="text-regular text-text-primary text-balance">
-              Get email alerts when new press releases are published, and stay up to date on company news.
-            </p>
-          </div>
-          <div class="flex flex-col gap-8 flex-1 min-w-0 w-full">
-            <div class="flex flex-col gap-[2px]" id="news-email-field">
-              <label for="news-email" class="text-small text-text-primary">E-mail</label>
-              <div class="input-row border-b flex items-center gap-4 py-4">
-                <input
-                  id="news-email"
-                  type="email"
-                  placeholder="Enter your e-mail..."
-                  class="flex-1 min-w-0 text-regular text-text-primary bg-transparent outline-none placeholder:text-text-secondary placeholder:opacity-50"
-                />
-              </div>
-              <p class="error-msg text-tiny text-text-quaternary mt-2 hidden">Enter a valid email address</p>
-            </div>
-            <div class="flex items-start gap-4 max-md:flex-col">
-              <p class="text-tiny text-text-primary flex-1 min-w-0">
-                By subscribing you agree to our <a href="/privacy-policy" class="text-text-tertiary underline">Privacy Policy</a> and provide consent to receive updates from DH-Robotics.
-              </p>
-              <button
-                id="news-subscribe-btn"
-                type="button"
-                class="self-start inline-flex items-center gap-6 pl-4 pr-2 rounded-[2px] min-h-[40px] text-small-caps text-trim-off transition-colors cursor-pointer bg-btn-black-default hover:bg-btn-black-hover text-text-alternate shrink-0"
-              >
-                <span>Subscribe</span>
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                  <path d="M9 18L15 12L9 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                </svg>
-              </button>
-            </div>
-          </div>
-        </div>
-
-        <div class="hidden flex-col gap-6" id="news-subscribe-success">
-          <h4 class="text-h4 text-text-primary">You're subscribed!</h4>
-          <p class="text-regular text-text-secondary">
-            Thank you — you'll receive the latest DH-Robotics news and insights directly to your inbox.
-          </p>
-        </div>
-
-      </div>
 
     </div>
   </div>
+
+  <!-- Subscribe -->
+  <div class="pt-[10rem] max-lg:pt-20" id="news-subscribe">
+    <div class="global-padding">
+      <div class="border-t border-border-other-2 py-20 max-lg:py-14">
+
+    <div class="flex gap-4 items-center max-w-[795px] mx-auto max-lg:flex-col max-lg:items-start max-lg:gap-8" id="news-subscribe-form">
+      <div class="flex flex-col gap-6 flex-1 min-w-0">
+        <h4 class="text-h4 text-text-primary text-balance">Subscribe to News Alerts</h4>
+        <p class="text-regular text-text-primary text-balance">
+          Get email alerts when new press releases are published, and stay up to date on company news.
+        </p>
+      </div>
+      <div class="flex flex-col gap-8 flex-1 min-w-0 w-full">
+        <div class="flex flex-col gap-[2px]" id="news-email-field">
+          <label for="news-email" class="text-small text-text-primary">E-mail</label>
+          <div class="input-row border-b flex items-center gap-4 py-4">
+            <input
+              id="news-email"
+              type="email"
+              placeholder="Enter your e-mail..."
+              class="flex-1 min-w-0 text-regular text-text-primary bg-transparent outline-none placeholder:text-text-secondary placeholder:opacity-50"
+            />
+          </div>
+          <p class="error-msg text-tiny text-text-quaternary mt-2 hidden">Enter a valid email address</p>
+        </div>
+        <div class="flex items-start gap-4 max-md:flex-col">
+          <p class="text-tiny text-text-primary flex-1 min-w-0">
+            By subscribing you agree to our <a href="/privacy-policy" class="text-text-tertiary underline">Privacy Policy</a> and provide consent to receive updates from DH-Robotics.
+          </p>
+          <button
+            id="news-subscribe-btn"
+            type="button"
+            class="self-start inline-flex items-center gap-6 pl-4 pr-2 rounded-[2px] min-h-[40px] text-small-caps text-trim-off transition-colors cursor-pointer bg-btn-black-default hover:bg-btn-black-hover text-text-alternate shrink-0"
+          >
+            <span>Subscribe</span>
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path d="M9 18L15 12L9 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="hidden flex-col gap-6 max-w-[795px] mx-auto" id="news-subscribe-success">
+      <h4 class="text-h4 text-text-primary">You're subscribed!</h4>
+      <p class="text-regular text-text-secondary">
+        Thank you — you'll receive the latest DH-Robotics news and insights directly to your inbox.
+      </p>
+    </div>
+
+      </div>
+    </div>
+  </div>
+
 </section>
 
 <style>
+  .news-fill-bg {
+    position: absolute;
+    inset: 0;
+    background-color: var(--color-bg-other);
+    opacity: 0.5;
+    transform: scaleY(0);
+    transform-origin: top;
+    transition: transform 0.8s ease;
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  @media (min-width: 1024px) {
+    .group:hover .news-fill-bg {
+      transform: scaleY(1);
+    }
+
+  }
+
   /* Base — mobile/tablet: единые стили для всех карточек */
   #news-grid {
     display: grid;
@@ -273,6 +300,7 @@ const tabs = [
     padding: 1.25rem;
     gap: 0.75rem;
   }
+
 
   #news-grid .card-badge {
     top: 1rem;

@@ -1,0 +1,53 @@
+---
+interface Props {
+  title: string
+  description?: string
+  image?: string
+  imageAlt?: string
+  scrollTarget?: string
+}
+
+const { title, description, image, imageAlt = '', scrollTarget } = Astro.props
+---
+
+<section class="bg-bg-primary pt-[208px] pb-[120px] max-lg:pt-20 max-lg:pb-16">
+  <div class="global-padding">
+    <div class="mx-auto max-w-[1200px] flex items-start justify-between gap-10 max-lg:flex-col">
+
+      <div class="flex flex-col justify-between h-[360px] max-lg:h-auto max-lg:gap-8 shrink-0 w-[491px] max-lg:w-full">
+        <div class="flex flex-col gap-10">
+          <h1 class="text-h1 text-text-primary">{title}</h1>
+          {description && (
+            <p class="text-h6-regular text-text-primary max-w-[390px]">{description}</p>
+          )}
+        </div>
+        {scrollTarget && (
+          <a href={`#${scrollTarget}`} class="inline-flex items-center gap-3 text-tiny text-text-secondary hover:text-text-primary transition-colors duration-200 scroll-target-link">
+            <svg class="size-3" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+              <circle cx="6" cy="6" r="5" stroke="currentColor" stroke-width="1.2"/>
+              <path d="M6 4v4M4 7l2 2 2-2" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            View more
+          </a>
+        )}
+      </div>
+
+      {image && (
+        <div class="bg-bg-secondary rounded-[8px] overflow-hidden shrink-0 w-[592px] h-[360px] max-lg:w-full max-lg:h-auto max-lg:aspect-video">
+          <img src={image} alt={imageAlt} class="w-full h-full object-cover" />
+        </div>
+      )}
+
+    </div>
+  </div>
+</section>
+
+<script>
+  document.querySelectorAll<HTMLAnchorElement>('.scroll-target-link').forEach(link => {
+    link.addEventListener('click', (e) => {
+      e.preventDefault()
+      const target = document.getElementById(link.getAttribute('href')!.slice(1))
+      target?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    })
+  })
+</script>
