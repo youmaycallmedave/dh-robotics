@@ -1,5 +1,273 @@
 ---
+const navItems = [
+  {
+    label: 'Products',
+    dropdown: {
+      columns: [
+        {
+          group: 'Automation',
+          links: [
+            { label: 'Electric Grippers',       href: '/products' },
+            { label: 'Rotary Electric Grippers', href: '/products' },
+            { label: 'Servo Drive',              href: '/products' },
+            { label: 'Linear Coil Actuator',     href: '/products' },
+            { label: 'Servo Electric Cylinder',  href: '/products' },
+          ],
+        },
+        {
+          group: 'Robotics',
+          links: [
+            { label: 'Dexterous Hand',                         href: '/products' },
+            { label: 'iFM Intelligent Flexible Motion System', href: '/products' },
+            { label: 'Hexapods',                               href: '/products' },
+          ],
+        },
+      ],
+    },
+  },
+  {
+    label: 'Applications',
+    dropdown: {
+      columns: [
+        {
+          links: [
+            { label: 'Industry',   href: '/applications/industry/template' },
+            { label: 'Processes',  href: '/applications/processes/template' },
+          ],
+        },
+      ],
+    },
+  },
+  {
+    label: 'Service',
+    dropdown: {
+      columns: [
+        {
+          links: [
+            { label: 'Technology',            href: '/services/technology' },
+            { label: 'User Control Software', href: '/services/software' },
+          ],
+        },
+      ],
+    },
+  },
+  {
+    label: 'Resources',
+    dropdown: {
+      columns: [
+        {
+          links: [
+            { label: 'News',            href: '/news' },
+            { label: 'Insights',        href: '/news' },
+            { label: 'Events',          href: '/events' },
+            { label: 'FAQ',             href: '/resources/faq' },
+            { label: 'Cases',           href: '/cases' },
+            { label: 'Download Center', href: '/resources/downloads' },
+          ],
+        },
+      ],
+    },
+  },
+  { label: 'About', href: '/about' },
+]
 ---
-<header>
-  <!-- Navigation -->
+
+<header id="site-header" class="fixed top-0 left-0 right-0 z-50 bg-bg-primary border-b border-border-other-2">
+  <div class="global-padding py-3">
+    <div class="mx-auto max-w-[1440px] flex items-center justify-between gap-6">
+
+      <!-- Logo -->
+      <a href="/" class="shrink-0" aria-label="DH-Robotics">
+        <img src="/logotype-dh-robotics.svg" alt="DH-Robotics" class="h-14 w-auto max-lg:h-[41px]" />
+      </a>
+
+      <!-- Desktop nav -->
+      <nav id="desktop-nav" class="flex items-center gap-1 max-lg:hidden">
+        {navItems.map((item, i) => (
+          item.dropdown ? (
+            <div class="nav-dropdown-wrap relative" data-index={i}>
+              <button
+                class="nav-btn flex items-center gap-1 px-2 py-1 rounded-[4px] text-small-medium text-text-primary hover:bg-bg-secondary transition-colors duration-150 cursor-pointer whitespace-nowrap"
+                aria-expanded="false"
+                data-dropdown={i}
+              >
+                {item.label}
+                <svg class="nav-chevron size-4 text-text-primary transition-transform duration-200" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                  <path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </button>
+            </div>
+          ) : (
+            <a
+              href={item.href}
+              class="flex items-center px-2 py-1 rounded-[4px] text-small-medium text-text-primary hover:bg-bg-secondary transition-colors duration-150 whitespace-nowrap"
+            >
+              {item.label}
+            </a>
+          )
+        ))}
+      </nav>
+
+      <!-- Right: EN + Contact Us + burger -->
+      <div class="flex items-center gap-6 shrink-0 max-lg:gap-3">
+
+        <!-- Language -->
+        <button class="flex items-center gap-1 px-2 py-1 rounded-[4px] text-small-medium text-text-primary hover:bg-bg-secondary transition-colors duration-150 uppercase max-lg:hidden">
+          EN
+          <svg class="size-4 text-text-primary" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+            <path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+
+        <!-- EN mobile -->
+        <button class="lg:hidden flex items-center gap-[6px] text-small-medium text-text-primary uppercase">
+          EN
+          <svg class="size-4 text-text-primary" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+            <path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+
+        <!-- Contact Us -->
+        <a href="/contact" class="inline-flex items-center gap-6 pl-4 pr-2 py-2 rounded-[2px] bg-btn-black-default hover:bg-btn-black-hover text-text-alternate text-small-caps transition-colors duration-150 whitespace-nowrap max-lg:gap-2 max-lg:pl-3">
+          CONTACT US
+          <svg class="size-6 text-text-alternate max-lg:size-5" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M9 18l6-6-6-6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </a>
+
+        <!-- Burger (mobile only) -->
+        <button id="burger-btn" class="lg:hidden border border-border-other-2 rounded-[4px] p-3 flex items-center justify-center hover:border-border-alternative transition-colors duration-200" aria-label="Menu" aria-expanded="false">
+          <svg id="burger-icon" class="size-4 text-text-primary" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+            <path d="M2 4h12M2 8h12M2 12h12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+          <svg id="close-icon" class="size-4 text-text-primary hidden" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+            <path d="M3 3l10 10M13 3L3 13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+        </button>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- Dropdown panels (desktop) — pt-3 bridges the gap between button and panel -->
+  {navItems.filter(i => i.dropdown).map((item) => {
+    const i = navItems.indexOf(item)
+    return (
+      <div
+        id={`dropdown-${i}`}
+        class="nav-dropdown-panel absolute left-0 right-0 bg-bg-primary border-b border-border-other-2 hidden z-10"
+      >
+        <!-- invisible bridge so mouse doesn't leave hover zone -->
+        <div class="h-3 absolute -top-3 left-0 right-0"></div>
+        <div class="global-padding py-8">
+          <div class="mx-auto max-w-[1440px] flex gap-16">
+            {item.dropdown!.columns.map(col => (
+              <div class="flex flex-col gap-2 min-w-[160px]">
+                {col.group && <p class="text-tiny text-text-secondary mb-2">{col.group}</p>}
+                {col.links.map(link => (
+                  <a href={link.href} class="text-small-medium text-text-primary hover:text-text-tertiary transition-colors duration-150 py-1 block">{link.label}</a>
+                ))}
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    )
+  })}
+
+  <!-- Mobile menu -->
+  <div id="mobile-menu" class="hidden lg:hidden border-t border-border-other-2 bg-bg-primary max-h-[calc(100vh-65px)] overflow-y-auto">
+    <div class="global-padding py-6 flex flex-col gap-6">
+
+      {navItems.map(item => (
+        item.dropdown ? (
+          <div class="mobile-section">
+            <button class="mobile-section-btn flex items-center justify-between w-full text-small-medium text-text-primary py-2" aria-expanded="false">
+              {item.label}
+              <svg class="mobile-chevron size-4 text-text-primary transition-transform duration-200" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                <path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </button>
+            <div class="mobile-section-content hidden pl-4 pt-2 flex flex-col gap-1">
+              {item.dropdown!.columns.map(col => (
+                <div class="mb-4">
+                  {col.group && <p class="text-tiny text-text-secondary mb-2">{col.group}</p>}
+                  {col.links.map(link => (
+                    <a href={link.href} class="text-small-medium text-text-primary hover:text-text-tertiary transition-colors duration-150 py-2 block">{link.label}</a>
+                  ))}
+                </div>
+              ))}
+            </div>
+          </div>
+        ) : (
+          <a href={item.href} class="text-small-medium text-text-primary py-2 block">{item.label}</a>
+        )
+      ))}
+
+    </div>
+  </div>
+
 </header>
+
+<!-- Spacer so content doesn't go under fixed header -->
+<div class="h-[80px] max-lg:h-[65px]"></div>
+
+<script>
+  // ── Desktop dropdowns (hover) ────────────────────────────────
+  const dropdownWraps = document.querySelectorAll<HTMLElement>('.nav-dropdown-wrap')
+
+  function openDropdown(idx: number) {
+    const panel = document.getElementById(`dropdown-${idx}`)
+    const btn = document.querySelector<HTMLButtonElement>(`[data-dropdown="${idx}"]`)
+    panel?.classList.remove('hidden')
+    btn?.setAttribute('aria-expanded', 'true')
+    btn?.querySelector('.nav-chevron')?.classList.add('rotate-180')
+  }
+
+  function closeDropdown(idx: number) {
+    const panel = document.getElementById(`dropdown-${idx}`)
+    const btn = document.querySelector<HTMLButtonElement>(`[data-dropdown="${idx}"]`)
+    panel?.classList.add('hidden')
+    btn?.setAttribute('aria-expanded', 'false')
+    btn?.querySelector('.nav-chevron')?.classList.remove('rotate-180')
+  }
+
+  dropdownWraps.forEach(wrap => {
+    const btn = wrap.querySelector<HTMLButtonElement>('[data-dropdown]')
+    const idx = Number(btn?.dataset.dropdown)
+    const panel = document.getElementById(`dropdown-${idx}`)
+
+    wrap.addEventListener('mouseenter', () => openDropdown(idx))
+    wrap.addEventListener('mouseleave', () => closeDropdown(idx))
+    panel?.addEventListener('mouseenter', () => openDropdown(idx))
+    panel?.addEventListener('mouseleave', () => closeDropdown(idx))
+  })
+
+  // ── Mobile menu ──────────────────────────────────────────────
+  const burgerBtn = document.getElementById('burger-btn')
+  const mobileMenu = document.getElementById('mobile-menu')
+  const burgerIcon = document.getElementById('burger-icon')
+  const closeIcon  = document.getElementById('close-icon')
+  let menuOpen = false
+
+  burgerBtn?.addEventListener('click', () => {
+    menuOpen = !menuOpen
+    mobileMenu?.classList.toggle('hidden', !menuOpen)
+    burgerIcon?.classList.toggle('hidden', menuOpen)
+    closeIcon?.classList.toggle('hidden', !menuOpen)
+    burgerBtn.setAttribute('aria-expanded', String(menuOpen))
+  })
+
+  // Mobile accordion sections
+  document.querySelectorAll<HTMLButtonElement>('.mobile-section-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const section = btn.closest('.mobile-section')
+      const content = section?.querySelector<HTMLElement>('.mobile-section-content')
+      const chevron = btn.querySelector('.mobile-chevron')
+      const isOpen = !content?.classList.contains('hidden')
+      content?.classList.toggle('hidden', isOpen)
+      chevron?.classList.toggle('rotate-180', !isOpen)
+      btn.setAttribute('aria-expanded', String(!isOpen))
+    })
+  })
+</script>
