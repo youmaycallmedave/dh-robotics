@@ -1,0 +1,319 @@
+---
+import Layout from '../../layouts/Layout.astro'
+import Button from '../../components/ui/Button.astro'
+import PostContent from '../../components/ui/PostContent.astro'
+import { client, urlFor } from '../../lib/sanity'
+import type { PostBlock } from '../../types/post'
+
+export async function getStaticPaths() {
+  const slugs = await client.fetch(`*[_type == "event"]{ "slug": slug.current }`)
+  return slugs.map((s: { slug: string }) => ({ params: { slug: s.slug } }))
+}
+
+const { slug } = Astro.params
+
+const raw = await client.fetch(`
+  *[_type == "event" && slug.current == $slug][0] {
+    title, slug, tag, date, location, time, registrationHref, heroImage, content
+  }
+`, { slug })
+
+if (!raw) return Astro.redirect('/events')
+
+function formatDate(iso: string) {
+  return new Date(iso).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
+}
+
+function mapContent(sanityContent: any[]): PostBlock[] {
+  if (!sanityContent) return []
+  const blocks: PostBlock[] = []
+  let textBlock: { type: 'text'; heading?: string; paragraphs: string[] } | null = null
+  let listBlock: { type: 'list'; items: string[]; ordered: boolean } | null = null
+
+  function flushText() { if (textBlock) { blocks.push(textBlock); textBlock = null } }
+  function flushList() { if (listBlock) { blocks.push(listBlock); listBlock = null } }
+
+  for (const b of sanityContent) {
+    if (b._type === 'block') {
+      const text = b.children?.map((c: any) => c.text).join('') ?? ''
+      if (!text) continue
+
+      if (b.listItem === 'bullet' || b.listItem === 'number') {
+        const ordered = b.listItem === 'number'
+        flushText()
+        if (!listBlock || listBlock.ordered !== ordered) { flushList(); listBlock = { type: 'list', items: [], ordered } }
+        listBlock.items.push(text)
+        continue
+      }
+      flushList()
+
+      if (['h2','h3','h4'].includes(b.style)) {
+        flushText()
+        textBlock = { type: 'text', heading: text, paragraphs: [] }
+      } else {
+        if (!textBlock) textBlock = { type: 'text', paragraphs: [] }
+        textBlock.paragraphs.push(text)
+      }
+    } else if (b._type === 'image') {
+      flushText(); flushList()
+      blocks.push({ type: 'image', src: urlFor(b).width(795).url(), alt: b.alt ?? '' })
+    } else if (b._type === 'videoEmbed') {
+      flushText(); flushList()
+      blocks.push({ type: 'video', src: b.thumbnail ? urlFor(b.thumbnail).width(795).url() : '', alt: b.url ?? '' })
+    } else if (b._type === 'callout') {
+      flushText(); flushList()
+      blocks.push({ type: 'callout', text: b.text ?? '' })
+    }
+  }
+  flushText(); flushList()
+  return blocks
+}
+
+const content = mapContent(raw.content ?? [])
+const heroImage = raw.heroImage ? urlFor(raw.heroImage).width(795).url() : null
+const date = formatDate(raw.date)
+const tag = raw.tag as 'future' | 'past'
+
+const otherRaw = await client.fetch(`
+  *[_type == "event" && slug.current != $slug] | order(date desc)[0...1] {
+    title, slug, tag, date, location, time, heroImage
+  }
+`, { slug })
+
+const otherEvents = otherRaw.map((e: any) => ({
+  title: e.title,
+  tag: e.tag,
+  date: formatDate(e.date),
+  location: e.location,
+  time: e.time,
+  image: e.heroImage ? urlFor(e.heroImage).width(390).url() : null,
+  href: `/events/${e.slug.current}`,
+}))
+---
+
+<Layout title={raw.title}>
+
+  <section class="bg-bg-primary pt-[208px] pb-[160px] max-lg:pt-20 max-lg:pb-20">
+
+    <div class="global-padding">
+      <div class="mx-auto max-w-[1200px]">
+
+        <a href="/events" class="inline-flex items-center gap-2 text-small-caps text-text-primary mb-10 max-lg:mb-8 group lg:mx-auto lg:flex lg:w-fit">
+          <svg class="size-4 rotate-180 transition-transform duration-200 group-hover:-translate-x-1" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+            <path d="M6 12l4-4-4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          Back all events
+        </a>
+
+        <h1 class="text-h1 mob-h2 text-text-primary text-center mx-auto max-w-[998px] mb-12 max-lg:text-left max-lg:mb-8 max-md:mb-6">{raw.title}</h1>
+
+        <div id="event-meta-trigger" class="mx-auto max-w-[998px] flex items-center justify-between gap-4 mb-12 max-lg:flex-col max-lg:items-start max-lg:gap-6 max-lg:mb-10">
+
+          <span class:list={[
+            "inline-flex items-center px-2 py-2 rounded-[4px] text-small text-text-primary leading-none whitespace-nowrap shrink-0",
+            tag === 'future' ? 'bg-fg-other-2' : 'bg-fg-other-1',
+          ]}>
+            {tag === 'future' ? 'Future event' : 'Past event'}
+          </span>
+
+          <div class="flex gap-3 max-lg:gap-x-4 max-lg:flex-wrap max-lg:gap-y-3">
+            <div class="flex flex-col gap-2 lg:w-[200px]">
+              <span class="text-small text-text-secondary max-lg:hidden">Date</span>
+              <div class="flex items-center gap-3">
+                <img src="/images/icons/date.svg" alt="" class="shrink-0 size-5 max-lg:size-4" aria-hidden="true" />
+                <span class="text-regular max-lg:text-small text-text-primary whitespace-nowrap">{date}</span>
+              </div>
+            </div>
+            {raw.location && (
+              <div class="flex flex-col gap-2 lg:w-[200px]">
+                <span class="text-small text-text-secondary max-lg:hidden">Location</span>
+                <div class="flex items-center gap-3">
+                  <img src="/images/icons/location.svg" alt="" class="shrink-0 size-5 max-lg:size-4" aria-hidden="true" />
+                  <span class="text-regular max-lg:text-small text-text-primary whitespace-nowrap">{raw.location}</span>
+                </div>
+              </div>
+            )}
+            {raw.time && (
+              <div class="flex flex-col gap-2 lg:w-[200px]">
+                <span class="text-small text-text-secondary max-lg:hidden">Time</span>
+                <div class="flex items-center gap-3">
+                  <img src="/images/icons/time.svg" alt="" class="shrink-0 size-5 max-lg:size-4" aria-hidden="true" />
+                  <span class="text-regular max-lg:text-small text-text-primary whitespace-nowrap">{raw.time}</span>
+                </div>
+              </div>
+            )}
+          </div>
+
+          {tag === 'future' && (
+            <Button label="Registration" href={raw.registrationHref ?? '/contact'} variant="blue" class="shrink-0" />
+          )}
+
+        </div>
+      </div>
+    </div>
+
+    <div class="global-padding">
+      <div class="mx-auto max-w-[795px] flex flex-col gap-[72px] max-lg:gap-14">
+
+        {heroImage && (
+          <div class="bg-bg-secondary rounded-[8px] overflow-hidden w-full h-[440px] max-lg:h-auto max-lg:aspect-video">
+            <img src={heroImage} alt={raw.title} class="w-full h-full object-cover" />
+          </div>
+        )}
+
+        <PostContent blocks={content} />
+
+      </div>
+    </div>
+
+  </section>
+
+  {otherEvents.length > 0 && (
+    <section id="more-events-section" class="bg-bg-primary py-[160px] max-lg:py-20">
+      <div class="global-padding">
+        <div class="mx-auto max-w-[1200px] flex flex-col gap-14">
+
+          <div class="flex items-end justify-between">
+            <h2 class="text-h2 text-text-primary">More events</h2>
+            <Button label="More events" href="/events" variant="black" class="max-lg:hidden" />
+          </div>
+
+          <div class="hidden lg:flex text-regular text-text-secondary pr-6">
+            <span class="shrink-0" style="width: calc(10rem + 1rem + 390px + 1rem)">Date</span>
+            <span>Event</span>
+          </div>
+
+          {otherEvents.map((e: any) => (
+            <div class="relative group border-t border-border-other-2 pt-12 px-6 flex gap-3 items-start pb-12 max-lg:flex-col max-lg:pt-8 max-lg:px-0 max-lg:pb-8">
+
+              <div class="flex flex-col items-start justify-center gap-4 shrink-0 w-[10rem] max-lg:flex-row max-lg:items-center max-lg:gap-2 max-lg:w-auto">
+                <span class="text-regular text-text-primary">{e.date}</span>
+                <span class:list={[
+                  "inline-flex items-center px-2 py-2 rounded-[4px] text-small text-text-primary leading-none whitespace-nowrap",
+                  e.tag === 'future' ? 'bg-fg-other-2' : 'bg-fg-other-1',
+                ]}>
+                  {e.tag === 'future' ? 'Future event' : 'Past event'}
+                </span>
+              </div>
+
+              <div class="flex flex-1 gap-4 items-start min-w-0 max-lg:flex-col max-lg:w-full">
+                <a href={e.href} class="bg-bg-secondary rounded-[4px] overflow-hidden shrink-0 w-[390px] h-[216px] max-lg:w-full max-lg:h-auto max-lg:aspect-video block">
+                  {e.image
+                    ? <img src={e.image} alt={e.title} class="w-full h-full object-cover transition-transform duration-700 ease-in-out lg:group-hover:scale-110" loading="lazy" />
+                    : <div class="w-full h-full bg-bg-secondary" />
+                  }
+                </a>
+                <div class="flex flex-col justify-between self-stretch flex-1 min-w-0 max-lg:gap-4">
+                  <a href={e.href} class="text-h6 text-text-primary text-trim-off pr-[10rem] max-lg:pr-0 hover:text-text-tertiary transition-colors duration-200">
+                    {e.title}
+                  </a>
+                  <div class="flex gap-x-14 lg:group-hover:gap-x-8 transition-all duration-300 ease-in-out max-md:gap-x-5 max-md:flex-wrap">
+                    {e.location && (
+                      <div class="flex flex-col gap-2">
+                        <span class="text-small text-text-secondary max-md:hidden">Location</span>
+                        <div class="flex items-center gap-3">
+                          <img src="/images/icons/location.svg" alt="" class="shrink-0 size-5 max-md:size-4" aria-hidden="true" />
+                          <span class="text-regular max-md:text-small text-text-primary whitespace-nowrap">{e.location}</span>
+                        </div>
+                      </div>
+                    )}
+                    {e.time && (
+                      <div class="flex flex-col gap-2">
+                        <span class="text-small text-text-secondary max-md:hidden">Time</span>
+                        <div class="flex items-center gap-3">
+                          <img src="/images/icons/time.svg" alt="" class="shrink-0 size-5 max-md:size-4" aria-hidden="true" />
+                          <span class="text-regular max-md:text-small text-text-primary whitespace-nowrap">{e.time}</span>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+
+              <div class="hidden lg:block absolute top-12 right-6 z-[1] opacity-0 lg:group-hover:opacity-100 transition-opacity duration-500 ease-in-out">
+                <Button label="Details" href={e.href} variant="black" />
+              </div>
+              <div class="relative z-[1] lg:hidden mt-2">
+                <Button label="Details" href={e.href} variant="black" />
+              </div>
+
+            </div>
+          ))}
+
+          <div class="hidden max-lg:flex max-lg:justify-center">
+            <Button label="More events" href="/events" variant="black" />
+          </div>
+
+        </div>
+      </div>
+    </section>
+  )}
+
+  <!-- Floating meta bar -->
+  <div id="event-floating-bar" class="fixed inset-x-0 bottom-3 z-50 flex justify-center px-4 opacity-0 pointer-events-none max-lg:hidden" aria-hidden="true">
+    <div class="bg-bg-primary border border-border-other-2 flex items-center justify-between pl-4 pr-2 py-2 pointer-events-auto w-fit">
+      <div class="flex items-center self-stretch shrink-0 w-[126px] mr-12">
+        <span class:list={[
+          "inline-flex items-center w-full h-full justify-center px-2 rounded-[4px] text-small text-text-primary leading-none whitespace-nowrap",
+          tag === 'future' ? 'bg-fg-other-2' : 'bg-fg-other-1',
+        ]}>
+          {tag === 'future' ? 'Future event' : 'Past event'}
+        </span>
+      </div>
+      <div class="flex flex-wrap gap-x-3 gap-y-2">
+        <div class="flex flex-col gap-2 lg:w-[200px]">
+          <span class="text-small text-text-secondary">Date</span>
+          <div class="flex items-center gap-3">
+            <img src="/images/icons/date.svg" alt="" class="shrink-0 size-5" aria-hidden="true" />
+            <span class="text-regular text-text-primary whitespace-nowrap">{date}</span>
+          </div>
+        </div>
+        {raw.location && (
+          <div class="flex flex-col gap-2 lg:w-[200px] max-md:hidden">
+            <span class="text-small text-text-secondary">Location</span>
+            <div class="flex items-center gap-3">
+              <img src="/images/icons/location.svg" alt="" class="shrink-0 size-5" aria-hidden="true" />
+              <span class="text-regular text-text-primary whitespace-nowrap">{raw.location}</span>
+            </div>
+          </div>
+        )}
+        {raw.time && (
+          <div class="flex flex-col gap-2 lg:w-[200px]">
+            <span class="text-small text-text-secondary">Time</span>
+            <div class="flex items-center gap-3">
+              <img src="/images/icons/time.svg" alt="" class="shrink-0 size-5" aria-hidden="true" />
+              <span class="text-regular text-text-primary whitespace-nowrap">{raw.time}</span>
+            </div>
+          </div>
+        )}
+      </div>
+      {tag === 'future' && (
+        <Button label="Registration" href={raw.registrationHref ?? '/contact'} variant="blue" class="shrink-0 ml-4" />
+      )}
+    </div>
+  </div>
+
+</Layout>
+
+<script>
+  import gsap from 'gsap'
+  import { ScrollTrigger } from 'gsap/ScrollTrigger'
+
+  gsap.registerPlugin(ScrollTrigger)
+
+  const metaTrigger = document.getElementById('event-meta-trigger')
+  const moreSection = document.getElementById('more-events-section')
+  const bar = document.getElementById('event-floating-bar')
+
+  if (metaTrigger && bar) {
+    gsap.set(bar, { y: 16 })
+
+    const showBar = () => { bar.style.pointerEvents = 'auto'; gsap.to(bar, { opacity: 1, y: 0, duration: 0.4, ease: 'power2.out' }) }
+    const hideBar = () => { bar.style.pointerEvents = 'none'; gsap.to(bar, { opacity: 0, y: 16, duration: 0.3, ease: 'power2.in' }) }
+
+    ScrollTrigger.create({ trigger: metaTrigger, start: 'bottom top', onEnter: showBar, onLeaveBack: hideBar })
+    if (moreSection) {
+      ScrollTrigger.create({ trigger: moreSection, start: 'top bottom', onEnter: hideBar, onLeaveBack: showBar })
+    }
+  }
+</script>

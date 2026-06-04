@@ -1,0 +1,294 @@
+---
+import Layout from '../../layouts/Layout.astro'
+import SwiperSlider from '../../components/ui/SwiperSlider.astro'
+import { client } from '../../lib/sanity'
+
+export async function getStaticPaths() {
+  const slugs = await client.fetch(`*[_type == "caseStudy"]{ "slug": slug.current }`)
+  return slugs.map((s: { slug: string }) => ({ params: { slug: s.slug } }))
+}
+
+const { slug } = Astro.params
+
+const raw = await client.fetch(`
+  *[_type == "caseStudy" && slug.current == $slug][0] {
+    title, slug, description, logo,
+    media[] {
+      type, label, duration, videoUrl,
+      "thumbnail": thumbnail.asset._ref,
+      "image": image.asset._ref,
+    },
+    applicationProduct {
+      series-> { title, subtitle, slug, "heroImage": heroImage.asset._ref, features[]{ title } }
+    }
+  }
+`, { slug })
+
+if (!raw) return Astro.redirect('/cases')
+
+const otherRaw = await client.fetch(`
+  *[_type == "caseStudy" && slug.current != $slug][0...6] {
+    title, slug, logo,
+    "image": media[0].thumbnail.asset._ref,
+    "seriesTitle": applicationProduct.series->title
+  }
+`, { slug })
+
+function assetUrl(ref: string | undefined, width = 800) {
+  if (!ref) return ''
+  return `https://cdn.sanity.io/images/0ufm7kaw/production/${ref.replace('image-', '').replace(/-([a-z]+)$/, '.$1')}?w=${width}&auto=format`
+}
+
+const logoUrl = raw.logo?.asset?._ref ? assetUrl(raw.logo.asset._ref, 400) : ''
+
+const media = (raw.media ?? []).map((m: any, i: number) => ({
+  id: `media-${i}`,
+  type: m.type ?? 'image',
+  label: m.label ?? `${m.type === 'video' ? 'Video' : 'Image'} ${i + 1}`,
+  thumbnail: m.thumbnail ? assetUrl(m.thumbnail, 160) : '',
+  src: m.type === 'video' ? (m.videoUrl ?? '') : (m.image ? assetUrl(m.image, 1200) : ''),
+  duration: m.duration ?? '',
+}))
+
+const ap = raw.applicationProduct
+const seriesTitle = ap?.series?.title ?? ''
+const seriesSubtitle = ap?.series?.subtitle ?? ''
+const seriesSlug = ap?.series?.slug?.current ?? ''
+const seriesHref = seriesSlug ? `/products/series/${seriesSlug}` : '/products'
+const apImage = ap?.series?.heroImage ? assetUrl(ap.series.heroImage, 600) : ''
+const features: string[] = (ap?.series?.features ?? []).map((f: any) => f.title).filter(Boolean)
+
+const otherCases = otherRaw.map((c: any) => ({
+  title: c.title,
+  href: `/cases/${c.slug.current}`,
+  image: c.image ? assetUrl(c.image, 800) : '',
+  series: c.seriesTitle ?? '',
+}))
+---
+
+<Layout title={raw.title}>
+
+  <section class="bg-bg-primary pt-[192px] pb-[120px] max-lg:pt-20 max-lg:pb-20">
+    <div class="global-padding">
+      <div class="mx-auto max-w-[1200px] flex flex-col gap-14 max-lg:gap-10">
+
+        <!-- Back + Header -->
+        <div class="max-w-[998px] mx-auto w-full flex flex-col gap-10 max-lg:gap-8">
+          <a href="/cases" class="inline-flex items-center gap-2 text-small-caps text-text-primary group w-fit">
+            <svg class="size-[14px] rotate-180 transition-transform duration-200 group-hover:-translate-x-1" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+              <path d="M5 11l4-4-4-4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            Back cases page
+          </a>
+          <div class="flex items-end justify-between gap-10 max-lg:flex-col max-lg:items-start max-lg:gap-6">
+            <div class="flex flex-col gap-10 flex-1 min-w-0 max-lg:gap-6">
+              <h1 class="text-h1 mob-h2 text-text-primary">{raw.title}</h1>
+              {raw.description && <p class="text-large text-text-primary max-w-[694px]">{raw.description}</p>}
+            </div>
+            {logoUrl && (
+              <div class="border border-border-other-2 rounded-[6px] shrink-0 w-[187px] h-[106px] max-lg:w-[140px] max-lg:h-20 flex items-center justify-center bg-bg-primary p-6">
+                <img src={logoUrl} alt={raw.title} class="w-full h-full object-contain" />
+              </div>
+            )}
+          </div>
+        </div>
+
+        <!-- Media viewer -->
+        {media.length > 0 && (
+          <div class="w-full flex items-center gap-4 max-lg:flex-col max-lg:items-stretch">
+
+            <!-- Left: thumbnails -->
+            <div class="flex flex-col gap-4 w-[85px] shrink-0 justify-center max-lg:w-full max-lg:flex-row max-lg:overflow-x-auto max-lg:order-3 max-lg:justify-center" id="case-thumbnails">
+              {media.map((item: any, i: number) => (
+                <button
+                  class:list={['case-thumb flex flex-col gap-2 items-start cursor-pointer', i === 0 ? 'is-active' : '']}
+                  data-media-id={item.id}
+                  data-media-type={item.type}
+                  aria-label={item.label}
+                >
+                  <div class:list={['size-10 rounded-[2px] overflow-hidden border-2 transition-colors duration-200', i === 0 ? 'border-blue-500/50' : 'border-border-other-2']}>
+                    {item.thumbnail
+                      ? <img src={item.thumbnail} alt={item.label} class="w-full h-full object-cover" loading="lazy" />
+                      : <div class="w-full h-full bg-bg-secondary" />
+                    }
+                  </div>
+                  <span class="text-tiny-medium text-text-primary whitespace-nowrap">{item.label}</span>
+                </button>
+              ))}
+            </div>
+
+            <!-- Main media -->
+            <div class="relative overflow-hidden rounded-[2px] bg-bg-secondary flex-1 h-[560px] max-lg:h-auto max-lg:aspect-video max-lg:order-2" id="case-main-media">
+              {media.map((item: any, i: number) => (
+                <div
+                  class:list={['case-media-item absolute inset-0 transition-opacity duration-300', i === 0 ? 'opacity-100' : 'opacity-0 pointer-events-none']}
+                  data-media-id={item.id}
+                  data-media-type={item.type}
+                  data-src={item.src}
+                >
+                  {item.type === 'image'
+                    ? <img src={item.src} alt={item.label} class="w-full h-full object-cover" />
+                    : (
+                      <>
+                        <img src={item.thumbnail} alt={item.label} class="w-full h-full object-cover" />
+                        <button class="case-play-btn absolute inset-0 flex items-center justify-center" data-video-url={item.src} aria-label="Play video">
+                          <span class="size-16 bg-bg-primary/90 rounded-full flex items-center justify-center">
+                            <svg class="size-6 text-text-primary translate-x-0.5" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M5 3l14 9-14 9V3z"/></svg>
+                          </span>
+                        </button>
+                        {item.duration && <span class="absolute bottom-5 right-4 text-large-medium text-text-alternate">{item.duration}</span>}
+                      </>
+                    )
+                  }
+                </div>
+              ))}
+            </div>
+
+            <!-- Right: type filter -->
+            <div class="flex flex-col gap-4 items-center w-[85px] shrink-0 justify-center max-lg:flex-row max-lg:w-full max-lg:order-1 max-lg:justify-center" id="case-type-filters">
+              <button class="case-type-btn flex flex-col gap-2 items-center is-active cursor-pointer" data-filter-type="video">
+                <div class="size-10 border-2 border-blue-500/50 rounded-[2px] flex items-center justify-center transition-colors duration-200">
+                  <svg class="size-6 text-text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><rect x="2" y="6" width="14" height="12" rx="1"/><path d="M16 10l6-4v12l-6-4"/></svg>
+                </div>
+                <span class="text-tiny-medium text-text-primary">Video</span>
+              </button>
+              <button class="case-type-btn flex flex-col gap-2 items-center cursor-pointer" data-filter-type="image">
+                <div class="size-10 border border-border-other-2 rounded-[2px] flex items-center justify-center transition-colors duration-200">
+                  <svg class="size-6 text-text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="1"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+                </div>
+                <span class="text-tiny-medium text-text-primary">Img</span>
+              </button>
+            </div>
+
+          </div>
+        )}
+
+        <!-- Application Products -->
+        {seriesTitle && (
+          <div class="max-w-[998px] mx-auto w-full flex flex-col gap-8">
+            <h6 class="text-h6 text-text-primary">Application Products</h6>
+            <div class="bg-bg-secondary p-10 flex items-start justify-between gap-10 max-lg:flex-col max-lg:p-8 max-lg:gap-8">
+              <div class="flex flex-col justify-between self-stretch gap-8 max-w-[405px] max-lg:max-w-full max-lg:w-full">
+                <div class="flex flex-col gap-6">
+                  <h3 class="text-h3 mob-h4 text-text-primary">{seriesTitle}</h3>
+                  {seriesSubtitle && <p class="text-large text-text-secondary">{seriesSubtitle}</p>}
+                </div>
+                <div class="flex items-end justify-between gap-4">
+                  {features.length > 0 && (
+                    <ul class="flex flex-col gap-2">
+                      {features.map((f: string) => (
+                        <li class="flex items-center gap-2">
+                          <img src="/images/global/icon-logo.svg" alt="" class="size-4 shrink-0" aria-hidden="true" />
+                          <span class="text-regular text-text-primary">{f}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                  <a href={seriesHref} class="shrink-0 size-10 bg-btn-black-default hover:bg-btn-black-hover flex items-center justify-center rounded-[2px] transition-colors duration-200 ml-auto" aria-label="View series">
+                    <svg class="size-6 text-text-alternate" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M9 18l6-6-6-6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                  </a>
+                </div>
+              </div>
+              {apImage && (
+                <div class="shrink-0 w-[288px] h-[259px] max-lg:w-full max-lg:h-auto max-lg:aspect-[4/3] overflow-hidden bg-bg-secondary">
+                  <img src={apImage} alt={seriesTitle} class="w-full h-full object-contain" loading="lazy" />
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+
+      </div>
+    </div>
+  </section>
+
+  <!-- Other cases slider -->
+  {otherCases.length > 0 && (
+    <section class="bg-bg-other py-[160px] max-lg:py-20">
+      <div class="global-padding">
+        <div class="mx-auto max-w-[1200px]">
+          <SwiperSlider id="cases-other-slider" title="Demonstration cases" description="Hundreds of factories are already using DH-Robotics' products." viewMoreHref="/cases" viewMoreLabel="View more" slideWidth={794} slideMobileWidth={320} gap={16}>
+            {otherCases.map((item: any) => (
+              <div class="swiper-slide">
+                <a href={item.href} class="relative overflow-hidden rounded-[2px] block h-[448px] max-lg:h-[280px] bg-bg-secondary group">
+                  {item.image && <img src={item.image} alt={item.title} class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 lg:group-hover:scale-105" loading="lazy" />}
+                  <div class="absolute inset-0 bg-gradient-to-r from-black/40 to-transparent"></div>
+                  <p class="text-h2 mob-h4 text-text-alternate absolute top-8 left-8 max-w-[300px]">{item.title}</p>
+                  {item.series && (
+                    <div class="absolute bottom-8 left-8 flex flex-col gap-3">
+                      <span class="text-tiny text-text-alternate opacity-60">Series:</span>
+                      <span class="border border-white/24 rounded-[4px] px-2 py-2 text-large-medium text-text-alternate">{item.series}</span>
+                    </div>
+                  )}
+                  <div class="absolute bottom-8 right-8 size-10 bg-btn-black-default hover:bg-btn-black-hover flex items-center justify-center rounded-[2px] transition-colors duration-200">
+                    <svg class="size-6 text-text-alternate" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M9 18l6-6-6-6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                  </div>
+                </a>
+              </div>
+            ))}
+          </SwiperSlider>
+        </div>
+      </div>
+    </section>
+  )}
+
+</Layout>
+
+<style>
+  .case-thumb.is-active .border-border-other-2 { border-color: rgba(0,54,127,0.5); }
+</style>
+
+<script>
+  const thumbs = document.querySelectorAll<HTMLButtonElement>('.case-thumb')
+  const mediaItems = document.querySelectorAll<HTMLElement>('.case-media-item')
+  const typeBtns = document.querySelectorAll<HTMLButtonElement>('.case-type-btn')
+
+  function setFilter(type: string) {
+    typeBtns.forEach(btn => {
+      const active = btn.dataset.filterType === type
+      btn.classList.toggle('is-active', active)
+      const box = btn.querySelector('div')
+      if (box) {
+        box.classList.toggle('border-2', active)
+        box.classList.toggle('border-blue-500/50', active)
+        box.classList.toggle('border', !active)
+        box.classList.toggle('border-border-other-2', !active)
+      }
+    })
+    thumbs.forEach(t => { t.style.display = t.dataset.mediaType === type ? '' : 'none' })
+    const first = Array.from(thumbs).find(t => t.dataset.mediaType === type)
+    if (first) activateMedia(first.dataset.mediaId!)
+  }
+
+  function activateMedia(id: string) {
+    thumbs.forEach(t => {
+      const active = t.dataset.mediaId === id
+      t.classList.toggle('is-active', active)
+      const box = t.querySelector('div')
+      if (box) {
+        box.classList.toggle('border-2', active)
+        box.classList.toggle('border-blue-500/50', active)
+        box.classList.toggle('border', !active)
+        box.classList.toggle('border-border-other-2', !active)
+      }
+    })
+    mediaItems.forEach(m => {
+      const active = m.dataset.mediaId === id
+      m.classList.toggle('opacity-100', active)
+      m.classList.toggle('opacity-0', !active)
+      m.classList.toggle('pointer-events-none', !active)
+    })
+  }
+
+  thumbs.forEach(t => t.addEventListener('click', () => activateMedia(t.dataset.mediaId!)))
+  typeBtns.forEach(b => b.addEventListener('click', () => setFilter(b.dataset.filterType!)))
+
+  document.querySelectorAll<HTMLButtonElement>('.case-play-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const url = btn.dataset.videoUrl
+      if (url) window.open(url, '_blank')
+    })
+  })
+
+  setFilter('video')
+</script>

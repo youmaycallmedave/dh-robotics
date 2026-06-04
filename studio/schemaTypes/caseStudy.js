@@ -11,17 +11,25 @@ export const caseStudyType = defineType({
     defineField({ name: 'logo', title: 'Client Logo', type: 'image' }),
     defineField({
       name: 'media',
-      title: 'Media',
+      title: 'Media (videos & images)',
       type: 'array',
       of: [{
         type: 'object',
         fields: [
-          defineField({ name: 'type', title: 'Type', type: 'string', options: { list: [{ title: 'Video', value: 'video' }, { title: 'Image', value: 'image' }] } }),
-          defineField({ name: 'file', title: 'File / Image', type: 'image' }),
+          defineField({
+            name: 'type',
+            title: 'Type',
+            type: 'string',
+            options: { list: [{ title: 'Video', value: 'video' }, { title: 'Image', value: 'image' }] },
+            validation: r => r.required(),
+          }),
           defineField({ name: 'label', title: 'Label', type: 'string' }),
-          defineField({ name: 'duration', title: 'Duration (video only)', type: 'string' }),
+          defineField({ name: 'thumbnail', title: 'Thumbnail', type: 'image', options: { hotspot: true } }),
+          defineField({ name: 'image', title: 'Full Image (for image type)', type: 'image', options: { hotspot: true } }),
+          defineField({ name: 'videoUrl', title: 'Video URL (for video type)', type: 'url' }),
+          defineField({ name: 'duration', title: 'Duration (e.g. 03:30)', type: 'string' }),
         ],
-        preview: { select: { title: 'label', subtitle: 'type' } },
+        preview: { select: { title: 'label', subtitle: 'type', media: 'thumbnail' } },
       }],
     }),
     defineField({
@@ -29,11 +37,12 @@ export const caseStudyType = defineType({
       title: 'Application Product',
       type: 'object',
       fields: [
-        defineField({ name: 'series', title: 'Series Name', type: 'string' }),
-        defineField({ name: 'subtitle', title: 'Subtitle', type: 'string' }),
-        defineField({ name: 'features', title: 'Features', type: 'array', of: [{ type: 'string' }] }),
-        defineField({ name: 'image', title: 'Product Image', type: 'image' }),
-        defineField({ name: 'href', title: 'Product Link', type: 'string' }),
+        defineField({
+          name: 'series',
+          title: 'Series',
+          type: 'reference',
+          to: [{ type: 'productSeries' }],
+        }),
       ],
     }),
   ],
