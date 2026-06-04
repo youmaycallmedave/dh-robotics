@@ -136,7 +136,7 @@ html { font-size: 1rem; }
   --font-secondary: 'Geist', sans-serif;
 }
 
-@layer components {
+@layer utilities {
 
   /* Headings — Switzer (mobile-first) */
   .text-h1 {
@@ -210,6 +210,16 @@ html { font-size: 1rem; }
     line-height: 1.167em;
     letter-spacing: -0.03125rem;
     font-weight: 400;
+  }
+
+  /* Mobile heading overrides — use alongside desktop heading class */
+  /* e.g. class="text-h2 mob-h4" → h2 on desktop, h4 on mobile */
+  @media (max-width: 1023px) {
+    .mob-h2 { font-size: 3rem; line-height: 1em; letter-spacing: -0.0625rem; }
+    .mob-h3 { font-size: 2.5rem; line-height: 1em; letter-spacing: -0.0625rem; }
+    .mob-h4 { font-size: 2rem; line-height: 1em; letter-spacing: -0.0625rem; }
+    .mob-h5 { font-size: 1.5rem; line-height: 1em; letter-spacing: -0.03125rem; }
+    .mob-h6 { font-size: 1.5rem; line-height: 1.167em; letter-spacing: -0.03125rem; }
   }
 
   /* Body — Geist */

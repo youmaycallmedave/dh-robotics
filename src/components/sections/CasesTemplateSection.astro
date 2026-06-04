@@ -1,0 +1,369 @@
+---
+import SwiperSlider from '../ui/SwiperSlider.astro'
+
+type MediaType = 'video' | 'image'
+
+type MediaItem = {
+  id: string
+  type: MediaType
+  thumbnail: string
+  src: string
+  alt: string
+  duration?: string
+  label: string
+}
+
+type Feature = {
+  text: string
+}
+
+type ApplicationProduct = {
+  series: string
+  subtitle: string
+  features: Feature[]
+  image: string
+  href: string
+}
+
+type CaseData = {
+  title: string
+  description: string
+  logo: string
+  logoAlt: string
+  media: MediaItem[]
+  applicationProduct: ApplicationProduct
+}
+
+const caseData: CaseData = {
+  title: 'FOXCONN',
+  description: 'The AG series electric grippers was applied with robots to complete complex tasks such as grabbing and handling mobile phone shells in FOXCONN factory.',
+  logo: '/images/case-logo-template.svg',
+  logoAlt: 'Foxconn logo',
+  media: [
+    {
+      id: 'video-1',
+      type: 'video',
+      thumbnail: 'https://www.figma.com/api/mcp/asset/d04b1da3-4228-4a59-9ce1-dfc8f473eff4',
+      src: 'https://www.figma.com/api/mcp/asset/d04b1da3-4228-4a59-9ce1-dfc8f473eff4',
+      alt: 'Case Video 1',
+      duration: '03:30',
+      label: 'Case Video 1',
+    },
+    {
+      id: 'video-2',
+      type: 'video',
+      thumbnail: 'https://www.figma.com/api/mcp/asset/d04b1da3-4228-4a59-9ce1-dfc8f473eff4',
+      src: 'https://www.figma.com/api/mcp/asset/d04b1da3-4228-4a59-9ce1-dfc8f473eff4',
+      alt: 'Case Video 2',
+      duration: '02:15',
+      label: 'Case Video 2',
+    },
+    {
+      id: 'image-1',
+      type: 'image',
+      thumbnail: 'https://www.figma.com/api/mcp/asset/d04b1da3-4228-4a59-9ce1-dfc8f473eff4',
+      src: 'https://www.figma.com/api/mcp/asset/d04b1da3-4228-4a59-9ce1-dfc8f473eff4',
+      alt: 'Case Image 1',
+      label: 'Case Image 1',
+    },
+  ],
+  applicationProduct: {
+    series: 'AG Series',
+    subtitle: 'Slim-type Electric Parallel Gripper',
+    features: [
+      { text: 'Compact Size & Flexible Installation' },
+      { text: 'High Working Speed' },
+      { text: 'Precise Force Control' },
+    ],
+    image: 'https://www.figma.com/api/mcp/asset/d04b1da3-4228-4a59-9ce1-dfc8f473eff4',
+    href: '/products/series',
+  },
+}
+---
+
+<section class="bg-bg-primary pt-[192px] pb-[120px] max-lg:pt-20 max-lg:pb-20">
+  <div class="global-padding">
+    <div class="mx-auto max-w-[1200px] flex flex-col gap-14 max-lg:gap-10">
+
+      <!-- Back + Header -->
+      <div class="max-w-[998px] mx-auto w-full flex flex-col gap-10 max-lg:gap-8">
+
+        <a href="/cases" class="inline-flex items-center gap-2 text-small-caps text-text-primary group w-fit">
+          <svg class="size-[14px] rotate-180 transition-transform duration-200 group-hover:-translate-x-1" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+            <path d="M5 11l4-4-4-4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          Back cases page
+        </a>
+
+        <div class="flex items-end justify-between gap-10 max-lg:flex-col max-lg:items-start max-lg:gap-6">
+          <div class="flex flex-col gap-10 flex-1 min-w-0 max-lg:gap-6">
+            <h1 class="text-h1 mob-h2 text-text-primary">{caseData.title}</h1>
+            <p class="text-large text-text-primary max-w-[694px]">{caseData.description}</p>
+          </div>
+          <div class="border border-border-other-2 rounded-[6px] shrink-0 w-[187px] h-[106px] max-lg:w-[140px] max-lg:h-20 flex items-center justify-center bg-bg-primary p-6">
+            <img src={caseData.logo} alt={caseData.logoAlt} class="w-full h-full object-contain" />
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Media viewer — full container width, sidebars 85px each side -->
+      <div class="w-full flex items-center gap-4 max-lg:flex-col max-lg:items-stretch">
+
+        <!-- Left: thumbnails (filtered by active type) -->
+        <div class="flex flex-col gap-4 w-[85px] shrink-0 justify-center max-lg:w-full max-lg:flex-row max-lg:overflow-x-auto max-lg:order-3 max-lg:justify-center" id="case-thumbnails">
+          {caseData.media.map((item, i) => (
+            <button
+              class:list={[
+                'case-thumb flex flex-col gap-2 items-start cursor-pointer',
+                i === 0 ? 'is-active' : '',
+              ]}
+              data-media-id={item.id}
+              data-media-type={item.type}
+              aria-label={item.label}
+            >
+              <div class:list={[
+                'size-10 rounded-[2px] overflow-hidden border-2 transition-colors duration-200',
+                i === 0 ? 'border-blue-500/50' : 'border-border-other-2',
+              ]}>
+                <img src={item.thumbnail} alt={item.alt} class="w-full h-full object-cover" loading="lazy" />
+              </div>
+              <span class="text-tiny-medium text-text-primary whitespace-nowrap">{item.label}</span>
+            </button>
+          ))}
+        </div>
+
+        <!-- Main media -->
+        <div class="relative overflow-hidden rounded-[2px] bg-bg-secondary flex-1 h-[560px] max-lg:h-auto max-lg:aspect-video max-lg:order-2" id="case-main-media">
+          {caseData.media.map((item, i) => (
+            <div
+              class:list={['case-media-item absolute inset-0 transition-opacity duration-300', i === 0 ? 'opacity-100' : 'opacity-0 pointer-events-none']}
+              data-media-id={item.id}
+            >
+              <img src={item.src} alt={item.alt} class="w-full h-full object-cover" />
+              {item.type === 'video' && (
+                <>
+                  <button class="absolute bottom-4 left-4 bg-bg-secondary/80 hover:bg-bg-secondary transition-colors p-3 rounded-[2px] flex items-center justify-center" aria-label="Play">
+                    <svg class="size-4 text-text-primary" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
+                      <path d="M4 2l10 6-10 6V2z"/>
+                    </svg>
+                  </button>
+                  {item.duration && (
+                    <span class="absolute bottom-5 right-4 text-large-medium text-text-alternate">{item.duration}</span>
+                  )}
+                </>
+              )}
+            </div>
+          ))}
+        </div>
+
+        <!-- Right: type filter buttons -->
+        <div class="flex flex-col gap-4 items-center w-[85px] shrink-0 justify-center max-lg:flex-row max-lg:w-full max-lg:order-1 max-lg:justify-center" id="case-type-filters">
+          <button class="case-type-btn flex flex-col gap-2 items-center is-active cursor-pointer" data-filter-type="video">
+            <div class="size-10 border-2 border-blue-500/50 rounded-[2px] flex items-center justify-center transition-colors duration-200">
+              <svg class="size-6 text-text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                <rect x="2" y="6" width="14" height="12" rx="1"/>
+                <path d="M16 10l6-4v12l-6-4"/>
+              </svg>
+            </div>
+            <span class="text-tiny-medium text-text-primary">Video</span>
+          </button>
+          <button class="case-type-btn flex flex-col gap-2 items-center cursor-pointer" data-filter-type="image">
+            <div class="size-10 border border-border-other-2 rounded-[2px] flex items-center justify-center transition-colors duration-200">
+              <svg class="size-6 text-text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                <rect x="3" y="3" width="18" height="18" rx="1"/>
+                <circle cx="8.5" cy="8.5" r="1.5"/>
+                <path d="M21 15l-5-5L5 21"/>
+              </svg>
+            </div>
+            <span class="text-tiny-medium text-text-primary">Img</span>
+          </button>
+        </div>
+
+      </div>
+
+      <!-- Application Products -->
+      <div class="max-w-[998px] mx-auto w-full flex flex-col gap-8">
+
+        <h6 class="text-h6 text-text-primary">Application Products</h6>
+
+        <div class="bg-bg-secondary p-10 flex items-start justify-between gap-10 max-lg:flex-col max-lg:p-8 max-lg:gap-8">
+
+          <!-- Left: info -->
+          <div class="flex flex-col justify-between self-stretch gap-8 max-w-[405px] max-lg:max-w-full max-lg:w-full">
+            <div class="flex flex-col gap-6">
+              <h3 class="text-h3 mob-h4 text-text-primary">{caseData.applicationProduct.series}</h3>
+              <p class="text-large text-text-secondary">{caseData.applicationProduct.subtitle}</p>
+            </div>
+            <div class="flex items-end justify-between gap-4">
+              <ul class="flex flex-col gap-2">
+                {caseData.applicationProduct.features.map(f => (
+                  <li class="flex items-center gap-2">
+                    <img src="/images/global/icon-logo.svg" alt="" class="size-4 shrink-0" aria-hidden="true" />
+                    <span class="text-regular text-text-primary">{f.text}</span>
+                  </li>
+                ))}
+              </ul>
+              <a
+                href={caseData.applicationProduct.href}
+                class="shrink-0 size-10 bg-btn-black-default hover:bg-btn-black-hover flex items-center justify-center rounded-[2px] transition-colors duration-200"
+                aria-label="View product"
+              >
+                <svg class="size-6 text-text-alternate" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                  <path d="M9 18l6-6-6-6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </a>
+            </div>
+          </div>
+
+          <!-- Right: product image -->
+          <div class="shrink-0 w-[288px] h-[259px] max-lg:w-full max-lg:h-auto max-lg:aspect-[4/3] overflow-hidden bg-bg-secondary">
+            <img
+              src={caseData.applicationProduct.image}
+              alt={caseData.applicationProduct.series}
+              class="w-full h-full object-contain"
+              loading="lazy"
+            />
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- Demonstration cases slider -->
+<section class="bg-bg-other py-[160px] max-lg:py-20">
+  <div class="global-padding">
+    <div class="mx-auto max-w-[1200px]">
+      <SwiperSlider
+        id="cases-demo-slider"
+        title="Demonstration cases"
+        description="Hundreds of factories are already using DH-Robotics' products. The number of customers continues to grow rapidly..."
+        viewMoreHref="/cases"
+        viewMoreLabel="View more"
+        slideWidth={794}
+        slideMobileWidth={320}
+        gap={16}
+      >
+        {[
+          {
+            title: 'SAIC Volkswagen',
+            series: 'PGC',
+            href: '/cases/template',
+            image: 'https://www.figma.com/api/mcp/asset/488f288e-98fd-481e-a250-ce5e0821a7a8',
+          },
+          {
+            title: 'CHOW TAI FOOK',
+            series: 'AG',
+            href: '/cases/template',
+            image: 'https://www.figma.com/api/mcp/asset/c47f9ca3-6bb1-41d4-80fc-e310ff254f1a',
+          },
+          {
+            title: 'NISSAN',
+            series: 'EFG',
+            href: '/cases/template',
+            image: 'https://www.figma.com/api/mcp/asset/488f288e-98fd-481e-a250-ce5e0821a7a8',
+          },
+          {
+            title: 'FOXCONN',
+            series: 'AG',
+            href: '/cases/template',
+            image: 'https://www.figma.com/api/mcp/asset/c47f9ca3-6bb1-41d4-80fc-e310ff254f1a',
+          },
+        ].map(item => (
+          <div class="swiper-slide">
+            <a href={item.href} class="relative overflow-hidden rounded-[2px] block h-[448px] max-lg:h-[280px] bg-bg-secondary group">
+              <img src={item.image} alt={item.title} class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 lg:group-hover:scale-105" loading="lazy" />
+              <div class="absolute inset-0 bg-gradient-to-r from-black/40 to-transparent"></div>
+              <p class="text-h2 mob-h4 text-text-alternate absolute top-8 left-8 max-w-[300px]">{item.title}</p>
+              <div class="absolute bottom-8 left-8 flex flex-col gap-3">
+                <span class="text-tiny text-text-alternate opacity-60">Series:</span>
+                <span class="border border-white/24 rounded-[4px] px-2 py-2 text-large-medium text-text-alternate">{item.series}</span>
+              </div>
+              <a href={item.href} class="absolute bottom-8 right-8 size-10 bg-btn-black-default hover:bg-btn-black-hover flex items-center justify-center rounded-[2px] transition-colors duration-200">
+                <svg class="size-6 text-text-alternate" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                  <path d="M9 18l6-6-6-6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </a>
+            </a>
+          </div>
+        ))}
+      </SwiperSlider>
+    </div>
+  </div>
+</section>
+
+<style>
+  .case-thumb.is-active .border-border-other-2 {
+    border-color: rgba(0, 54, 127, 0.5);
+  }
+
+  .case-type-indicator .size-10 {
+    transition: border-color 0.2s ease;
+  }
+
+  .case-type-indicator.is-active .size-10 {
+    border-color: rgba(0, 54, 127, 0.5);
+    border-width: 2px;
+  }
+</style>
+
+<script>
+  const thumbs = document.querySelectorAll<HTMLButtonElement>('.case-thumb')
+  const mediaItems = document.querySelectorAll<HTMLElement>('.case-media-item')
+  const typeBtns = document.querySelectorAll<HTMLButtonElement>('.case-type-btn')
+
+  function setFilter(type: string) {
+
+    typeBtns.forEach(btn => {
+      const isActive = btn.dataset.filterType === type
+      btn.classList.toggle('is-active', isActive)
+      const box = btn.querySelector('div')
+      if (box) {
+        box.classList.toggle('border-2', isActive)
+        box.classList.toggle('border-blue-500/50', isActive)
+        box.classList.toggle('border', !isActive)
+        box.classList.toggle('border-border-other-2', !isActive)
+      }
+    })
+
+    // Show only thumbs matching type
+    thumbs.forEach(t => {
+      const matches = t.dataset.mediaType === type
+      t.style.display = matches ? '' : 'none'
+    })
+
+    // Activate first visible thumb
+    const firstVisible = Array.from(thumbs).find(t => t.dataset.mediaType === type)
+    if (firstVisible) activateMedia(firstVisible.dataset.mediaId!)
+  }
+
+  function activateMedia(id: string) {
+    thumbs.forEach(t => {
+      const isActive = t.dataset.mediaId === id
+      t.classList.toggle('is-active', isActive)
+      const box = t.querySelector('div')
+      if (box) {
+        box.classList.toggle('border-2', isActive)
+        box.classList.toggle('border-blue-500/50', isActive)
+        box.classList.toggle('border', !isActive)
+        box.classList.toggle('border-border-other-2', !isActive)
+      }
+    })
+
+    mediaItems.forEach(m => {
+      const isActive = m.dataset.mediaId === id
+      m.classList.toggle('opacity-100', isActive)
+      m.classList.toggle('opacity-0', !isActive)
+      m.classList.toggle('pointer-events-none', !isActive)
+    })
+  }
+
+  thumbs.forEach(t => t.addEventListener('click', () => activateMedia(t.dataset.mediaId!)))
+  typeBtns.forEach(btn => btn.addEventListener('click', () => setFilter(btn.dataset.filterType!)))
+
+  // Init
+  setFilter('video')
+</script>
