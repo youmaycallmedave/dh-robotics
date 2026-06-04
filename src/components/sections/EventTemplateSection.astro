@@ -1,15 +1,9 @@
 ---
 import Button from '../ui/Button.astro'
+import PostContent from '../ui/PostContent.astro'
+import type { PostBlock } from '../../types/post'
 
 type EventTag = 'future' | 'past'
-
-type ContentBlock = {
-  heading?: string
-  headingLevel?: 'h2' | 'h4'
-  text?: string
-  image?: string
-  imageAlt?: string
-}
 
 type EventTemplateProps = {
   title: string
@@ -20,7 +14,7 @@ type EventTemplateProps = {
   registrationHref?: string
   heroImage: string
   heroImageAlt: string
-  content: ContentBlock[]
+  content: PostBlock[]
 }
 
 const event: EventTemplateProps = {
@@ -34,48 +28,51 @@ const event: EventTemplateProps = {
   heroImageAlt: 'DH-Robotics at Productronica China',
   content: [
     {
-      text: 'On March 26, 2025, the three-day Productronica China officially kicked off at the Shanghai New International Expo Centre, bringing together cutting-edge technologies and an electrifying atmosphere that captivated attendees.',
+      type: 'text',
+      paragraphs: [
+        'On March 26, 2025, the three-day Productronica China officially kicked off at the Shanghai New International Expo Centre, bringing together cutting-edge technologies and an electrifying atmosphere that captivated attendees.',
+        'As a pioneer in intelligent manufacturing, DH-Robotics showcased its groundbreaking innovations, including "Dexterous Intelligence with Dual-Hand Coordination," the iFM Intelligent Flexible Motion System, Universal Plug-and-Play Automation, and High-Speed Precision Compound Motion Demonstrations.',
+      ],
     },
     {
-      text: 'As a pioneer in intelligent manufacturing, DH-Robotics showcased its groundbreaking innovations, including "Dexterous Intelligence with Dual-Hand Coordination," the iFM Intelligent Flexible Motion System, Universal Plug-and-Play Automation, and High-Speed Precision Compound Motion Demonstrations. With state-of-the-art technology and dynamic live demonstrations, DH-Robotics drew a large crowd, becoming one of the key highlights of the event.',
-    },
-    {
-      headingLevel: 'h4',
+      type: 'text',
       heading: 'Driving Innovation, Leading the Future of Smart Manufacturing',
-      text: 'As intelligent manufacturing reaches new heights, companies must compete not only in speed but also in flexibility and precision. As an expert in core components for industrial smart manufacturing, DH-Robotics integrates precision control, force control, embedded integration, and intelligent technology to develop electric end-effector solutions that are more dexterous, more precise, and faster.',
+      paragraphs: ['As intelligent manufacturing reaches new heights, companies must compete not only in speed but also in flexibility and precision. DH-Robotics integrates precision control, force control, embedded integration, and intelligent technology to develop electric end-effector solutions that are more dexterous, more precise, and faster.'],
     },
     {
-      headingLevel: 'h4',
+      type: 'text',
       heading: 'Precision Collaboration: Left Hand Holds a Fork, Right Hand Serves a Bowl',
-      text: 'One DH-5 Dexterous Hand firmly gripped a fork, while another balanced a bowl of Sachima, smoothly serving "food" to spectators. The crowd was amazed, with one visitor exclaiming: "It feeds better than I do!" Many eagerly lined up to experience the hand\'s flexibility and precision firsthand.',
+      paragraphs: ['One DH-5 Dexterous Hand firmly gripped a fork, while another balanced a bowl of Sachima, smoothly serving "food" to spectators. Many eagerly lined up to experience the hand\'s flexibility and precision firsthand.'],
     },
     {
-      headingLevel: 'h4',
+      type: 'text',
       heading: 'Lifelike Hand Gesture Performance',
-      text: 'In another captivating demonstration, two DH-5 Dexterous Hands waved, gestured, and danced with seamless coordination, mimicking human-like movement. With independent drive and control units for each finger, powered by high-precision force control algorithms, the DH-5 achieved remarkably realistic hand movements.',
+      paragraphs: ['In another captivating demonstration, two DH-5 Dexterous Hands waved, gestured, and danced with seamless coordination, mimicking human-like movement. With independent drive and control units for each finger, powered by high-precision force control algorithms, the DH-5 achieved remarkably realistic hand movements.'],
     },
     {
-      headingLevel: 'h2',
+      type: 'text',
       heading: 'Cutting-Edge Innovations on Display',
+      paragraphs: [],
     },
     {
-      headingLevel: 'h4',
+      type: 'text',
       heading: 'iFM Intelligent Flexible Motion System – The "LEGO Master" of Industrial Automation',
-      text: 'The iFM System showcased high-speed precision, modular design, and flexible configuration, allowing industries to "build automation like LEGO." This highly adaptable system is ideal for 3C electronics, new energy, automotive, and semiconductor industries, setting a new benchmark for flexible manufacturing.',
+      paragraphs: ['The iFM System showcased high-speed precision, modular design, and flexible configuration, allowing industries to "build automation like LEGO." This highly adaptable system is ideal for 3C electronics, new energy, automotive, and semiconductor industries.'],
     },
     {
-      headingLevel: 'h4',
+      type: 'text',
       heading: 'AG Series Electric Grippers – Precision Insertion, Adaptive Handling',
-      text: 'With precise force control, adaptive gripping, and intelligent feedback, the AG Series Electric Grippers excelled in 3C electronics, automotive, medical, and semiconductor assembly. During the demo, an AG Gripper mounted on a robotic arm seamlessly executed blind insertion tasks for connectors, screws, and precision components—without external vision sensors.',
+      paragraphs: ['With precise force control, adaptive gripping, and intelligent feedback, the AG Series Electric Grippers excelled in 3C electronics, automotive, medical, and semiconductor assembly.'],
     },
     {
-      image: 'https://www.figma.com/api/mcp/asset/d9008c0e-5a48-49f6-bfec-5e2add3be87b',
-      imageAlt: 'DH-Robotics exhibition booth',
+      type: 'image',
+      src: 'https://www.figma.com/api/mcp/asset/d9008c0e-5a48-49f6-bfec-5e2add3be87b',
+      alt: 'DH-Robotics exhibition booth',
     },
     {
-      headingLevel: 'h4',
+      type: 'text',
       heading: 'Universal Plug-and-Play Automation – From Production to Delivery in 15 Minutes',
-      text: 'Through standardized interfaces and universal components, this system reduces configuration time from hours to just 15 minutes, significantly cutting labor costs and increasing production flexibility.',
+      paragraphs: ['Through standardized interfaces and universal components, this system reduces configuration time from hours to just 15 minutes, significantly cutting labor costs and increasing production flexibility.'],
     },
   ],
 }
@@ -157,26 +154,7 @@ const event: EventTemplateProps = {
       </div>
 
       <!-- Content blocks -->
-      <div class="flex flex-col gap-12">
-        {event.content.map((block) => (
-          <div class="flex flex-col gap-8">
-            {block.headingLevel === 'h2' && (
-              <h2 class="text-h2 text-text-primary">{block.heading}</h2>
-            )}
-            {block.headingLevel === 'h4' && (
-              <h4 class="text-h4 text-text-primary">{block.heading}</h4>
-            )}
-            {block.image && (
-              <div class="bg-bg-secondary rounded-[8px] overflow-hidden w-full aspect-video">
-                <img src={block.image} alt={block.imageAlt || ''} class="w-full h-full object-cover" loading="lazy" />
-              </div>
-            )}
-            {block.text && (
-              <p class="text-large text-text-primary">{block.text}</p>
-            )}
-          </div>
-        ))}
-      </div>
+      <PostContent blocks={event.content} />
 
     </div>
   </div>

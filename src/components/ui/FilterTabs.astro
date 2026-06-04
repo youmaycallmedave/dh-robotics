@@ -20,7 +20,7 @@ const { id, tabs, defaultTab = tabs[0]?.id, fit = false } = Astro.props
     data-filter-tabs
     class:list={[
       "flex gap-16 overflow-x-auto border-b border-border-other-2 relative z-[2] pb-[1px]",
-      fit ? 'w-fit' : 'max-md:px-4 max-lg:px-10 lg:px-0',
+      fit ? 'lg:w-fit max-lg:w-full' : 'max-md:px-4 max-lg:px-10 lg:px-0',
     ]}
     style="scrollbar-width: none"
   >

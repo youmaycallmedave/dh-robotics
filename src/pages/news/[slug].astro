@@ -1,0 +1,295 @@
+---
+import Layout from '../../layouts/Layout.astro'
+import { client, urlFor } from '../../lib/sanity'
+import type { PostBlock } from '../../types/post'
+import PostContent from '../../components/ui/PostContent.astro'
+import SwiperSlider from '../../components/ui/SwiperSlider.astro'
+import 'swiper/css'
+
+export async function getStaticPaths() {
+  const slugs = await client.fetch(`*[_type == "news"]{ "slug": slug.current }`)
+  return slugs.map((s: { slug: string }) => ({ params: { slug: s.slug } }))
+}
+
+const { slug } = Astro.params
+
+const raw = await client.fetch(`
+  *[_type == "news" && slug.current == $slug][0] {
+    title, slug, category, date, heroImage, content
+  }
+`, { slug })
+
+if (!raw) return Astro.redirect('/news')
+
+function formatDate(iso: string) {
+  return new Date(iso).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
+}
+
+// Map Sanity Portable Text → PostBlock[]
+function mapContent(sanityContent: any[]): PostBlock[] {
+  if (!sanityContent) return []
+  const blocks: PostBlock[] = []
+  let textBlock: { type: 'text'; heading?: string; paragraphs: string[] } | null = null
+  let listBlock: { type: 'list'; intro?: string; items: string[]; ordered: boolean } | null = null
+
+  function flushText() { if (textBlock) { blocks.push(textBlock); textBlock = null } }
+  function flushList() { if (listBlock) { blocks.push(listBlock); listBlock = null } }
+
+  for (const b of sanityContent) {
+    if (b._type === 'block') {
+      const text = b.children?.map((c: any) => c.text).join('') ?? ''
+      if (!text) continue
+
+      // List items
+      if (b.listItem === 'bullet' || b.listItem === 'number') {
+        const ordered = b.listItem === 'number'
+        flushText()
+        if (!listBlock || listBlock.ordered !== ordered) {
+          flushList()
+          listBlock = { type: 'list', items: [], ordered }
+        }
+        listBlock.items.push(text)
+        continue
+      }
+
+      flushList()
+
+      // Headings
+      if (['h2','h3','h4'].includes(b.style)) {
+        flushText()
+        textBlock = { type: 'text', heading: text, paragraphs: [] }
+      } else {
+        if (!textBlock) textBlock = { type: 'text', paragraphs: [] }
+        textBlock.paragraphs.push(text)
+      }
+    } else if (b._type === 'image') {
+      flushText(); flushList()
+      blocks.push({ type: 'image', src: urlFor(b).width(795).url(), alt: b.alt ?? '' })
+    } else if (b._type === 'videoEmbed') {
+      flushText(); flushList()
+      blocks.push({ type: 'video', src: b.thumbnail ? urlFor(b.thumbnail).width(795).url() : '', alt: b.url ?? '' })
+    } else if (b._type === 'callout') {
+      flushText(); flushList()
+      blocks.push({ type: 'callout', text: b.text ?? '' })
+    }
+  }
+  flushText(); flushList()
+  return blocks
+}
+
+const content = mapContent(raw.content ?? [])
+const heroImage = raw.heroImage ? urlFor(raw.heroImage).width(795).url() : null
+const date = formatDate(raw.date)
+const category = raw.category as 'news' | 'insights'
+
+// Other articles
+const otherRaw = await client.fetch(`
+  *[_type == "news" && slug.current != $slug] | order(date desc)[0...5] {
+    title, slug, category, date, heroImage
+  }
+`, { slug })
+
+const otherArticles = otherRaw.map((item: any) => ({
+  title: item.title,
+  category: item.category,
+  date: formatDate(item.date),
+  image: item.heroImage ? urlFor(item.heroImage).width(562).url() : null,
+  href: `/news/${item.slug.current}`,
+}))
+---
+
+<Layout title={raw.title}>
+  <section class="bg-bg-primary pt-[208px] pb-0 max-lg:pt-20">
+
+    <!-- Back + Title -->
+    <div class="global-padding mb-10 max-lg:mb-8">
+      <div class="mx-auto max-w-[999px] flex flex-col items-center gap-10 max-lg:items-start max-lg:gap-8">
+        <a href="/news" class="inline-flex items-center gap-2 text-small-caps text-text-primary group">
+          <svg class="size-[14px] rotate-180 transition-transform duration-200 group-hover:-translate-x-1" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+            <path d="M5 11l4-4-4-4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          Back all news
+        </a>
+        <h1 class="text-h1 mob-h3 text-text-primary text-center max-lg:text-left">{raw.title}</h1>
+      </div>
+    </div>
+
+    <!-- Meta row -->
+    <div class="global-padding mb-[72px] max-lg:mb-14">
+      <div class="mx-auto max-w-[795px] flex items-start justify-between gap-6 max-lg:flex-col max-lg:gap-6">
+        <div class="flex flex-col gap-3">
+          <span class="text-small text-text-secondary">Categories:</span>
+          <span class="inline-flex items-center px-2 py-2 bg-fg-alternative text-text-alternate text-small-caps leading-none whitespace-nowrap">
+            {category === 'news' ? 'News' : 'Insights'}
+          </span>
+        </div>
+        <div class="flex flex-col gap-4">
+          <span class="text-small text-text-secondary">Date</span>
+          <div class="flex items-center gap-3">
+            <svg class="shrink-0 size-[18px] text-text-primary" viewBox="0 0 18 20" fill="none" aria-hidden="true">
+              <rect x="1" y="3" width="16" height="16" rx="1" stroke="currentColor" stroke-width="1.3"/>
+              <path d="M1 7h16" stroke="currentColor" stroke-width="1.3"/>
+              <path d="M5 1v4M13 1v4" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/>
+            </svg>
+            <span class="text-regular text-text-primary whitespace-nowrap">{date}</span>
+          </div>
+        </div>
+        <div class="flex items-center gap-4">
+          <span class="text-regular-medium text-text-primary">Share:</span>
+          <div class="flex items-center gap-2">
+            <div class="relative">
+              <button id="share-copy-btn" class="border border-border-other-2 rounded-[4px] p-3 flex items-center justify-center hover:border-border-alternative transition-colors duration-200 cursor-pointer" aria-label="Copy link">
+                <svg class="size-6 text-text-primary" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                  <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                  <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </button>
+              <div id="share-copy-toast" class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-2 bg-fg-alternative text-text-alternate text-tiny whitespace-nowrap rounded-[4px] opacity-0 pointer-events-none transition-opacity duration-200">Link copied</div>
+            </div>
+            <a href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(`https://dh-robotics.vercel.app/news/${slug}`)}`} target="_blank" rel="noopener noreferrer" class="border border-border-other-2 rounded-[4px] p-3 flex items-center justify-center hover:border-border-alternative transition-colors duration-200" aria-label="Share on LinkedIn">
+              <svg class="size-6 text-text-primary" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+            </a>
+            <a href={`https://twitter.com/intent/tweet?url=${encodeURIComponent(`https://dh-robotics.vercel.app/news/${slug}`)}`} target="_blank" rel="noopener noreferrer" class="border border-border-other-2 rounded-[4px] p-3 flex items-center justify-center hover:border-border-alternative transition-colors duration-200" aria-label="Share on X">
+              <svg class="size-6 text-text-primary" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Content -->
+    <div class="global-padding pb-[160px] max-lg:pb-20">
+      <div class="mx-auto max-w-[795px] flex flex-col gap-[72px] max-lg:gap-14">
+
+        {heroImage && (
+          <div class="bg-bg-secondary overflow-hidden w-full h-[398px] max-lg:h-auto max-lg:aspect-video">
+            <img src={heroImage} alt={raw.title} class="w-full h-full object-cover" />
+          </div>
+        )}
+
+        <PostContent blocks={content} />
+
+        <!-- Subscribe -->
+        <div class="border-t border-b border-border-other-2 py-20 max-lg:py-14">
+          <div class="flex gap-4 items-center max-lg:flex-col max-lg:items-start max-lg:gap-8" id="subscribe-form">
+            <div class="flex flex-col gap-6 flex-1 min-w-0">
+              <h4 class="text-h4 text-text-primary text-balance">Subscribe to News Alerts</h4>
+              <p class="text-regular text-text-primary text-balance">Get email alerts when new press releases are published, and stay up to date on company news.</p>
+            </div>
+            <div class="flex flex-col gap-8 flex-1 min-w-0 w-full">
+              <div class="flex flex-col gap-[2px]" id="subscribe-email-field">
+                <label for="subscribe-email" class="text-small text-text-primary">E-mail</label>
+                <div class="input-row border-b flex items-center gap-4 py-4">
+                  <input id="subscribe-email" type="email" placeholder="Enter your e-mail..." class="flex-1 min-w-0 text-regular text-text-primary bg-transparent outline-none placeholder:text-text-secondary placeholder:opacity-50" />
+                </div>
+                <p class="error-msg text-tiny text-text-quaternary mt-2 hidden">Enter a valid email address</p>
+              </div>
+              <div class="flex items-start gap-4 max-md:flex-col">
+                <p class="text-tiny text-text-primary flex-1 min-w-0">By subscribing you agree to our <a href="/privacy-policy" class="text-text-tertiary underline">Privacy Policy</a> and provide consent to receive updates from DH-Robotics.</p>
+                <button id="subscribe-btn" type="button" class="self-start inline-flex items-center gap-6 pl-4 pr-2 rounded-[2px] min-h-[40px] text-small-caps text-trim-off transition-colors cursor-pointer bg-btn-black-default hover:bg-btn-black-hover text-text-alternate shrink-0">
+                  <span>Subscribe</span>
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M9 18L15 12L9 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="hidden flex-col gap-6" id="subscribe-success">
+            <h4 class="text-h4 text-text-primary">You're subscribed!</h4>
+            <p class="text-regular text-text-secondary">Thank you — you'll receive the latest DH-Robotics news and insights directly to your inbox.</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- Other articles -->
+  {otherArticles.length > 0 && (
+    <section class="bg-bg-primary py-[160px] max-lg:py-20 overflow-hidden">
+      <div class="global-padding">
+        <div class="mx-auto max-w-[1200px]">
+          <SwiperSlider id="news-other-slider" title="Other articles" viewMoreHref="/news" viewMoreLabel="More articles" slideWidth={562} slideMobileWidth={320}>
+            {otherArticles.map((card: any) => (
+              <div class="swiper-slide">
+                <a href={card.href} class="group border border-border-other-2 flex flex-col overflow-hidden h-full relative">
+                  <div class="news-fill-bg"></div>
+                  <div class="card-info flex flex-col gap-5 px-10 py-9 max-lg:px-6 max-lg:py-6 relative z-[1]">
+                    <div class="flex items-center justify-between">
+                      <span class="inline-flex items-center px-2 py-2 bg-fg-alternative text-text-alternate text-small-caps leading-none whitespace-nowrap">{card.category === 'news' ? 'News' : 'Insights'}</span>
+                      <span class="card-date text-small text-text-primary">{card.date}</span>
+                    </div>
+                    <p class="card-title text-h6 text-text-primary line-clamp-2">{card.title}</p>
+                  </div>
+                  <div class="relative overflow-hidden h-[316px] max-lg:h-[200px] shrink-0 bg-bg-secondary mt-auto z-[1]">
+                    {card.image
+                      ? <img src={card.image} alt={card.title} class="w-full h-full object-cover transition-transform duration-700 ease-in-out lg:group-hover:scale-105" loading="lazy" />
+                      : <div class="w-full h-full bg-bg-secondary"></div>
+                    }
+                  </div>
+                </a>
+              </div>
+            ))}
+          </SwiperSlider>
+        </div>
+      </div>
+    </section>
+  )}
+</Layout>
+
+<style>
+  .news-fill-bg {
+    position: absolute; inset: 0;
+    background-color: var(--color-bg-other);
+    opacity: 0.5;
+    transform: scaleY(0);
+    transform-origin: top;
+    transition: transform 0.8s ease;
+    z-index: 0;
+    pointer-events: none;
+  }
+  @media (min-width: 1024px) {
+    .group:hover .news-fill-bg { transform: scaleY(1); }
+  }
+</style>
+
+<script>
+  const btn = document.getElementById('share-copy-btn')
+  const toast = document.getElementById('share-copy-toast')
+  let timer: ReturnType<typeof setTimeout>
+  btn?.addEventListener('click', async () => {
+    try { await navigator.clipboard.writeText(window.location.href) } catch {}
+    if (toast) {
+      clearTimeout(timer)
+      toast.classList.remove('opacity-0')
+      toast.classList.add('opacity-100')
+      timer = setTimeout(() => { toast.classList.remove('opacity-100'); toast.classList.add('opacity-0') }, 2000)
+    }
+  })
+
+  const emailInput = document.getElementById('subscribe-email') as HTMLInputElement
+  const emailField = document.getElementById('subscribe-email-field')
+  const emailRow = emailField?.querySelector<HTMLElement>('.input-row')
+  const emailError = emailField?.querySelector<HTMLElement>('.error-msg')
+  const subscribeBtn = document.getElementById('subscribe-btn')
+  const form = document.getElementById('subscribe-form')
+  const success = document.getElementById('subscribe-success')
+  const isValid = (v: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)
+
+  subscribeBtn?.addEventListener('click', () => {
+    if (!isValid(emailInput?.value.trim() ?? '')) {
+      emailRow?.classList.add('is-error')
+      emailError?.classList.remove('hidden')
+      emailInput?.focus()
+      return
+    }
+    form?.classList.add('hidden')
+    success?.classList.remove('hidden')
+    success?.classList.add('flex')
+  })
+  emailInput?.addEventListener('input', () => {
+    if (emailRow?.classList.contains('is-error') && isValid(emailInput.value.trim())) {
+      emailRow.classList.remove('is-error')
+      emailError?.classList.add('hidden')
+    }
+  })
+</script>

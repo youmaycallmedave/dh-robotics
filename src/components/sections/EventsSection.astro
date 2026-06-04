@@ -1,6 +1,7 @@
 ---
 import Section from '../ui/Section.astro'
 import Button from '../ui/Button.astro'
+import { client, urlFor } from '../../lib/sanity'
 
 type EventTag = 'future' | 'past'
 
@@ -16,85 +17,30 @@ type EventItem = {
   href: string
 }
 
-const events: EventItem[] = [
-  {
-    date: 'Mar 31, 2025',
-    tag: 'future',
-    image: 'https://www.figma.com/api/mcp/asset/651ffb27-b57a-49fd-9f61-2470b7b9c1f3',
-    alt: 'DH-Robotics at Productronica China',
-    title: 'DH-Robotics Shines at Productronica China, Pioneering Smart Manufacturing Breakthroughs!',
-    location: 'New York',
-    eventDate: 'Mar 31, 2025',
-    time: '8:00 am – 9:00 am',
-    href: '/events/template',
-  },
-  {
-    date: 'Mar 31, 2025',
-    tag: 'past',
-    image: 'https://www.figma.com/api/mcp/asset/19e7db52-4706-41cb-bfca-47d4652b10fc',
-    alt: 'Agile Manipulation Challenge',
-    title: "The University of Hong Kong Team Wins the Agile Manipulation Challenge! Using DH-Robotics' PGC Collaborative Electric Gripper",
-    location: 'New York',
-    eventDate: 'Mar 31, 2025',
-    time: '8:00 am – 9:00 am',
-    href: '/events/template',
-  },
-  {
-    date: 'Mar 31, 2025',
-    tag: 'past',
-    image: 'https://www.figma.com/api/mcp/asset/af771c44-c3a7-4a69-8118-334afe544bb6',
-    alt: 'World Robot Conference 2022',
-    title: 'Here comes the representative of domestic core components! DH-Robotics at the 2022 World Robot Conference',
-    location: 'New York',
-    eventDate: 'Mar 31, 2025',
-    time: '8:00 am – 9:00 am',
-    href: '/events/template',
-  },
-  {
-    date: 'Mar 31, 2025',
-    tag: 'past',
-    image: 'https://www.figma.com/api/mcp/asset/651ffb27-b57a-49fd-9f61-2470b7b9c1f3',
-    alt: 'DH-Robotics at Productronica China',
-    title: 'DH-Robotics Shines at Productronica China, Pioneering Smart Manufacturing Breakthroughs!',
-    location: 'New York',
-    eventDate: 'Mar 31, 2025',
-    time: '8:00 am – 9:00 am',
-    href: '/events/template',
-  },
-  {
-    date: 'Mar 31, 2025',
-    tag: 'past',
-    image: 'https://www.figma.com/api/mcp/asset/19e7db52-4706-41cb-bfca-47d4652b10fc',
-    alt: 'Agile Manipulation Challenge',
-    title: "The University of Hong Kong Team Wins the Agile Manipulation Challenge! Using DH-Robotics' PGC Collaborative Electric Gripper",
-    location: 'New York',
-    eventDate: 'Mar 31, 2025',
-    time: '8:00 am – 9:00 am',
-    href: '/events/template',
-  },
-  {
-    date: 'Mar 31, 2025',
-    tag: 'past',
-    image: 'https://www.figma.com/api/mcp/asset/af771c44-c3a7-4a69-8118-334afe544bb6',
-    alt: 'World Robot Conference 2022',
-    title: 'Here comes the representative of domestic core components! DH-Robotics at the 2022 World Robot Conference',
-    location: 'New York',
-    eventDate: 'Mar 31, 2025',
-    time: '8:00 am – 9:00 am',
-    href: '/events/template',
-  },
-  {
-    date: 'Mar 31, 2025',
-    tag: 'past',
-    image: 'https://www.figma.com/api/mcp/asset/651ffb27-b57a-49fd-9f61-2470b7b9c1f3',
-    alt: 'DH-Robotics at Productronica China',
-    title: 'DH-Robotics Shines at Productronica China, Pioneering Smart Manufacturing Breakthroughs!',
-    location: 'New York',
-    eventDate: 'Mar 31, 2025',
-    time: '8:00 am – 9:00 am',
-    href: '/events/template',
-  },
-]
+function formatDate(iso: string) {
+  const d = new Date(iso)
+  return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
+}
+
+const FALLBACK_IMAGE = 'https://www.figma.com/api/mcp/asset/651ffb27-b57a-49fd-9f61-2470b7b9c1f3'
+
+const raw = await client.fetch(`
+  *[_type == "event"] | order(date desc) {
+    title, slug, tag, date, location, time, heroImage
+  }
+`)
+
+const events: EventItem[] = raw.map((item: any) => ({
+  title: item.title,
+  tag: item.tag as EventTag,
+  date: formatDate(item.date),
+  eventDate: formatDate(item.date),
+  location: item.location ?? '',
+  time: item.time ?? '',
+  image: item.heroImage ? urlFor(item.heroImage).width(600).url() : FALLBACK_IMAGE,
+  alt: item.title,
+  href: `/events/${item.slug.current}`,
+}))
 ---
 
 <Section class="bg-bg-primary pt-[208px] pb-[160px] max-md:pt-20 max-md:pb-20">

@@ -1,5 +1,6 @@
 ---
 import FilterTabs from '../ui/FilterTabs.astro'
+import { client, urlFor } from '../../lib/sanity'
 
 type NewsCategory = 'news' | 'insights'
 
@@ -13,92 +14,31 @@ type NewsItem = {
   featured?: boolean
 }
 
-const news: NewsItem[] = [
-  {
-    title: 'DH-Robotics First Launched high-precision "zero backlash" rotary Electric Gripper breaks the product application boundary',
-    date: '11 Jan 2022',
-    image: 'https://www.figma.com/api/mcp/asset/d6929362-0218-4bf7-8dc0-3df7ddb430f5',
-    alt: 'DH-Robotics rotary gripper',
-    category: 'news',
-    href: '/news/template',
-    featured: true,
-  },
-  {
-    title: 'DH-Robotics AG Adaptive Gripper: A Versatile Solution from Precision Industry to Embodied Intelligence',
-    date: '11 Jan 2022',
-    image: 'https://www.figma.com/api/mcp/asset/4efb2a45-aeda-401e-a19e-e806492406dd',
-    alt: 'AG Adaptive Gripper',
-    category: 'news',
-    href: '/news/template',
-  },
-  {
-    title: 'AG Adaptive Grippers Supporting Robotics Training at Kranti\'s Automation Lab in Bangladesh',
-    date: '11 Jan 2022',
-    image: 'https://www.figma.com/api/mcp/asset/db8045dd-26c0-4ba6-954b-5ea012ca55a1',
-    alt: 'AG Grippers in Bangladesh',
-    category: 'news',
-    href: '/news/template',
-  },
-  {
-    title: 'How Does an Electric Gripper Work?',
-    date: '11 Jan 2022',
-    image: 'https://www.figma.com/api/mcp/asset/4efb2a45-aeda-401e-a19e-e806492406dd',
-    alt: 'Electric Gripper',
-    category: 'insights',
-    href: '/news/template',
-  },
-  {
-    title: 'The Future of Remote Handling with Advanced Dexterous Hands',
-    date: '11 Jan 2022',
-    image: 'https://www.figma.com/api/mcp/asset/ae8628b2-4ab2-4399-bd57-7ad55b670f50',
-    alt: 'Dexterous Hands',
-    category: 'insights',
-    href: '/news/template',
-  },
-  {
-    title: 'Enhancing Dexterity with Neural Network-Based Motion Planning in Robotic Hands',
-    date: '11 Jan 2022',
-    image: 'https://www.figma.com/api/mcp/asset/d2a68fc9-f65d-4e1b-9f2c-c0bdc65216df',
-    alt: 'Neural Network Robotic Hands',
-    category: 'insights',
-    href: '/news/template',
-  },
-  {
-    title: 'How Electric Actuators Are Transforming Modern Industrial Automation Workflows',
-    date: '15 Mar 2023',
-    image: 'https://www.figma.com/api/mcp/asset/aaaabb44-18a3-4c47-bacf-0cd85bd199f6',
-    alt: 'Electric Actuators in automation',
-    category: 'insights',
-    href: '/news/template',
-  },
-  {
-    title: 'The Science of Force Control: Why Precision Matters in Modern Assembly',
-    date: '20 Feb 2023',
-    image: 'https://www.figma.com/api/mcp/asset/9953a836-7c6c-4b33-bd07-8440efff0024',
-    alt: 'Force Control in assembly',
-    category: 'insights',
-    href: '/news/template',
-  },
-  {
-    title: 'Enhancing Dexterity with Real-Time Haptic Feedback in Robotic Hands',
-    date: '11 Jan 2022',
-    image: 'https://www.figma.com/api/mcp/asset/aaaabb44-18a3-4c47-bacf-0cd85bd199f6',
-    alt: 'Haptic Feedback Robotic Hands',
-    category: 'news',
-    href: '/news/template',
-  },
-  {
-    title: 'Learning from Demonstration: Teaching Dexterous Hands Through Human Motion Capture',
-    date: '11 Jan 2022',
-    image: 'https://www.figma.com/api/mcp/asset/9953a836-7c6c-4b33-bd07-8440efff0024',
-    alt: 'Motion Capture Robotic Hands',
-    category: 'news',
-    href: '/news/template',
-  },
-]
+function formatDate(iso: string) {
+  const d = new Date(iso)
+  return d.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })
+}
 
-const featured   = news.find(n => n.featured)!
-const gridCards  = news.filter(n => !n.featured)
+const FALLBACK_IMAGE = 'https://www.figma.com/api/mcp/asset/d6929362-0218-4bf7-8dc0-3df7ddb430f5'
+
+const raw = await client.fetch(`
+  *[_type == "news"] | order(date desc) {
+    title, slug, category, date, heroImage, featured
+  }
+`)
+
+const news: NewsItem[] = raw.map((item: any) => ({
+  title: item.title,
+  date: formatDate(item.date),
+  image: item.heroImage ? urlFor(item.heroImage).width(800).url() : FALLBACK_IMAGE,
+  alt: item.title,
+  category: item.category as NewsCategory,
+  href: `/news/${item.slug.current}`,
+  featured: item.featured ?? false,
+}))
+
+const featured   = news.find(n => n.featured) ?? news[0]
+const gridCards  = news.filter(n => n !== featured)
 
 const tabs = [
   { id: 'all',      label: 'All' },
