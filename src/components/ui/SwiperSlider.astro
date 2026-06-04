@@ -92,7 +92,9 @@ const {
   }
   .swiper-slider-wrap .swiper-slide {
     height: auto;
-    margin-right: -1px !important;
+  }
+  .swiper-slider-wrap .swiper-slide:not(:last-child) > * {
+    border-right-width: 0 !important;
   }
 </style>
 
