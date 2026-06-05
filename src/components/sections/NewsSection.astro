@@ -35,7 +35,7 @@ const tabs = [
 ]
 ---
 
-<section class="bg-bg-primary pt-[208px] pb-[160px] max-lg:pt-20 max-lg:pb-20">
+<section class="bg-bg-primary pt-[208px] pb-0 max-lg:pt-20">
   <div class="global-padding">
     <div class="mx-auto max-w-[1200px] flex flex-col gap-14 items-center">
 
@@ -93,7 +93,7 @@ const tabs = [
                 <div class="news-fill-bg"></div>
                 <div class="card-text flex flex-col gap-4 flex-1 relative z-[1]">
                   <p class="card-date text-small text-text-primary">{item.date}</p>
-                  <p class="card-title text-text-primary text-trim-off line-clamp-3">{item.title}</p>
+                  <p class="card-title text-text-primary text-trim-off line-clamp-2">{item.title}</p>
                 </div>
                 <div class="card-image relative overflow-hidden bg-bg-secondary shrink-0">
                   <img
@@ -130,9 +130,9 @@ const tabs = [
   </div>
 
   <!-- Subscribe -->
-  <div class="pt-[10rem] max-lg:pt-20" id="news-subscribe">
+  <div class="pt-0" id="news-subscribe">
     <div class="global-padding">
-      <div class="border-t border-border-other-2 py-20 max-lg:py-14">
+      <div class="border-t border-border-other-2 py-20 max-lg:py-14 mt-[160px] max-lg:mt-[72px]">
 
     <div class="flex gap-4 items-center max-w-[795px] mx-auto max-lg:flex-col max-lg:items-start max-lg:gap-8" id="news-subscribe-form">
       <div class="flex flex-col gap-6 flex-1 min-w-0">
@@ -277,7 +277,7 @@ const tabs = [
       line-height: 1.167em;
       letter-spacing: -0.03125rem;
       font-weight: 500;
-      min-height: 5.25rem;
+      min-height: 3.5rem;
     }
 
     #news-grid .news-card.is-small .card-title {
@@ -286,7 +286,7 @@ const tabs = [
       line-height: 1.333em;
       letter-spacing: -0.0225rem;
       font-weight: 500;
-      min-height: 4.5rem;
+      min-height: 3rem;
     }
   }
 </style>

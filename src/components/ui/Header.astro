@@ -77,42 +77,42 @@ const navItems: NavItem[] = [
 
 <header id="site-header" class="fixed top-0 left-0 right-0 z-50 bg-bg-primary border-b border-border-other-2 transition-transform duration-300 ease-in-out">
   <div class="global-padding py-3">
-    <div class="mx-auto max-w-[1440px] flex items-center justify-between gap-6">
+    <div class="mx-auto max-w-[1200px] flex items-center justify-between gap-6">
 
       <!-- Logo -->
       <a href="/" class="shrink-0" aria-label="DH-Robotics">
         <img src="/logotype-dh-robotics.svg" alt="DH-Robotics" class="h-14 w-auto max-lg:h-[41px]" />
       </a>
 
-      <!-- Desktop nav -->
-      <nav id="desktop-nav" class="flex items-center gap-1 max-lg:hidden">
-        {navItems.map((item, i) => (
-          item.dropdown ? (
-            <div class="nav-dropdown-wrap relative" data-index={i}>
-              <button
-                class="nav-btn flex items-center gap-1 px-2 py-1 rounded-[4px] text-small-medium text-text-primary hover:bg-bg-secondary transition-colors duration-150 cursor-pointer whitespace-nowrap"
-                aria-expanded="false"
-                data-dropdown={i}
+      <!-- Right: nav + EN + Contact Us + burger -->
+      <div class="flex items-center gap-6 shrink-0 max-lg:gap-3">
+
+        <!-- Desktop nav -->
+        <nav id="desktop-nav" class="flex items-center gap-1 max-lg:hidden">
+          {navItems.map((item, i) => (
+            item.dropdown ? (
+              <div class="nav-dropdown-wrap relative" data-index={i}>
+                <button
+                  class="nav-btn flex items-center gap-1 px-2 py-1 rounded-[4px] text-small-medium text-text-primary hover:bg-bg-secondary transition-colors duration-150 cursor-pointer whitespace-nowrap"
+                  aria-expanded="false"
+                  data-dropdown={i}
+                >
+                  {item.label}
+                  <svg class="nav-chevron size-4 text-text-primary transition-transform duration-200" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                    <path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </button>
+              </div>
+            ) : (
+              <a
+                href={item.href}
+                class="flex items-center px-2 py-1 rounded-[4px] text-small-medium text-text-primary hover:bg-bg-secondary transition-colors duration-150 whitespace-nowrap"
               >
                 {item.label}
-                <svg class="nav-chevron size-4 text-text-primary transition-transform duration-200" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-                  <path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                </svg>
-              </button>
-            </div>
-          ) : (
-            <a
-              href={item.href}
-              class="flex items-center px-2 py-1 rounded-[4px] text-small-medium text-text-primary hover:bg-bg-secondary transition-colors duration-150 whitespace-nowrap"
-            >
-              {item.label}
-            </a>
-          )
-        ))}
-      </nav>
-
-      <!-- Right: EN + Contact Us + burger -->
-      <div class="flex items-center gap-6 shrink-0 max-lg:gap-3">
+              </a>
+            )
+          ))}
+        </nav>
 
         <!-- Language -->
         <button class="flex items-center gap-1 px-2 py-1 rounded-[4px] text-small-medium text-text-primary hover:bg-bg-secondary transition-colors duration-150 uppercase max-lg:hidden">
@@ -131,7 +131,7 @@ const navItems: NavItem[] = [
         </button>
 
         <!-- Contact Us -->
-        <a href="/contact" class="inline-flex items-center gap-6 pl-4 pr-2 py-2 rounded-[2px] bg-btn-black-default hover:bg-btn-black-hover text-text-alternate text-small-caps transition-colors duration-150 whitespace-nowrap max-lg:gap-2 max-lg:pl-3 max-lg:pr-1">
+        <a href="/contact" class="inline-flex items-center gap-6 pl-4 pr-2 py-2 rounded-[2px] bg-btn-black-default hover:bg-btn-black-hover text-text-alternate text-small-caps text-trim-off transition-colors duration-150 whitespace-nowrap max-lg:gap-2 max-lg:pl-3 max-lg:pr-1">
           CONTACT US
           <svg class="size-6 text-text-alternate" viewBox="0 0 24 24" fill="none" aria-hidden="true">
             <path d="M9 18l6-6-6-6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
@@ -163,7 +163,7 @@ const navItems: NavItem[] = [
         <!-- invisible bridge so mouse doesn't leave hover zone -->
         <div class="h-3 absolute -top-3 left-0 right-0"></div>
         <div class="global-padding py-8">
-          <div class="mx-auto max-w-[1440px] flex gap-16">
+          <div class="mx-auto max-w-[1200px] flex gap-16">
             {item.dropdown!.columns.map(col => (
               <div class="flex flex-col gap-2 min-w-[160px]">
                 {col.group && <p class="text-tiny text-text-secondary mb-2">{col.group}</p>}

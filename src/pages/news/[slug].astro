@@ -158,7 +158,7 @@ const otherArticles = otherRaw.map((item: any) => ({
     </div>
 
     <!-- Content -->
-    <div class="global-padding pb-[160px] max-lg:pb-20">
+    <div class="global-padding pb-0">
       <div class="mx-auto max-w-[795px] flex flex-col gap-[72px] max-lg:gap-14">
 
         {heroImage && (
@@ -218,7 +218,7 @@ const otherArticles = otherRaw.map((item: any) => ({
                       <span class="inline-flex items-center px-2 py-2 bg-fg-alternative text-text-alternate text-small-caps leading-none whitespace-nowrap">{card.category === 'news' ? 'News' : 'Insights'}</span>
                       <span class="card-date text-small text-text-primary">{card.date}</span>
                     </div>
-                    <p class="card-title text-h6 text-text-primary line-clamp-2">{card.title}</p>
+                    <p class="card-title text-h6 text-text-primary text-trim-off line-clamp-2">{card.title}</p>
                   </div>
                   <div class="relative overflow-hidden h-[316px] max-lg:h-[200px] shrink-0 bg-bg-secondary mt-auto z-[1]">
                     {card.image
@@ -237,6 +237,10 @@ const otherArticles = otherRaw.map((item: any) => ({
 </Layout>
 
 <style>
+  .card-title {
+    min-height: calc(1.5rem * 1.167 * 2);
+  }
+
   .news-fill-bg {
     position: absolute; inset: 0;
     background-color: var(--color-bg-other);

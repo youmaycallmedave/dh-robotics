@@ -23,9 +23,9 @@ const { title, description, image, imageAlt = '', scrollTarget } = Astro.props
         </div>
         {scrollTarget && (
           <a href={`#${scrollTarget}`} class="inline-flex items-center gap-3 text-tiny text-text-secondary hover:text-text-primary transition-colors duration-200 scroll-target-link">
-            <svg class="size-3" viewBox="0 0 12 12" fill="none" aria-hidden="true">
-              <circle cx="6" cy="6" r="5" stroke="currentColor" stroke-width="1.2"/>
-              <path d="M6 4v4M4 7l2 2 2-2" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+            <svg class="size-3" width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+              <path d="M6 1.875V10.125" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M2.625 6.75L6 10.125L9.375 6.75" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/>
             </svg>
             View more
           </a>

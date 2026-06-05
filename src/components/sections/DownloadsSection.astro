@@ -34,7 +34,7 @@ const dlData = JSON.stringify({ categories, series: seriesList, products, downlo
 <PageHero
   title="Download Center"
   description="With deep technical background, DH-Robotics has developed the robotic and precision motion control technologies for many years."
-  image="https://www.figma.com/api/mcp/asset/92148eb6-c027-4479-b8d5-83460911b97e"
+  image="/images/download hero.webp"
   imageAlt="DH-Robotics products"
   scrollTarget="downloads-content"
 />
@@ -47,35 +47,104 @@ const dlData = JSON.stringify({ categories, series: seriesList, products, downlo
       <div class="flex gap-4 items-end w-full max-lg:flex-col max-lg:items-stretch max-lg:gap-3">
 
         <!-- Category -->
-        <div class="flex flex-col gap-[2px] flex-1 min-w-0">
-          <label for="filter-category" class="text-small text-text-primary">Product Category</label>
-          <div class="input-row border-b flex items-center gap-4 py-4">
-            <select id="filter-category" class="text-regular text-text-primary flex-1 bg-transparent outline-none appearance-none cursor-pointer">
-              <option value="">All Categories</option>
-              {categories.map((c: any) => <option value={c._id}>{c.title}</option>)}
-            </select>
+        <div class="flex flex-col gap-[2px] flex-1 min-w-0 dl-select-field" id="field-category">
+          <label class="text-small text-text-primary">Product Category</label>
+          <input type="hidden" id="filter-category" value="" />
+          <div class="relative">
+            <div class="input-row border-b flex items-center gap-4 py-4 cursor-pointer select-none dl-select-trigger" data-for="filter-category" data-placeholder="All Categories">
+              <span class="dl-select-display flex-1 text-regular text-text-secondary opacity-50">All Categories</span>
+              <svg class="dl-select-chevron shrink-0 text-text-primary transition-transform duration-200" width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="M6 9L12 15L18 9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </div>
+            <div class="dl-select-dropdown absolute top-full left-0 w-full z-20 hidden">
+              <div class="border-2 border-border-quinary">
+                <div class="border border-border-tertiary bg-bg-primary p-3 flex flex-col max-h-[240px] overflow-y-auto">
+                  <button type="button" data-value="" class="dl-option text-trim-off flex items-center gap-4 text-left px-2 py-2 text-regular text-text-primary rounded-[4px] hover:bg-fg-other-4 transition-colors w-full cursor-pointer">
+                    <span class="flex-1">All Categories</span>
+                    <span class="check-badge bg-bg-tertiary p-[2px] rounded-full opacity-0 shrink-0">
+                      <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M2 6L5 9L10 3" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    </span>
+                  </button>
+                  {categories.map((c: any) => (
+                    <button type="button" data-value={c._id} class="dl-option text-trim-off flex items-center gap-4 text-left px-2 py-2 text-regular text-text-secondary rounded-[4px] hover:bg-fg-other-4 hover:text-text-primary transition-colors w-full cursor-pointer">
+                      <span class="flex-1">{c.title}</span>
+                      <span class="check-badge bg-bg-tertiary p-[2px] rounded-full opacity-0 shrink-0">
+                        <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M2 6L5 9L10 3" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                      </span>
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </div>
           </div>
         </div>
 
         <!-- Series -->
-        <div class="flex flex-col gap-[2px] flex-1 min-w-0">
-          <label for="filter-series" class="text-small text-text-primary">Series</label>
-          <div class="input-row border-b flex items-center gap-4 py-4">
-            <select id="filter-series" class="text-regular text-text-primary flex-1 bg-transparent outline-none appearance-none cursor-pointer">
-              <option value="">All Series</option>
-              {seriesList.map((s: any) => <option value={s._id} data-category={s.categoryId}>{s.title}</option>)}
-            </select>
+        <div class="flex flex-col gap-[2px] flex-1 min-w-0 dl-select-field" id="field-series">
+          <label class="text-small text-text-primary">Series</label>
+          <input type="hidden" id="filter-series" value="" />
+          <div class="relative">
+            <div class="input-row border-b flex items-center gap-4 py-4 cursor-pointer select-none dl-select-trigger" data-for="filter-series" data-placeholder="All Series">
+              <span class="dl-select-display flex-1 text-regular text-text-secondary opacity-50">All Series</span>
+              <svg class="dl-select-chevron shrink-0 text-text-primary transition-transform duration-200" width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="M6 9L12 15L18 9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </div>
+            <div class="dl-select-dropdown absolute top-full left-0 w-full z-20 hidden">
+              <div class="border-2 border-border-quinary">
+                <div class="border border-border-tertiary bg-bg-primary p-3 flex flex-col max-h-[240px] overflow-y-auto">
+                  <button type="button" data-value="" class="dl-option text-trim-off flex items-center gap-4 text-left px-2 py-2 text-regular text-text-primary rounded-[4px] hover:bg-fg-other-4 transition-colors w-full cursor-pointer">
+                    <span class="flex-1">All Series</span>
+                    <span class="check-badge bg-bg-tertiary p-[2px] rounded-full opacity-0 shrink-0">
+                      <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M2 6L5 9L10 3" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    </span>
+                  </button>
+                  {seriesList.map((s: any) => (
+                    <button type="button" data-value={s._id} data-category={s.categoryId} class="dl-option text-trim-off flex items-center gap-4 text-left px-2 py-2 text-regular text-text-secondary rounded-[4px] hover:bg-fg-other-4 hover:text-text-primary transition-colors w-full cursor-pointer">
+                      <span class="flex-1">{s.title}</span>
+                      <span class="check-badge bg-bg-tertiary p-[2px] rounded-full opacity-0 shrink-0">
+                        <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M2 6L5 9L10 3" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                      </span>
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </div>
           </div>
         </div>
 
         <!-- Product -->
-        <div class="flex flex-col gap-[2px] flex-1 min-w-0">
-          <label for="filter-product" class="text-small text-text-primary">Product Model</label>
-          <div class="input-row border-b flex items-center gap-4 py-4">
-            <select id="filter-product" class="text-regular text-text-primary flex-1 bg-transparent outline-none appearance-none cursor-pointer">
-              <option value="">All Models</option>
-              {products.map((p: any) => <option value={p._id} data-series={p.seriesId}>{p.title}</option>)}
-            </select>
+        <div class="flex flex-col gap-[2px] flex-1 min-w-0 dl-select-field" id="field-product">
+          <label class="text-small text-text-primary">Product Model</label>
+          <input type="hidden" id="filter-product" value="" />
+          <div class="relative">
+            <div class="input-row border-b flex items-center gap-4 py-4 cursor-pointer select-none dl-select-trigger" data-for="filter-product" data-placeholder="All Models">
+              <span class="dl-select-display flex-1 text-regular text-text-secondary opacity-50">All Models</span>
+              <svg class="dl-select-chevron shrink-0 text-text-primary transition-transform duration-200" width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="M6 9L12 15L18 9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </div>
+            <div class="dl-select-dropdown absolute top-full left-0 w-full z-20 hidden">
+              <div class="border-2 border-border-quinary">
+                <div class="border border-border-tertiary bg-bg-primary p-3 flex flex-col max-h-[240px] overflow-y-auto">
+                  <button type="button" data-value="" class="dl-option text-trim-off flex items-center gap-4 text-left px-2 py-2 text-regular text-text-primary rounded-[4px] hover:bg-fg-other-4 transition-colors w-full cursor-pointer">
+                    <span class="flex-1">All Models</span>
+                    <span class="check-badge bg-bg-tertiary p-[2px] rounded-full opacity-0 shrink-0">
+                      <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M2 6L5 9L10 3" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    </span>
+                  </button>
+                  {products.map((p: any) => (
+                    <button type="button" data-value={p._id} data-series={p.seriesId} class="dl-option text-trim-off flex items-center gap-4 text-left px-2 py-2 text-regular text-text-secondary rounded-[4px] hover:bg-fg-other-4 hover:text-text-primary transition-colors w-full cursor-pointer">
+                      <span class="flex-1">{p.title}</span>
+                      <span class="check-badge bg-bg-tertiary p-[2px] rounded-full opacity-0 shrink-0">
+                        <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M2 6L5 9L10 3" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                      </span>
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -155,53 +224,125 @@ const dlData = JSON.stringify({ categories, series: seriesList, products, downlo
   </div>
 </section>
 
+<style>
+  .dl-option[data-filtered] { display: none; }
+</style>
+
 <script define:vars={{ dlData }} is:inline>
   const { series, products } = JSON.parse(dlData)
 
-  const selCategory = document.getElementById('filter-category')
-  const selSeries   = document.getElementById('filter-series')
-  const selProduct  = document.getElementById('filter-product')
+  // ── Custom select logic ──────────────────────────────────────
+  class DlSelect {
+    constructor(fieldEl) {
+      this.field    = fieldEl
+      this.trigger  = fieldEl.querySelector('.dl-select-trigger')
+      this.dropdown = fieldEl.querySelector('.dl-select-dropdown')
+      this.display  = fieldEl.querySelector('.dl-select-display')
+      this.chevron  = fieldEl.querySelector('.dl-select-chevron')
+      this.input    = document.getElementById(this.trigger.dataset.for)
+      this.options  = Array.from(fieldEl.querySelectorAll('.dl-option'))
+      this.placeholder = this.trigger.dataset.placeholder || 'All'
+
+      this.trigger.addEventListener('click', () => {
+        this.dropdown.classList.contains('hidden') ? this.open() : this.close()
+      })
+
+      this.options.forEach(btn => {
+        btn.addEventListener('click', () => {
+          this.select(btn.dataset.value, btn.querySelector('span')?.textContent?.trim() ?? '')
+          this.close()
+          this.field.dispatchEvent(new CustomEvent('dl-change', { bubbles: true }))
+        })
+      })
+    }
+
+    get value() { return this.input.value }
+
+    open() {
+      this.dropdown.classList.remove('hidden')
+      this.chevron.classList.add('rotate-180')
+      this.trigger.querySelector('.input-row')?.classList.add('is-focused-custom')
+    }
+
+    close() {
+      this.dropdown.classList.add('hidden')
+      this.chevron.classList.remove('rotate-180')
+    }
+
+    select(value, label) {
+      this.input.value = value
+      if (value) {
+        this.display.textContent = label
+        this.display.classList.remove('opacity-50', 'text-text-secondary')
+        this.display.classList.add('text-text-primary')
+      } else {
+        this.display.textContent = this.placeholder
+        this.display.classList.add('opacity-50', 'text-text-secondary')
+        this.display.classList.remove('text-text-primary')
+      }
+      this.options.forEach(btn => {
+        const selected = btn.dataset.value === value
+        btn.classList.toggle('bg-fg-other-4', selected)
+        btn.classList.toggle('text-text-primary', selected)
+        btn.classList.toggle('rounded-[2px]', selected)
+        btn.classList.toggle('text-text-secondary', !selected && btn.dataset.value !== '')
+        btn.querySelector('.check-badge').style.opacity = selected ? '1' : '0'
+      })
+    }
+
+    reset() { this.select('', '') }
+
+    filterOptions(predicate) {
+      let hasVisible = false
+      this.options.forEach(btn => {
+        if (!btn.dataset.value) return
+        const hide = !predicate(btn)
+        btn.toggleAttribute('data-filtered', hide)
+        if (!hide) hasVisible = true
+      })
+      if (this.value && !this.options.find(b => b.dataset.value === this.value && !b.hasAttribute('data-filtered'))) {
+        this.reset()
+      }
+    }
+
+    showAll() {
+      this.options.forEach(btn => btn.removeAttribute('data-filtered'))
+    }
+  }
+
+  const selCategory = new DlSelect(document.getElementById('field-category'))
+  const selSeries   = new DlSelect(document.getElementById('field-series'))
+  const selProduct  = new DlSelect(document.getElementById('field-product'))
+
+  // Close dropdowns on outside click
+  document.addEventListener('click', (e) => {
+    [selCategory, selSeries, selProduct].forEach(sel => {
+      if (!sel.field.contains(e.target)) sel.close()
+    })
+  })
+
   const searchInput = document.getElementById('downloads-search')
   const items       = document.querySelectorAll('.downloads-item')
   const emptyState  = document.getElementById('downloads-empty')
-
-  // All <option> elements (excluding "All" placeholder)
-  const seriesOpts  = Array.from(selSeries.querySelectorAll('option[value]:not([value=""])'))
-  const productOpts = Array.from(selProduct.querySelectorAll('option[value]:not([value=""])'))
-
   let activeTab = 'all'
 
-  // ── Cascade: update visible options ─────────────────────────
   function updateSelects() {
     const catId    = selCategory.value
     const seriesId = selSeries.value
 
-    // Series options: show only those matching selected category
-    seriesOpts.forEach(opt => {
-      const matches = !catId || opt.dataset.category === catId
-      opt.hidden = !matches
-    })
-    // If current series selection is now hidden, reset it
-    if (selSeries.value && selSeries.querySelector(`option[value="${selSeries.value}"]`)?.hidden) {
-      selSeries.value = ''
-    }
+    selSeries.filterOptions(btn => !catId || btn.dataset.category === catId)
 
-    // Product options: match selected series (or all series of selected category)
     const validSeriesIds = catId
       ? series.filter(s => s.categoryId === catId).map(s => s._id)
       : series.map(s => s._id)
 
-    productOpts.forEach(opt => {
-      const inSeries   = !seriesId || opt.dataset.series === seriesId
-      const inCategory = !catId   || validSeriesIds.includes(opt.dataset.series)
-      opt.hidden = !(inSeries && inCategory)
+    selProduct.filterOptions(btn => {
+      const inSeries   = !seriesId || btn.dataset.series === seriesId
+      const inCategory = !catId   || validSeriesIds.includes(btn.dataset.series)
+      return inSeries && inCategory
     })
-    if (selProduct.value && selProduct.querySelector(`option[value="${selProduct.value}"]`)?.hidden) {
-      selProduct.value = ''
-    }
   }
 
-  // ── Filter download rows ─────────────────────────────────────
   function filterItems() {
     const catId     = selCategory.value
     const seriesId  = selSeries.value
@@ -217,10 +358,8 @@ const dlData = JSON.stringify({ categories, series: seriesList, products, downlo
       const isGlobal    = !itemCat && !itemSeries && !itemProduct
       const title       = item.querySelector('p')?.textContent?.toLowerCase() ?? ''
 
-      // Tab
       if (activeTab !== 'all' && itemTab !== activeTab) { item.style.display = 'none'; return }
 
-      // Cascade: product → series → category (most specific wins)
       if (productId) {
         if (!isGlobal && itemProduct !== productId) { item.style.display = 'none'; return }
       } else if (seriesId) {
@@ -229,7 +368,6 @@ const dlData = JSON.stringify({ categories, series: seriesList, products, downlo
         if (!isGlobal && itemCat !== catId)          { item.style.display = 'none'; return }
       }
 
-      // Search
       if (query && !title.includes(query)) { item.style.display = 'none'; return }
 
       item.style.display = ''
@@ -239,40 +377,42 @@ const dlData = JSON.stringify({ categories, series: seriesList, products, downlo
     if (emptyState) emptyState.style.display = visible === 0 ? 'flex' : 'none'
   }
 
-  selCategory.addEventListener('change', () => {
-    // Reset more specific filters when category changes
-    selSeries.value  = ''
-    selProduct.value = ''
+  document.getElementById('field-category').addEventListener('dl-change', () => {
+    selSeries.reset()
+    selProduct.reset()
     updateSelects()
     filterItems()
   })
 
-  selSeries.addEventListener('change', () => {
+  document.getElementById('field-series').addEventListener('dl-change', () => {
     const seriesId = selSeries.value
     if (seriesId) {
-      // Auto-fill category from selected series
       const ser = series.find(s => s._id === seriesId)
-      if (ser?.categoryId) selCategory.value = ser.categoryId
+      if (ser?.categoryId) selCategory.select(ser.categoryId, document.querySelector(`#field-category [data-value="${ser.categoryId}"] span`)?.textContent?.trim() ?? '')
     }
-    selProduct.value = ''
+    selProduct.reset()
     updateSelects()
     filterItems()
   })
 
-  selProduct.addEventListener('change', () => {
+  document.getElementById('field-product').addEventListener('dl-change', () => {
     const productId = selProduct.value
     if (productId) {
-      // Auto-fill series and category from selected product
       const prod = products.find(p => p._id === productId)
       if (prod?.seriesId) {
-        selSeries.value = prod.seriesId
+        const serBtn = document.querySelector(`#field-series [data-value="${prod.seriesId}"]`)
+        selSeries.select(prod.seriesId, serBtn?.querySelector('span')?.textContent?.trim() ?? '')
         const ser = series.find(s => s._id === prod.seriesId)
-        if (ser?.categoryId) selCategory.value = ser.categoryId
+        if (ser?.categoryId) {
+          const catBtn = document.querySelector(`#field-category [data-value="${ser.categoryId}"]`)
+          selCategory.select(ser.categoryId, catBtn?.querySelector('span')?.textContent?.trim() ?? '')
+        }
       }
     }
     updateSelects()
     filterItems()
   })
+
   searchInput?.addEventListener('input', filterItems)
 
   document.addEventListener('tabchange', (e) => {
