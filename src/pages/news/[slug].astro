@@ -99,7 +99,7 @@ const otherArticles = otherRaw.map((item: any) => ({
 ---
 
 <Layout title={raw.title}>
-  <section class="bg-bg-primary pt-[208px] pb-0 max-lg:pt-20">
+  <section class="bg-bg-primary pt-page pb-none">
 
     <!-- Back + Title -->
     <div class="global-padding mb-10 max-lg:mb-8">
@@ -205,7 +205,7 @@ const otherArticles = otherRaw.map((item: any) => ({
 
   <!-- Other articles -->
   {otherArticles.length > 0 && (
-    <section class="bg-bg-primary py-[160px] max-lg:py-20 overflow-hidden">
+    <section class="bg-bg-primary pt-page pb-lg overflow-hidden">
       <div class="global-padding">
         <div class="mx-auto max-w-[1200px]">
           <SwiperSlider id="news-other-slider" title="Other articles" viewMoreHref="/news" viewMoreLabel="More articles" slideWidth={562} slideMobileWidth={320}>

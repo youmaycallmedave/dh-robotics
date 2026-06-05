@@ -1,12 +1,18 @@
 ---
+type SpaceSize = 'none' | 'sm' | 'md' | 'lg' | 'page'
+
 interface Props {
   size?: 'sm' | 'md' | 'lg' | 'xl' | 'full'
+  pt?: SpaceSize
+  pb?: SpaceSize
   class?: string
   hasBg?: boolean
 }
 
 const {
   size = 'lg',
+  pt,
+  pb,
   class: className,
   hasBg = false,
 } = Astro.props
@@ -18,8 +24,24 @@ const containerSizes = {
   xl:   'max-w-[1440px]',
   full: 'max-w-none',
 }
+
+const ptMap: Record<SpaceSize, string> = {
+  none: 'pt-0',
+  sm:   'pt-20 max-lg:pt-12',
+  md:   'pt-[120px] max-lg:pt-16',
+  lg:   'pt-[160px] max-lg:pt-20',
+  page: 'pt-[160px] max-lg:pt-20',
+}
+
+const pbMap: Record<SpaceSize, string> = {
+  none: 'pb-0',
+  sm:   'pb-20 max-lg:pb-12',
+  md:   'pb-[120px] max-lg:pb-16',
+  lg:   'pb-[160px] max-lg:pb-20',
+  page: 'pb-[160px] max-lg:pb-20',
+}
 ---
-<section class:list={[className]}>
+<section class:list={[pt && ptMap[pt], pb && pbMap[pb], className]}>
 
   {hasBg && (
     <div class="section-bg">

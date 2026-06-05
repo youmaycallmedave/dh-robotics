@@ -384,6 +384,27 @@ html { font-size: 1rem; }
     transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
+  /* ── Section spacing tokens ──────────────────── */
+  /* none */
+  .pt-none { padding-top: 0; }
+  .pb-none { padding-bottom: 0; }
+  /* sm — 80px / 48px */
+  .pt-sm { padding-top: 80px; }
+  .pb-sm { padding-bottom: 80px; }
+  @media (max-width: 1023px) { .pt-sm { padding-top: 48px; } .pb-sm { padding-bottom: 48px; } }
+  /* md — 120px / 64px */
+  .pt-md { padding-top: 120px; }
+  .pb-md { padding-bottom: 120px; }
+  @media (max-width: 1023px) { .pt-md { padding-top: 64px; } .pb-md { padding-bottom: 64px; } }
+  /* lg — 160px / 80px */
+  .pt-lg { padding-top: 160px; }
+  .pb-lg { padding-bottom: 160px; }
+  @media (max-width: 1023px) { .pt-lg { padding-top: 80px; } .pb-lg { padding-bottom: 80px; } }
+  /* page — 160px / 80px (alias for lg, semantic for first section) */
+  .pt-page { padding-top: 160px; }
+  .pb-page { padding-bottom: 160px; }
+  @media (max-width: 1023px) { .pt-page { padding-top: 80px; } .pb-page { padding-bottom: 80px; } }
+
   /* Единый класс для пагинаций и кнопок "More" */
   .text-pagination {
     font-family: var(--font-primary);

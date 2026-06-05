@@ -47,7 +47,7 @@ const events: EventItem[] = raw.map((item: any) => ({
 const hasMore = events.length > PAGE_SIZE
 ---
 
-<Section class="bg-bg-primary pt-[208px] pb-[160px] max-md:pt-20 max-md:pb-20">
+<Section class="bg-bg-primary" pt="page" pb="lg">
 
   <!-- Title row -->
   <div class="flex items-start justify-between mb-14 max-md:mb-10">
@@ -166,12 +166,8 @@ const hasMore = events.length > PAGE_SIZE
       const next = shown + pageSize
 
       const items = document.querySelectorAll<HTMLElement>('.event-item')
-      let newShown = 0
       items.forEach((item, i) => {
-        if (i < next) {
-          item.classList.remove('hidden')
-          newShown = i + 1
-        }
+        if (i < next) item.classList.remove('hidden')
       })
 
       btn.dataset.shown = String(next)

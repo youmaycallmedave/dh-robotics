@@ -68,7 +68,7 @@ const otherCases = otherRaw.map((c: any) => ({
 
 <Layout title={raw.title}>
 
-  <section class="bg-bg-primary pt-[192px] pb-[120px] max-lg:pt-20 max-lg:pb-20">
+  <section class="bg-bg-primary pt-page pb-md">
     <div class="global-padding">
       <div class="mx-auto max-w-[1200px] flex flex-col gap-14 max-lg:gap-10">
 
@@ -204,7 +204,7 @@ const otherCases = otherRaw.map((c: any) => ({
 
   <!-- Other cases slider -->
   {otherCases.length > 0 && (
-    <section class="bg-bg-other py-[160px] max-lg:py-20">
+    <section class="bg-bg-other pt-page pb-lg">
       <div class="global-padding">
         <div class="mx-auto max-w-[1200px]">
           <SwiperSlider id="cases-other-slider" title="Demonstration cases" description="Hundreds of factories are already using DH-Robotics' products." viewMoreHref="/cases" viewMoreLabel="View more" slideWidth={794} slideMobileWidth={320} gap={16}>

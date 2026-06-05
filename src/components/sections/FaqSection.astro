@@ -6,7 +6,7 @@ const raw = await client.fetch(`*[_type == "faqGroup"] | order(order asc) { titl
 const groups: { title: string; items: { question: string; answer: string }[] }[] = raw
 ---
 
-<Section class="bg-bg-primary pt-[208px] pb-[160px] max-lg:pt-20 max-lg:pb-20" size="xl">
+<Section class="bg-bg-primary" pt="page" pb="lg" size="xl">
 
   <h1 class="text-h1 text-text-primary mb-14 max-md:mb-10">FAQ</h1>
 
