@@ -1,0 +1,70 @@
+---
+import Layout from '../../layouts/Layout.astro'
+import NewsSection from '../../components/sections/NewsSection.astro'
+import { client, urlFor } from '../../lib/sanity'
+
+const PAGE_SIZE = 9
+
+function formatDate(iso: string) {
+  const d = new Date(iso)
+  return d.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })
+}
+
+const FALLBACK_IMAGE = '/images/placeholder.webp'
+
+export async function getStaticPaths() {
+  const PAGE_SIZE = 9
+
+  function formatDate(iso: string) {
+    const d = new Date(iso)
+    return d.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })
+  }
+
+  const FALLBACK_IMAGE = '/images/placeholder.webp'
+
+  const { client, urlFor } = await import('../../lib/sanity')
+  const raw = await client.fetch(`*[_type == "news"] | order(date desc) { title, slug, category, date, heroImage, featured }`)
+
+  const allNews = raw.map((item: any) => ({
+    title: item.title,
+    date: formatDate(item.date),
+    image: item.heroImage ? urlFor(item.heroImage).width(800).url() : FALLBACK_IMAGE,
+    alt: item.title,
+    category: item.category as 'news' | 'insights',
+    href: `/news/${item.slug.current}`,
+    featured: item.featured ?? false,
+  }))
+
+  const featured = allNews.find((n: any) => n.featured) ?? allNews[0]
+  const gridNews = allNews.filter((n: any) => n !== featured)
+  const totalPages = Math.max(1, Math.ceil(gridNews.length / PAGE_SIZE))
+
+  return Array.from({ length: Math.max(0, totalPages - 1) }, (_, i) => {
+    const pageNum = i + 2
+    const start = (pageNum - 1) * PAGE_SIZE
+    return {
+      params: { page: String(pageNum) },
+      props: {
+        gridCards: gridNews.slice(start, start + PAGE_SIZE),
+        currentPage: pageNum,
+        lastPage: totalPages,
+      },
+    }
+  })
+}
+
+const { gridCards, currentPage, lastPage } = Astro.props
+
+const page = {
+  data: gridCards,
+  currentPage,
+  lastPage,
+  url: {
+    prev: currentPage === 2 ? '/news' : `/news/${currentPage - 1}`,
+    next: currentPage < lastPage ? `/news/${currentPage + 1}` : undefined as string | undefined,
+  },
+}
+---
+<Layout title={`News — Page ${currentPage}`}>
+  <NewsSection gridCards={page.data} page={page} />
+</Layout>

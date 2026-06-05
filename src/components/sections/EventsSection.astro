@@ -3,6 +3,8 @@ import Section from '../ui/Section.astro'
 import Button from '../ui/Button.astro'
 import { client, urlFor } from '../../lib/sanity'
 
+const PAGE_SIZE = 5
+
 type EventTag = 'future' | 'past'
 
 type EventItem = {
@@ -22,7 +24,7 @@ function formatDate(iso: string) {
   return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
 }
 
-const FALLBACK_IMAGE = 'https://www.figma.com/api/mcp/asset/651ffb27-b57a-49fd-9f61-2470b7b9c1f3'
+const FALLBACK_IMAGE = '/images/placeholder.webp'
 
 const raw = await client.fetch(`
   *[_type == "event"] | order(date desc) {
@@ -41,6 +43,8 @@ const events: EventItem[] = raw.map((item: any) => ({
   alt: item.title,
   href: `/events/${item.slug.current}`,
 }))
+
+const hasMore = events.length > PAGE_SIZE
 ---
 
 <Section class="bg-bg-primary pt-[208px] pb-[160px] max-md:pt-20 max-md:pb-20">
@@ -51,23 +55,27 @@ const events: EventItem[] = raw.map((item: any) => ({
     <span class="text-h1 text-text-secondary">{events.length}</span>
   </div>
 
-  <!-- Column labels — desktop only (≥1024px) -->
+  <!-- Column labels — desktop only -->
   <div class="hidden lg:flex text-regular text-text-secondary mb-4 pr-6">
     <span class="shrink-0" style="width: calc(10rem + 1rem + 390px + 1rem)">Date</span>
     <span>Event</span>
   </div>
 
   <!-- Events list -->
-  <div class="flex flex-col gap-12 max-md:gap-6">
+  <div id="events-list" class="flex flex-col gap-12 max-md:gap-6">
     {events.map((event, i) => (
-      <div class:list={[
-        "relative group border-t border-border-other-2 pt-12 px-6 flex gap-3 items-start",
-        "max-lg:flex-col max-lg:pt-8 max-lg:px-0",
-        "max-md:pt-6",
-        i === events.length - 1 ? "pb-12 max-lg:pb-8 max-md:pb-6" : "",
-      ]}>
+      <div
+        class:list={[
+          "event-item relative group border-t border-border-other-2 pt-12 px-6 flex gap-3 items-start",
+          "max-lg:flex-col max-lg:pt-8 max-lg:px-0",
+          "max-md:pt-6",
+          i === events.length - 1 ? "pb-12 max-lg:pb-8 max-md:pb-6" : "",
+          i >= PAGE_SIZE ? "hidden" : "",
+        ]}
+        data-index={i}
+      >
 
-        <!-- Date + tag: vertical on desktop, horizontal on tablet/mobile -->
+        <!-- Date + tag -->
         <div class="flex flex-col items-start justify-center gap-4 shrink-0 w-[10rem] max-lg:flex-row max-lg:items-center max-lg:gap-2 max-lg:w-auto">
           <span class="text-regular text-text-primary">{event.date}</span>
           <span class:list={[
@@ -81,7 +89,6 @@ const events: EventItem[] = raw.map((item: any) => ({
         <!-- Image + text -->
         <div class="flex flex-1 gap-4 items-start min-w-0 max-lg:flex-col max-lg:w-full">
 
-          <!-- Image link -->
           <a href={event.href} class="bg-bg-secondary rounded-[4px] overflow-hidden shrink-0 w-[390px] h-[216px] max-lg:w-full max-lg:h-auto max-lg:aspect-video block">
             <img
               src={event.image}
@@ -91,14 +98,11 @@ const events: EventItem[] = raw.map((item: any) => ({
             />
           </a>
 
-          <!-- Text: title top, meta bottom -->
           <div class="flex flex-col justify-between self-stretch flex-1 min-w-0 max-lg:gap-4">
             <a href={event.href} class="text-h6 text-text-primary text-trim-off pr-[10rem] max-lg:pr-0 hover:text-text-tertiary transition-colors duration-200">{event.title}</a>
 
-            <!-- Location / Date / Time -->
             <div class="flex gap-x-14 lg:group-hover:gap-x-8 transition-all duration-300 ease-in-out max-md:gap-x-5 max-md:flex-wrap">
 
-              <!-- Location -->
               <div class="flex flex-col gap-2">
                 <span class="text-small text-text-secondary max-md:hidden">Location</span>
                 <div class="flex items-center gap-3 max-md:flex-col max-md:items-start max-md:gap-3">
@@ -107,7 +111,6 @@ const events: EventItem[] = raw.map((item: any) => ({
                 </div>
               </div>
 
-              <!-- Date -->
               <div class="flex flex-col gap-2">
                 <span class="text-small text-text-secondary max-md:hidden">Date</span>
                 <div class="flex items-center gap-3 max-md:flex-col max-md:items-start max-md:gap-3">
@@ -116,7 +119,6 @@ const events: EventItem[] = raw.map((item: any) => ({
                 </div>
               </div>
 
-              <!-- Time -->
               <div class="flex flex-col gap-2">
                 <span class="text-small text-text-secondary max-md:hidden">Time</span>
                 <div class="flex items-center gap-3 max-md:flex-col max-md:items-start max-md:gap-3">
@@ -129,7 +131,7 @@ const events: EventItem[] = raw.map((item: any) => ({
           </div>
         </div>
 
-        <!-- Details button: desktop hover / tablet+mobile always visible -->
+        <!-- Details button -->
         <div class="hidden lg:block absolute top-12 right-6 z-[1] opacity-0 lg:group-hover:opacity-100 transition-opacity duration-500 ease-in-out">
           <Button label="Details" href={event.href} variant="black" />
         </div>
@@ -141,9 +143,39 @@ const events: EventItem[] = raw.map((item: any) => ({
     ))}
   </div>
 
-  <!-- More -->
-  <button class="w-full text-pagination text-text-primary text-center mt-12 cursor-pointer hover:text-text-secondary transition-colors duration-200">
-    More ↓
-  </button>
+  <!-- Load More -->
+  {hasMore && (
+    <button
+      id="events-more-btn"
+      class="w-full text-pagination text-text-primary text-center mt-12 cursor-pointer hover:text-text-secondary transition-colors duration-200"
+      data-shown={PAGE_SIZE}
+      data-page-size={PAGE_SIZE}
+    >
+      More ↓
+    </button>
+  )}
 
 </Section>
+
+<script>
+  const btn = document.getElementById('events-more-btn') as HTMLButtonElement | null
+  if (btn) {
+    btn.addEventListener('click', () => {
+      const shown = Number(btn.dataset.shown)
+      const pageSize = Number(btn.dataset.pageSize)
+      const next = shown + pageSize
+
+      const items = document.querySelectorAll<HTMLElement>('.event-item')
+      let newShown = 0
+      items.forEach((item, i) => {
+        if (i < next) {
+          item.classList.remove('hidden')
+          newShown = i + 1
+        }
+      })
+
+      btn.dataset.shown = String(next)
+      if (next >= items.length) btn.hidden = true
+    })
+  }
+</script>

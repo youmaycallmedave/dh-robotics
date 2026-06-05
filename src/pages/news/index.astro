@@ -1,7 +1,43 @@
 ---
 import Layout from '../../layouts/Layout.astro'
 import NewsSection from '../../components/sections/NewsSection.astro'
+import { client, urlFor } from '../../lib/sanity'
+
+const PAGE_SIZE = 9
+
+function formatDate(iso: string) {
+  const d = new Date(iso)
+  return d.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })
+}
+
+const FALLBACK_IMAGE = '/images/placeholder.webp'
+
+const raw = await client.fetch(`*[_type == "news"] | order(date desc) { title, slug, category, date, heroImage, featured }`)
+
+const allNews = raw.map((item: any) => ({
+  title: item.title,
+  date: formatDate(item.date),
+  image: item.heroImage ? urlFor(item.heroImage).width(800).url() : FALLBACK_IMAGE,
+  alt: item.title,
+  category: item.category as 'news' | 'insights',
+  href: `/news/${item.slug.current}`,
+  featured: item.featured ?? false,
+}))
+
+const featured = allNews.find((n: any) => n.featured) ?? allNews[0]
+const gridNews = allNews.filter((n: any) => n !== featured)
+const totalPages = Math.max(1, Math.ceil(gridNews.length / PAGE_SIZE))
+
+const page = {
+  data: gridNews.slice(0, PAGE_SIZE),
+  currentPage: 1,
+  lastPage: totalPages,
+  url: {
+    prev: undefined as string | undefined,
+    next: totalPages > 1 ? '/news/2' : undefined as string | undefined,
+  },
+}
 ---
 <Layout title="News">
-  <NewsSection />
+  <NewsSection featured={featured} gridCards={page.data} page={page} />
 </Layout>

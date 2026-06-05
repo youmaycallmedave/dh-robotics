@@ -18,8 +18,8 @@ const groups: { title: string; items: { question: string; answer: string }[] }[]
       ]}>
 
         <!-- Left: nav title — always visible, sticky on desktop -->
-        <div class="shrink-0 w-full lg:w-[260px] lg:sticky lg:top-[5vh] lg:self-start mb-2 lg:mb-0">
-          <p class="faq-nav-title text-large text-text-secondary inline-block relative" data-nav={gi}>
+        <div class="shrink-0 w-full lg:w-[260px] lg:sticky lg:top-[100px] lg:self-start mb-2 lg:mb-0">
+          <p class="faq-nav-title text-large text-text-primary max-lg:text-text-secondary inline-block relative" data-nav={gi}>
             {group.title}
             <span class="faq-nav-line absolute bottom-[-2px] left-0 h-[1px] bg-text-primary w-full origin-left scale-x-0 transition-transform duration-1000 ease-[cubic-bezier(0.4,0,0.2,1)] max-lg:hidden"></span>
           </p>
