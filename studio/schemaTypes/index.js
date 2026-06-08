@@ -6,6 +6,8 @@ import { productCategoryType } from './productCategory'
 import { productSeriesType } from './productSeries'
 import { productType } from './product'
 import { downloadType } from './download'
+import { industryType } from './industry'
+import { actionType } from './action'
 
 export const schemaTypes = [
   newsType,
@@ -16,4 +18,6 @@ export const schemaTypes = [
   productSeriesType,
   productType,
   downloadType,
+  industryType,
+  actionType,
 ]

@@ -1,14 +1,226 @@
 ---
 import Layout from '../../layouts/Layout.astro'
-import Section from '../../components/ui/Section.astro'
+import Button from '../../components/ui/Button.astro'
+import ScrollIndicator from '../../components/ui/ScrollIndicator.astro'
+import { client, urlFor } from '../../lib/sanity'
+
+const [cmsIndustries, cmsTasks] = await Promise.all([
+  client.fetch(`*[_type == "industry"] | order(order asc) { _id, title, slug, description, image }`),
+  client.fetch(`*[_type == "action"] | order(order asc) { _id, title, slug, icon }`),
+])
+
+const fallbackIndustries = [
+  {
+    _id: '1',
+    title: 'Medical automation',
+    description: 'Medical automation can greatly improve the work efficiency of modern medical front-end and back-end, reduce processes, and improve accuracy.',
+    imageUrl: '/images/applications-medical.webp',
+    href: '/applications/industry/medical-automation',
+  },
+]
+
+const fallbackTasks = [
+  { _id: '1', title: 'Grabbing',               imageUrl: '/images/icon-task-grabbing.svg',     href: '/applications/action/grabbing' },
+  { _id: '2', title: 'Clamping',               imageUrl: '/images/icon-task-clamping.svg',      href: '/applications/action/clamping' },
+  { _id: '3', title: 'Counterpoint',           imageUrl: '/images/icon-task-counterpoint.svg',  href: '/applications/action/counterpoint' },
+  { _id: '4', title: 'Transport',              imageUrl: '/images/icon-task-transport.svg',     href: '/applications/action/transport' },
+  { _id: '5', title: 'Rotation',               imageUrl: '/images/icon-task-rotation.png',      href: '/applications/action/rotation' },
+  { _id: '6', title: 'Assembly',               imageUrl: '/images/icon-task-assembly.svg',      href: '/applications/action/assembly' },
+  { _id: '7', title: 'Loading &\nUnloading',   imageUrl: '/images/icon-task-loading.svg',       href: '/applications/action/loading-unloading' },
+  { _id: '8', title: 'Opening &\nClosing Lid', imageUrl: '/images/icon-task-opening.svg',       href: '/applications/action/opening-closing-lid' },
+]
+
+const industries = cmsIndustries.length > 0
+  ? (cmsIndustries as any[]).map((i) => ({
+      _id: i._id,
+      title: i.title,
+      description: i.description ?? '',
+      imageUrl: i.image ? urlFor(i.image).width(1200).url() : '/images/applications-medical.webp',
+      href: `/applications/industry/${i.slug?.current}`,
+    }))
+  : fallbackIndustries
+
+const taskIconMap: Record<string, string> = {
+  'grabbing':            '/images/icon-task-grabbing.svg',
+  'clamping':            '/images/icon-task-clamping.svg',
+  'counterpoint':        '/images/icon-task-counterpoint.svg',
+  'transport':           '/images/icon-task-transport.svg',
+  'rotation':            '/images/icon-task-rotation.png',
+  'assembly':            '/images/icon-task-assembly.svg',
+  'loading-unloading':   '/images/icon-task-loading.svg',
+  'opening-closing-lid': '/images/icon-task-opening.svg',
+}
+
+const tasks = cmsTasks.length > 0
+  ? (cmsTasks as any[]).map((t) => ({
+      _id: t._id,
+      title: t.title,
+      imageUrl: t.icon ? urlFor(t.icon).width(144).url() : (taskIconMap[t.slug?.current] ?? ''),
+      href: `/applications/action/${t.slug?.current}`,
+    }))
+  : fallbackTasks
 ---
+
 <Layout title="Applications">
-  <Section pt="page" pb="lg">
-    <h1>Applications</h1>
-    <ul>
-      <li>1. Hero — фото + title</li>
-      <li>2. Industries — слайдер с индустриями (из CMS)</li>
-      <li>3. Tasks / Processes — список процессов (из CMS)</li>
-    </ul>
-  </Section>
+
+  <!-- Hero -->
+  <section class="relative h-[720px] bg-bg-other overflow-hidden max-lg:h-[500px] max-md:h-[400px]">
+    <div class="absolute top-0 bottom-0 right-0 left-[17.5%] max-lg:left-0">
+      <img
+        src="/images/applications-hero.webp"
+        alt="DH-Robotics grippers in action"
+        class="w-full h-full object-cover object-top"
+      />
+      <div class="absolute inset-x-0 bottom-0 h-[124px] bg-gradient-to-b from-transparent to-bg-other"></div>
+    </div>
+    <div class="absolute bottom-10 inset-x-0">
+      <div class="global-padding">
+        <div class="mx-auto max-w-[1200px] flex items-end justify-between">
+          <h1 class="text-h1 mob-h2 text-text-primary">Applications</h1>
+          <ScrollIndicator label="Scroll down" href="#industries" />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Industries -->
+  <section id="industries" class="bg-bg-other pb-[120px] max-lg:pb-20">
+    <div class="global-padding">
+      <div class="mx-auto max-w-[1200px]">
+
+        <div class="pt-[120px] mb-20 max-lg:pt-20 max-lg:mb-10">
+          <h2 class="text-h2 mob-h3 text-text-primary mb-10">Industries</h2>
+          <p class="text-regular text-text-secondary max-w-[796px]">The global manufacturing industry is gradually entering the era of high-end intelligence. There is an increasingly demand on automation, informatization, intelligence, and energy saving. Due to the continuous development of the industry, cost-effective precision motion and smart assembly have become the primary target for the development of smart manufacturing in various industries.</p>
+        </div>
+
+        <!-- Slider -->
+        <div class="relative overflow-hidden" id="industries-slider-wrap">
+          <div class="flex gap-10 transition-transform duration-500 ease-[cubic-bezier(.21,1,.34,1)]" id="industries-slider">
+            {industries.map((industry) => (
+              <div class="shrink-0 w-full flex flex-col gap-8 max-lg:gap-6">
+                <!-- image -->
+                <div class="relative w-full aspect-[795/538] rounded-[4px] overflow-hidden bg-bg-secondary">
+                  <img
+                    src={industry.imageUrl}
+                    alt={industry.title}
+                    class="absolute inset-0 w-full h-full object-cover"
+                  />
+                  <div class="absolute bottom-0 inset-x-0 h-[148px] bg-gradient-to-t from-[rgba(5,11,19,0.8)] to-transparent"></div>
+                </div>
+                <!-- title + desc + button -->
+                <div class="flex items-start justify-between gap-10 max-lg:flex-col max-lg:gap-6">
+                  <div class="flex flex-col gap-6 max-w-[490px] max-lg:max-w-full">
+                    <h3 class="text-h5 mob-h6 text-text-primary">{industry.title}</h3>
+                    <p class="text-regular text-text-secondary">{industry.description}</p>
+                  </div>
+                  <Button label="Explore" href={industry.href} variant="black" class="shrink-0" />
+                </div>
+                <!-- progress + nav + view more -->
+                <div class="flex items-center gap-10">
+                  <div class="flex-1 h-px bg-border-other-2 relative">
+                    <div class="absolute left-0 top-0 h-px bg-text-primary transition-all duration-500" style={`width: ${((1/industries.length)*100).toFixed(0)}%`} id="industries-progress"></div>
+                  </div>
+                  <div class="flex gap-4 shrink-0">
+                    <button id="industries-prev" aria-label="Previous" class="size-8 border border-border-other-2 rounded-[4px] flex items-center justify-center text-text-secondary hover:text-text-primary hover:border-text-primary transition-colors">
+                      <svg width="8" height="12" viewBox="0 0 8 12" fill="none" aria-hidden="true">
+                        <path d="M6 10L2 6L6 2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                      </svg>
+                    </button>
+                    <button id="industries-next" aria-label="Next" class="size-8 border border-border-other-2 rounded-[4px] flex items-center justify-center text-text-secondary hover:text-text-primary hover:border-text-primary transition-colors">
+                      <svg width="8" height="12" viewBox="0 0 8 12" fill="none" aria-hidden="true">
+                        <path d="M2 2L6 6L2 10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                      </svg>
+                    </button>
+                  </div>
+                  <a href="/applications/industry" class="shrink-0 inline-flex items-center gap-2 text-small-caps text-text-primary hover:opacity-70 transition-opacity">
+                    VIEW MORE
+                    <svg width="5" height="9" viewBox="0 0 5 9" fill="none" aria-hidden="true">
+                      <path d="M1 1L4 4.5L1 8" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                  </a>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- Tasks -->
+  <section class="bg-bg-primary pt-[160px] pb-[120px] max-lg:pt-20 max-lg:pb-16">
+    <div class="global-padding">
+      <div class="mx-auto max-w-[1200px]">
+
+        <!-- header -->
+        <div class="flex items-end justify-between gap-10 mb-[56px] max-lg:flex-col max-lg:items-start max-lg:mb-10">
+          <div class="flex flex-col gap-10 max-w-[694px] max-lg:gap-6">
+            <h2 class="text-h2 mob-h3 text-text-primary">Tasks</h2>
+            <p class="text-regular text-text-secondary">Based on the self-developed servo control system with precision force control as the core, DH-Robotics provides customers in various industries around the world with a variety of intelligent grasping products, which are well adapted to various scenarios such as detection, sorting, handling, and assembly, it provides higher accuracy, better usability and stronger stability for intelligent manufacturing capabilities.</p>
+          </div>
+          <a href="/applications" class="shrink-0 inline-flex items-center gap-2 text-small-caps text-text-primary hover:opacity-70 transition-opacity whitespace-nowrap mb-1">
+            VIEW MORE
+            <svg width="5" height="9" viewBox="0 0 5 9" fill="none" aria-hidden="true">
+              <path d="M1 1L4 4.5L1 8" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </a>
+        </div>
+
+        <!-- task cards grid -->
+        <div class="grid grid-cols-4 gap-4 max-lg:grid-cols-2 max-sm:grid-cols-1">
+          {tasks.map((task) => (
+            <a
+              href={task.href}
+              class="group bg-bg-primary border border-border-other-2 p-8 flex flex-col justify-between h-[272px] hover:border-text-primary transition-colors duration-200"
+            >
+              <div class="flex items-center justify-between">
+                <span class="text-large-medium text-text-primary uppercase leading-[1.3] whitespace-pre-line">{task.title}</span>
+                <div class="shrink-0 size-8 border border-border-other-2 rounded-[4px] flex items-center justify-center text-text-secondary group-hover:border-text-primary group-hover:text-text-primary transition-colors">
+                  <svg width="8" height="12" viewBox="0 0 8 12" fill="none" aria-hidden="true">
+                    <path d="M2 2L6 6L2 10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </div>
+              </div>
+              {task.imageUrl && (
+                <div class="size-[72px]">
+                  <img src={task.imageUrl} alt="" class="size-full object-contain" aria-hidden="true" />
+                </div>
+              )}
+            </a>
+          ))}
+        </div>
+
+      </div>
+    </div>
+  </section>
+
 </Layout>
+
+<script>
+  const slider = document.getElementById('industries-slider') as HTMLElement
+  const wrap = document.getElementById('industries-slider-wrap') as HTMLElement
+  const progress = document.getElementById('industries-progress') as HTMLElement
+  const prevBtn = document.getElementById('industries-prev') as HTMLButtonElement
+  const nextBtn = document.getElementById('industries-next') as HTMLButtonElement
+
+  if (slider && wrap) {
+    const cards = slider.children.length
+    let current = 0
+
+    const update = () => {
+      slider.style.transform = `translateX(calc(-${current * 100}% - ${current * 40}px))`
+      if (progress) progress.style.width = `${((current + 1) / cards) * 100}%`
+    }
+
+    prevBtn?.addEventListener('click', () => {
+      current = Math.max(0, current - 1)
+      update()
+    })
+
+    nextBtn?.addEventListener('click', () => {
+      current = Math.min(cards - 1, current + 1)
+      update()
+    })
+  }
+</script>

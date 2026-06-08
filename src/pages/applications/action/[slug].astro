@@ -1,0 +1,356 @@
+---
+import Layout from '../../../layouts/Layout.astro'
+import Button from '../../../components/ui/Button.astro'
+import Breadcrumbs from '../../../components/ui/Breadcrumbs.astro'
+import { client, urlFor } from '../../../lib/sanity'
+
+export async function getStaticPaths() {
+  const actions = await client.fetch(`*[_type == "action"]{ slug }`)
+  return actions.map((a: any) => ({ params: { slug: a.slug.current } }))
+}
+
+const { slug } = Astro.params
+
+const [action, allActions, allIndustries] = await Promise.all([
+  client.fetch(
+    `*[_type == "action" && slug.current == $slug][0]{
+      _id, title, description, icon,
+      sections[]{ _key, title, text, videoUrl, image, series[]->{ _id, title, slug, heroImage, subtitle, features[]{title} } }
+    }`,
+    { slug }
+  ),
+  client.fetch(`*[_type == "action"] | order(order asc) { _id, title, slug, icon }`),
+  client.fetch(`*[_type == "industry"] | order(order asc) { _id, title, slug, description, image }`),
+])
+
+if (!action) return Astro.redirect('/applications')
+
+const iconMap: Record<string, string> = {
+  'grabbing':           '/images/icon-task-grabbing.svg',
+  'clamping':           '/images/icon-task-clamping.svg',
+  'counterpoint':       '/images/icon-task-counterpoint.svg',
+  'transport':          '/images/icon-task-transport.svg',
+  'rotation':           '/images/icon-task-rotation.png',
+  'assembly':           '/images/icon-task-assembly.svg',
+  'loading-unloading':  '/images/icon-task-loading.svg',
+  'opening-closing-lid':'/images/icon-task-opening.svg',
+}
+
+function getYoutubeId(url: string): string | null {
+  const m = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&\s]+)/)
+  return m ? m[1] : null
+}
+---
+
+<Layout title={`${action.title} — DH Robotics`}>
+
+  <Breadcrumbs crumbs={[
+    { label: 'Applications', href: '/applications' },
+    { label: action.title },
+  ]} />
+
+  <section class="bg-bg-primary py-[120px] max-lg:py-20">
+    <div class="global-padding">
+      <div class="mx-auto max-w-[1200px]">
+
+        <!-- H1 + description -->
+        <div class="flex items-end justify-between gap-10 mb-14 max-lg:flex-col max-lg:items-start max-lg:mb-10">
+          <div class="flex flex-col gap-10 max-w-[785px] max-lg:gap-6">
+            <h1 class="text-h1 mob-h2 text-text-primary">{action.title}</h1>
+            {action.description && (
+              <p class="text-large text-text-secondary">{action.description}</p>
+            )}
+          </div>
+        </div>
+
+        <!-- Icon navigation: all action types -->
+        <div class="flex flex-wrap gap-4 pt-10 border-t border-border-other-2 mb-[120px] max-lg:mb-20">
+          {(allActions as any[]).map((a) => {
+            const isActive = a.slug?.current === slug
+            const iconSrc = a.icon ? urlFor(a.icon).width(80).url() : iconMap[a.slug?.current] ?? ''
+            return (
+              <a
+                href={`/applications/action/${a.slug?.current}`}
+                class:list={[
+                  'flex flex-col gap-4 items-center group',
+                ]}
+              >
+                <div class:list={[
+                  'w-[112px] h-[63px] rounded-[4px] flex items-center justify-center border transition-colors duration-200',
+                  isActive
+                    ? 'border-[#d7000f] border-[1.6px] bg-bg-primary shadow-[0_0_0_3px_rgba(215,0,15,0.24)]'
+                    : 'border-border-other-2 bg-bg-primary hover:border-text-primary',
+                ]}>
+                  {iconSrc && (
+                    <img src={iconSrc} alt="" class="size-[38px] object-contain" aria-hidden="true" />
+                  )}
+                </div>
+                <span class:list={[
+                  'text-small-medium',
+                  isActive ? 'text-text-primary' : 'text-text-secondary group-hover:text-text-primary',
+                ]}>
+                  {a.title}
+                </span>
+              </a>
+            )
+          })}
+        </div>
+
+        <!-- Classification heading + sidebar + content -->
+        {action.sections?.length > 0 && (
+          <div class="flex flex-col gap-14 max-lg:gap-10">
+            <h2 class="text-h2 mob-h3 text-text-primary">Classification</h2>
+
+            <div class="flex items-start gap-10 max-lg:flex-col">
+
+              <!-- Sticky sidebar: numbered list of section titles -->
+              <aside class="shrink-0 w-[288px] sticky top-24 max-lg:static max-lg:w-full">
+                <ol class="flex flex-col gap-0">
+                  {(action.sections as any[]).map((section, i) => (
+                    <li>
+                      <a
+                        href={`#section-${section._key}`}
+                        class="relative block py-3 border-b border-border-other-2 text-small text-text-secondary hover:text-text-primary transition-colors duration-200 section-nav-link"
+                        data-key={section._key}
+                      >
+                        <span class="text-text-tertiary mr-2">{String(i + 1).padStart(2, '0')}.</span>
+                        {section.title}
+                        <span class="section-nav-line absolute bottom-[-1px] left-0 h-[1px] bg-text-primary w-full origin-left scale-x-0 transition-transform duration-700 ease-[cubic-bezier(0.4,0,0.2,1)]"></span>
+                      </a>
+                    </li>
+                  ))}
+                </ol>
+              </aside>
+
+              <!-- Main content: stacked sections -->
+              <div class="flex-1 flex flex-col min-w-0">
+                {(action.sections as any[]).map((section, i) => {
+                  const ytId = section.videoUrl ? getYoutubeId(section.videoUrl) : null
+                  const hasMedia = ytId || section.image
+                  return (
+                    <div
+                      id={`section-${section._key}`}
+                      class:list={[
+                        'flex flex-col gap-10',
+                        i < (action.sections?.length ?? 0) - 1 ? 'pb-16 mb-16 border-b border-border-other-2' : '',
+                      ]}
+                    >
+                      <!-- Title + description -->
+                      <div class="flex flex-col gap-8">
+                        {section.title && (
+                          <h3 class="text-h3 mob-h4 text-text-primary">{section.title}</h3>
+                        )}
+                        {section.text && (
+                          <p class="text-small text-text-secondary">{section.text}</p>
+                        )}
+                      </div>
+
+                      <!-- Video or image block -->
+                      {hasMedia && (
+                        <div class="w-full aspect-video bg-bg-secondary rounded-[4px] overflow-hidden relative">
+                          {ytId ? (
+                            <iframe
+                              src={`https://www.youtube.com/embed/${ytId}`}
+                              title={section.title ?? ''}
+                              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                              allowfullscreen
+                              class="absolute inset-0 w-full h-full border-0"
+                            />
+                          ) : section.image ? (
+                            <img
+                              src={urlFor(section.image).width(1800).url()}
+                              alt={section.title ?? ''}
+                              class="absolute inset-0 w-full h-full object-cover"
+                            />
+                          ) : null}
+                        </div>
+                      )}
+
+                      <!-- Application Series -->
+                      {section.series?.length > 0 && (
+                        <div class="flex flex-col gap-6">
+                          <h4 class="text-h6 text-text-primary">Application Products</h4>
+                          <div class="flex flex-wrap gap-4">
+                            {(section.series as any[]).map((s) => (
+                              <a
+                                href={`/products/series/${s.slug?.current}`}
+                                class="group w-[288px] shrink-0 flex flex-col bg-bg-secondary"
+                              >
+                                <div class="h-[259px] overflow-hidden relative">
+                                  {s.heroImage ? (
+                                    <img
+                                      src={urlFor(s.heroImage).width(576).url()}
+                                      alt={s.title}
+                                      class="absolute inset-0 w-full h-full object-contain"
+                                    />
+                                  ) : (
+                                    <div class="absolute inset-0 flex items-center justify-center">
+                                      <span class="text-text-tertiary text-small">{s.title}</span>
+                                    </div>
+                                  )}
+                                </div>
+                                <div class="flex flex-col gap-6 p-5">
+                                  <div class="flex flex-col gap-4">
+                                    <span class="text-h6 text-text-primary tracking-[-0.03125rem]">{s.title}</span>
+                                    {s.subtitle && <span class="text-regular text-text-secondary">{s.subtitle}</span>}
+                                  </div>
+                                  <div class="flex items-end gap-4">
+                                    {s.features?.length > 0 && (
+                                      <ul class="flex-1 flex flex-col gap-2 min-w-0">
+                                        {(s.features as any[]).map((f: any) => (
+                                          <li class="flex items-center gap-2">
+                                            <svg class="shrink-0" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                                              <rect x="5" y="5" width="6" height="6" rx="1" fill="currentColor" class="text-text-primary"/>
+                                            </svg>
+                                            <span class="text-small text-text-primary leading-[22px]">{f.title}</span>
+                                          </li>
+                                        ))}
+                                      </ul>
+                                    )}
+                                    <div class="size-10 bg-btn-black-default flex items-center justify-center rounded-[2px] shrink-0 self-end group-hover:opacity-80 transition-opacity duration-200">
+                                      <svg width="6" height="10" viewBox="0 0 6 10" fill="none" aria-hidden="true">
+                                        <path d="M1 1L5 5L1 9" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                      </svg>
+                                    </div>
+                                  </div>
+                                </div>
+                              </a>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  )
+                })}
+              </div>
+
+            </div>
+          </div>
+        )}
+
+      </div>
+    </div>
+  </section>
+
+  <!-- Industry Applications -->
+  {allIndustries.length > 0 && (
+    <section class="bg-bg-other py-[120px] max-lg:py-20" id="industry-apps-section">
+      <div class="global-padding">
+        <div class="mx-auto max-w-[1200px]">
+
+          <!-- Title + description -->
+          <div class="flex flex-col gap-10 max-w-[694px] mb-[56px] max-lg:mb-10">
+            <h2 class="text-h3 mob-h4 text-text-primary">Industry Applications</h2>
+            <p class="text-regular text-text-secondary">The global manufacturing industry is gradually entering the era of high-end intelligence. There is an increasingly demand on automation, informatization, intelligence, and energy saving. Due to the continuous development of the industry, cost-effective precision motion and smart assembly have become the primary target for the development of smart manufacturing in various industries.</p>
+          </div>
+
+          <!-- Slider -->
+          <div class="relative overflow-hidden" id="ind-slider-wrap">
+            <div class="flex gap-10 transition-transform duration-500 ease-[cubic-bezier(.21,1,.34,1)]" id="ind-slider">
+              {(allIndustries as any[]).map((industry) => (
+                <div class="shrink-0 w-full flex items-start gap-10 max-lg:flex-col">
+                  <!-- Left: smaller image -->
+                  <div class="shrink-0 w-[480px] h-[465px] bg-bg-secondary rounded-[4px] overflow-hidden max-lg:w-full max-lg:h-auto max-lg:aspect-video">
+                    {industry.image ? (
+                      <img
+                        src={urlFor(industry.image).width(960).url()}
+                        alt={industry.title}
+                        class="w-full h-full object-cover"
+                      />
+                    ) : (
+                      <img src="/images/applications-medical.webp" alt={industry.title} class="w-full h-full object-cover" />
+                    )}
+                  </div>
+
+                  <!-- Right: title + desc + button -->
+                  <div class="flex-1 flex flex-col gap-6 pt-4">
+                    <h3 class="text-h5 mob-h6 text-text-primary">{industry.title}</h3>
+                    {industry.description && (
+                      <p class="text-regular text-text-secondary">{industry.description}</p>
+                    )}
+                    <div class="mt-2">
+                      <Button label="Explore" href={`/applications/industry/${industry.slug?.current}`} variant="black" />
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <!-- Progress + nav -->
+          <div class="flex items-center gap-10 mt-10">
+            <div class="flex-1 h-px bg-border-other-2 relative">
+              <div class="absolute left-0 top-0 h-px bg-text-primary transition-all duration-500" id="ind-progress" style={`width: ${(1 / allIndustries.length * 100).toFixed(0)}%`}></div>
+            </div>
+            <div class="flex gap-4 shrink-0">
+              <button id="ind-prev" aria-label="Previous" class="size-8 border border-border-other-2 rounded-[4px] flex items-center justify-center text-text-secondary hover:text-text-primary hover:border-text-primary transition-colors">
+                <svg width="8" height="12" viewBox="0 0 8 12" fill="none" aria-hidden="true">
+                  <path d="M6 10L2 6L6 2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </button>
+              <button id="ind-next" aria-label="Next" class="size-8 border border-border-other-2 rounded-[4px] flex items-center justify-center text-text-secondary hover:text-text-primary hover:border-text-primary transition-colors">
+                <svg width="8" height="12" viewBox="0 0 8 12" fill="none" aria-hidden="true">
+                  <path d="M2 2L6 6L2 10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+  )}
+
+</Layout>
+
+<script>
+  // Industry slider
+  const slider = document.getElementById('ind-slider') as HTMLElement
+  const progress = document.getElementById('ind-progress') as HTMLElement
+  const prevBtn = document.getElementById('ind-prev') as HTMLButtonElement
+  const nextBtn = document.getElementById('ind-next') as HTMLButtonElement
+
+  if (slider) {
+    const cards = slider.children.length
+    let current = 0
+
+    const update = () => {
+      slider.style.transform = `translateX(calc(-${current * 100}% - ${current * 40}px))`
+      if (progress) progress.style.width = `${((current + 1) / cards) * 100}%`
+    }
+
+    prevBtn?.addEventListener('click', () => { current = Math.max(0, current - 1); update() })
+    nextBtn?.addEventListener('click', () => { current = Math.min(cards - 1, current + 1); update() })
+  }
+
+  // Sidebar TOC: FAQ-style animated underline on scroll
+  const navLinks = Array.from(document.querySelectorAll<HTMLAnchorElement>('.section-nav-link'))
+  const navLines = Array.from(document.querySelectorAll<HTMLElement>('.section-nav-line'))
+  const sectionEls = navLinks.map(l => document.getElementById(l.dataset.key ? `section-${l.dataset.key}` : ''))
+
+  function updateActiveToc() {
+    const trigger = window.innerHeight * 0.2
+    let activeIdx = 0
+    sectionEls.forEach((el, i) => {
+      if (el && el.getBoundingClientRect().top <= trigger) activeIdx = i
+    })
+    navLines.forEach((line, i) => {
+      if (i === activeIdx) {
+        line.classList.remove('scale-x-0')
+        line.classList.add('scale-x-100')
+      } else {
+        line.classList.remove('scale-x-100')
+        line.classList.add('scale-x-0')
+      }
+    })
+    navLinks.forEach((link, i) => {
+      link.classList.toggle('text-text-primary', i === activeIdx)
+      link.classList.toggle('text-text-secondary', i !== activeIdx)
+    })
+  }
+
+  if (sectionEls.length > 0) {
+    updateActiveToc()
+    window.addEventListener('scroll', updateActiveToc, { passive: true })
+  }
+</script>

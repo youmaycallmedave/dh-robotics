@@ -1,0 +1,54 @@
+---
+interface Props {
+  label?: string
+  href?: string
+  variant?: 'horizontal' | 'vertical'
+  class?: string
+}
+
+const {
+  label = 'View more',
+  href,
+  variant = 'horizontal',
+  class: className,
+} = Astro.props
+
+const tag = href ? 'a' : 'div'
+---
+
+{variant === 'horizontal' ? (
+  <a
+    href={href}
+    class:list={[
+      'inline-flex items-center gap-3 text-tiny text-text-secondary hover:text-text-primary transition-colors duration-200',
+      href && 'scroll-indicator-link',
+      className,
+    ]}
+  >
+    <svg class="size-3 shrink-0" width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+      <path d="M6 1.875V10.125" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M2.625 6.75L6 10.125L9.375 6.75" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+    {label}
+  </a>
+) : (
+  <div class:list={['flex flex-col gap-3 items-center self-start max-lg:hidden', className]}>
+    <div class="flex items-center justify-center h-[77px] w-[9px]">
+      <span class="-rotate-90 text-tiny text-text-secondary whitespace-nowrap">{label}</span>
+    </div>
+    <svg class="shrink-0 text-text-secondary" width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+      <path d="M6 1.875V10.125" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M2.625 6.75L6 10.125L9.375 6.75" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  </div>
+)}
+
+<script>
+  document.querySelectorAll<HTMLAnchorElement>('.scroll-indicator-link').forEach(link => {
+    link.addEventListener('click', (e) => {
+      e.preventDefault()
+      const id = link.getAttribute('href')?.slice(1)
+      if (id) document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    })
+  })
+</script>
