@@ -50,6 +50,19 @@ export const downloadType = defineType({
       type: 'reference',
       to: [{ type: 'product' }],
     }),
+    defineField({
+      name: 'pages',
+      title: 'Show on pages',
+      description: 'Where this download should appear (besides Download Center)',
+      type: 'array',
+      of: [{ type: 'string' }],
+      options: {
+        list: [
+          { title: 'User Control Software page', value: 'software' },
+        ],
+        layout: 'grid',
+      },
+    }),
   ],
   preview: {
     select: { title: 'title', subtitle: 'tab', description: 'series.title' },

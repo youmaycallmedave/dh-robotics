@@ -1,11 +1,10 @@
 ---
 import Layout from '../layouts/Layout.astro'
-import Breadcrumbs from '../components/ui/Breadcrumbs.astro'
 import Button from '../components/ui/Button.astro'
+import ScrollIndicator from '../components/ui/ScrollIndicator.astro'
 ---
 
 <Layout title="Service">
-  <Breadcrumbs crumbs={[{ label: 'Service' }]} />
 
   <!-- Hero -->
   <section class="bg-bg-primary pt-page pb-14">
@@ -16,15 +15,7 @@ import Button from '../components/ui/Button.astro'
           <p class="text-regular text-text-primary max-w-[592px]">
             Based on the accurately understanding on the customer needs, DH-Robotics develops the electric grippers and actuators with the advantages of "precision, intelligence, flexibility, and User-friendly". After 6 years development, DH-Robotics already became the leading company of precision motion control solutions in Chinese market.
           </p>
-          <div class="flex flex-col gap-3 items-center justify-center shrink-0 max-lg:hidden">
-            <div class="flex items-center justify-center h-[58px] w-[9px]">
-              <span class="-rotate-90 text-tiny text-text-secondary whitespace-nowrap">View more</span>
-            </div>
-            <svg class="text-text-secondary" width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
-              <path d="M6 1.875V10.125" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/>
-              <path d="M2.625 6.75L6 10.125L9.375 6.75" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-          </div>
+          <ScrollIndicator variant="vertical" />
         </div>
       </div>
     </div>

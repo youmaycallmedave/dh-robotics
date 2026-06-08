@@ -34,8 +34,9 @@ const navItems: NavItem[] = [
       columns: [
         {
           links: [
-            { label: 'Industry',   href: '/applications/industry/template' },
-            { label: 'Processes',  href: '/applications/processes/template' },
+            { label: 'Applications', href: '/applications' },
+            { label: 'Industries',   href: '/applications' },
+            { label: 'Tasks',        href: '/applications' },
           ],
         },
       ],
@@ -47,6 +48,7 @@ const navItems: NavItem[] = [
       columns: [
         {
           links: [
+            { label: 'Services',              href: '/services' },
             { label: 'Technology',            href: '/services/technology' },
             { label: 'User Control Software', href: '/services/software' },
           ],
@@ -131,9 +133,9 @@ const navItems: NavItem[] = [
         </button>
 
         <!-- Contact Us -->
-        <a href="/contact" class="inline-flex items-center gap-6 pl-4 pr-2 py-2 rounded-[2px] bg-btn-black-default hover:bg-btn-black-hover text-text-alternate text-small-caps text-trim-off transition-colors duration-150 whitespace-nowrap max-lg:gap-2 max-lg:pl-3 max-lg:pr-1">
-          CONTACT US
-          <svg class="size-6 text-text-alternate" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <a href="/contact" class="contact-btn relative overflow-hidden inline-flex items-center gap-6 pl-4 pr-2 py-2 rounded-[2px] bg-btn-black-default text-text-alternate text-small-caps text-trim-off whitespace-nowrap max-lg:gap-2 max-lg:pl-3 max-lg:pr-1">
+          <span class="contact-label relative z-[1]">CONTACT US</span>
+          <svg class="size-6 text-text-alternate relative z-[1]" viewBox="0 0 24 24" fill="none" aria-hidden="true">
             <path d="M9 18l6-6-6-6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
           </svg>
         </a>
@@ -240,6 +242,37 @@ const navItems: NavItem[] = [
 
 <!-- Spacer so content doesn't go under fixed header -->
 <div class="h-[80px] max-lg:h-[65px]"></div>
+
+<style>
+  @media (hover: hover) and (pointer: fine) {
+    .contact-btn::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-color: var(--color-btn-black-hover);
+      clip-path: inset(100% 0 0 0);
+      transition: clip-path 0.45s cubic-bezier(.21, 1, .34, 1);
+      z-index: 0;
+    }
+
+    .contact-btn:hover::before {
+      clip-path: inset(0 0 0 0);
+    }
+
+    .contact-label {
+      text-shadow: 0 -2em 0 white;
+      transform: translateY(2em);
+      transition:
+        transform 0.45s cubic-bezier(.21, 1, .34, 1),
+        text-shadow 0.15s cubic-bezier(0.215, 0.61, 0.355, 1);
+    }
+
+    .contact-btn:hover .contact-label {
+      transform: translateY(0);
+      text-shadow: 0 -2em 0 white;
+    }
+  }
+</style>
 
 <script>
   // ── Desktop dropdowns (hover) ────────────────────────────────

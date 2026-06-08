@@ -1,13 +1,28 @@
 ---
+import Button from './Button.astro'
+import ScrollIndicator from './ScrollIndicator.astro'
+
 interface Props {
   title: string
   description?: string
   image?: string
   imageAlt?: string
   scrollTarget?: string
+  buttonLabel?: string
+  buttonHref?: string
+  buttonVariant?: 'black' | 'blue' | 'red' | 'white'
 }
 
-const { title, description, image, imageAlt = '', scrollTarget } = Astro.props
+const {
+  title,
+  description,
+  image,
+  imageAlt = '',
+  scrollTarget,
+  buttonLabel,
+  buttonHref,
+  buttonVariant = 'black',
+} = Astro.props
 ---
 
 <section class="bg-bg-primary pt-page pb-md">
@@ -18,17 +33,16 @@ const { title, description, image, imageAlt = '', scrollTarget } = Astro.props
         <div class="flex flex-col gap-10">
           <h1 class="text-h1 text-text-primary">{title}</h1>
           {description && (
-            <p class="text-h6-regular text-text-primary max-w-[390px]">{description}</p>
+            <p class="text-h6-regular text-text-primary max-w-[390px] text-balance">{description}</p>
+          )}
+          {buttonLabel && buttonHref && (
+            <div>
+              <Button label={buttonLabel} href={buttonHref} variant={buttonVariant} />
+            </div>
           )}
         </div>
         {scrollTarget && (
-          <a href={`#${scrollTarget}`} class="inline-flex items-center gap-3 text-tiny text-text-secondary hover:text-text-primary transition-colors duration-200 scroll-target-link">
-            <svg class="size-3" width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
-              <path d="M6 1.875V10.125" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/>
-              <path d="M2.625 6.75L6 10.125L9.375 6.75" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-            View more
-          </a>
+          <ScrollIndicator href={`#${scrollTarget}`} />
         )}
       </div>
 
@@ -41,13 +55,3 @@ const { title, description, image, imageAlt = '', scrollTarget } = Astro.props
     </div>
   </div>
 </section>
-
-<script>
-  document.querySelectorAll<HTMLAnchorElement>('.scroll-target-link').forEach(link => {
-    link.addEventListener('click', (e) => {
-      e.preventDefault()
-      const target = document.getElementById(link.getAttribute('href')!.slice(1))
-      target?.scrollIntoView({ behavior: 'smooth', block: 'start' })
-    })
-  })
-</script>

@@ -1,0 +1,23 @@
+---
+import Button from './Button.astro'
+
+interface Props {
+  title: string
+  version?: string
+  fileFormat?: string
+  date?: string
+  fileUrl?: string
+}
+
+const { title, version, fileFormat, date, fileUrl } = Astro.props
+
+const meta = [version && `Version ${version}`, fileFormat, date].filter(Boolean).join(' · ')
+---
+
+<div class="border-t border-border-other-2 flex items-center justify-between py-8 gap-6">
+  <div class="flex flex-col gap-5">
+    <p class="text-h6 text-text-primary">{title}</p>
+    {meta && <p class="text-regular text-text-secondary">{meta}</p>}
+  </div>
+  <Button label="Download" href={fileUrl ?? '#'} variant="black" class="shrink-0" />
+</div>

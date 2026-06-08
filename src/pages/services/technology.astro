@@ -1,18 +1,200 @@
 ---
 import Layout from '../../layouts/Layout.astro'
-import Breadcrumbs from '../../components/ui/Breadcrumbs.astro'
-import Section from '../../components/ui/Section.astro'
+import PageHero from '../../components/ui/PageHero.astro'
+import ScrollIndicator from '../../components/ui/ScrollIndicator.astro'
+
+const features = [
+  {
+    title: 'Precise',
+    icon: '/images/icon-feature-precise.svg',
+    image: '/images/service-technology-precise.png',
+    items: ['Precise force control', 'High accurate repeatability', 'Exquisite and compact size'],
+    desc: 'The direct drive force feedback and servo control technology guarantee the high-precision gripping force, stroke, speed and rotation of the product.',
+  },
+  {
+    title: 'Intelligent',
+    icon: '/images/icon-feature-intelligent.svg',
+    image: '/images/service-technology-intelligent.png',
+    items: ['Intelligent detection', 'Smart feedback', 'Real-time perception'],
+    desc: 'With smart feedback functions, DH-Robotics products can easily adapt to diversified industrial production and help the refined development of intelligent production.',
+  },
+  {
+    title: 'Flexible',
+    icon: '/images/icon-feature-flexible.svg',
+    image: '/images/service-technology-flexible.png',
+    items: ['Adjustable parameters', 'Modular design', 'Flexible production'],
+    desc: 'DH-Robotics electric grippers like force, position, speed and rotation angle are all adjustable, which can be used in the same scene with the same machine to complete different tasks, so it can adapt to the flexible requirements from factories.',
+  },
+  {
+    title: 'User-friendly',
+    icon: '/images/icon-feature-userfriendly.svg',
+    image: '/images/service-technology-userfriendly.png',
+    items: ['Easy deployment', 'Simple maintenance', 'Drive and control one'],
+    desc: 'The integrated design of drive and control reduces the difficulty and cost of equipment deployment; the protection level up to IP67 enables the gripper to adapt to different production environments; More than 10 millions of maintenance-free cycle times.',
+  },
+]
 ---
 <Layout title="DH-Robotics Technology">
-  <Breadcrumbs crumbs={[{ label: 'Service', href: '/services' }, { label: 'Technology' }]} />
-  <Section pt="page" pb="lg">
-    <h1>DH-Robotics Technology</h1>
-    <ul>
-      <li>1. Hero — title, текст, кнопка</li>
-      <li>2. Инфо секция — title, текст, картинка</li>
-      <li>3. Контентные блоки — чередующиеся: картинка + текст (разные вариации)</li>
-      <li>4. Core Advantages — 4 карточки: иконка, title, текст (преимущества)</li>
-      <li>5. CTA блоки — 2 блока: Selection Manual (PDF/документ) + User Control Software (→ /software)</li>
-    </ul>
-  </Section>
+
+  <PageHero
+    title="DH-Robotics Technology"
+    description="Download the product introduction, 3D drawing files, software and materials"
+    image="/images/service-technology-hero.webp"
+    imageAlt="DH-Robotics product lineup"
+    scrollTarget="intro-section"
+  />
+
+  <!-- Intro: text + dark product image -->
+  <section id="intro-section" class="bg-bg-other py-[96px] max-lg:py-20">
+    <div class="global-padding">
+      <div class="mx-auto max-w-[1200px] flex items-start justify-between gap-[70px] max-lg:flex-col max-lg:gap-10">
+
+        <div class="flex flex-col justify-between shrink-0 w-[438px] max-xl:w-[360px] max-lg:w-full">
+          <p class="text-h5 mob-h6 text-text-primary text-balance mb-[139px] max-lg:mb-10">
+            Nowadays, with the continuous development of high-end intelligent manufacturing, more and more factories have higher requirements for automation.
+            <br/><br/>
+            Accurately understanding customer needs and developing corresponding products are the driving force and competitiveness of DH-Robotics team.
+          </p>
+          <ScrollIndicator label="Keep scrolling" variant="vertical" />
+        </div>
+
+        <div class="bg-bg-alternative rounded-[8px] overflow-hidden shrink-0 w-[389px] h-[636px] max-xl:w-[320px] max-xl:h-auto max-xl:aspect-[389/636] max-lg:w-full max-lg:aspect-[389/500]">
+          <img
+            src="/images/service-technology-product-home.webp"
+            alt="DH-Robotics products"
+            class="w-full h-full object-cover"
+          />
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- R&D History + Core Technologies -->
+  <section class="bg-bg-primary py-[160px] max-lg:py-20">
+    <div class="global-padding">
+      <div class="mx-auto max-w-[1000px] flex flex-col gap-[144px] max-lg:gap-20">
+
+        <!-- R&D History -->
+        <div class="flex items-start gap-[72px] max-lg:flex-col max-lg:gap-10">
+          <div class="relative shrink-0 w-[594px] h-[451px] bg-bg-alternative rounded-[8px] overflow-hidden max-lg:w-full max-lg:h-auto max-lg:aspect-[594/451]">
+            <img
+              src="/images/service-technology-rd.webp"
+              alt="DH-Robotics R&D history"
+              class="absolute inset-0 w-full h-full object-cover"
+            />
+            <div class="absolute bottom-6 right-6 bg-bg-primary rounded-[6px] p-5">
+              <img src="/logotype-dh-robotics.svg" alt="DH-Robotics" class="h-14 w-auto" />
+            </div>
+          </div>
+          <div class="flex flex-col gap-10 flex-1">
+            <h2 class="text-h4 mob-h5 text-text-primary">The history of DH-Robotics R&D</h2>
+            <p class="text-regular text-text-primary">The core team of DH-Robotics is under the tutelage of the industry leader, Prof. Jian S. Dai, an authoritative expert in robotics in international theoretical kinematics and reconfigurable mechanisms.</p>
+            <p class="text-regular text-text-primary">The DH-Robotics team has been deeply involved in the field of robotics for more than ten years, and has participated in three "EU Seventh Framework" projects on robotic dexterous hands, SQUIRREL, TOMSY, and DEXDEB, and has rich technical accumulation and application experience.</p>
+          </div>
+        </div>
+
+        <!-- Core Technologies -->
+        <div class="flex items-start gap-[72px] max-lg:flex-col-reverse max-lg:gap-10">
+          <div class="flex flex-col gap-10 flex-1">
+            <h2 class="text-h4 mob-h5 text-text-primary">Core<br/>Technologies</h2>
+            <p class="text-regular text-text-primary">DH-Robotics has developed the industry-leading direct drive force feedback technology, precision control technology, and integrated integration technology, combining precision clamping motion, linear motion, rotary motion and real-time control to create a benchmark product in the industry.</p>
+            <p class="text-regular text-text-primary">DH-Robotics' products have good dynamic performance, high force control accuracy, precise stroke, simple structure, easy operation, long working life, precise speed control and smooth and quiet performance, and can provide maximum output force, good adaptation to industrial manufacturing scenarios that require high precision and reliability.</p>
+          </div>
+          <div class="relative shrink-0 w-[594px] h-[451px] bg-bg-alternative rounded-[8px] overflow-hidden max-lg:w-full max-lg:h-auto max-lg:aspect-[594/451]">
+            <img
+              src="/images/service-technology-core.webp"
+              alt="DH-Robotics core technology"
+              class="absolute inset-0 w-full h-full object-cover"
+            />
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- Core Advantages header -->
+  <section class="bg-bg-other pt-[160px] pb-[88px] max-lg:pt-20 max-lg:pb-10">
+    <div class="global-padding">
+      <div class="mx-auto max-w-[1200px] flex items-start justify-between gap-10 max-lg:flex-col max-lg:gap-6">
+        <h2 class="text-h2 mob-h3 text-text-primary shrink-0">Core Advantages</h2>
+        <p class="text-large text-text-secondary max-w-[592px] text-balance">Thanks to the top-equipped components and high-standard process accessories, we have built our unique competitiveness, delivering electric actuators that outperform the market.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Core Advantages features -->
+  <section class="bg-bg-other pb-[160px] max-lg:pb-20">
+    <div class="global-padding">
+      <div class="mx-auto max-w-[1200px] flex flex-col gap-20 max-lg:gap-16">
+
+        {features.map((f) => (
+          <div class="flex items-center justify-between gap-10 max-lg:flex-col max-lg:items-start max-lg:gap-8">
+
+            <div class="shrink-0 w-[593px] h-[334px] bg-bg-secondary rounded-[4px] overflow-hidden max-xl:w-[480px] max-xl:h-auto max-xl:aspect-[593/334] max-lg:w-full">
+              <img src={f.image} alt={f.title} class="w-full h-full object-cover" />
+            </div>
+
+            <div class="flex flex-col gap-6 flex-1 max-w-[491px] max-lg:max-w-full">
+              <div class="flex items-center gap-3">
+                <div class="shrink-0 size-[56px] flex items-center justify-center">
+                  <img src={f.icon} alt="" class="size-12" aria-hidden="true" />
+                </div>
+                <h3 class="text-h4 mob-h5 text-text-primary">{f.title}</h3>
+              </div>
+              <ul class="flex flex-col gap-3">
+                {f.items.map((item) => (
+                  <li class="flex items-center gap-2">
+                    <img src="/images/icon-bullet-logo.svg" alt="" class="shrink-0 size-4" aria-hidden="true" />
+                    <span class="text-h6 text-text-primary">{item}</span>
+                  </li>
+                ))}
+              </ul>
+              <p class="text-regular text-text-primary">{f.desc}</p>
+            </div>
+
+          </div>
+        ))}
+
+      </div>
+    </div>
+  </section>
+
+  <!-- Bottom CTA cards -->
+  <section class="bg-bg-primary">
+    <div class="global-padding py-10 max-lg:py-0 max-lg:px-0">
+      <div class="mx-auto max-w-[1200px] flex max-lg:flex-col">
+
+        <!-- Selection Manual -->
+        <a href="/resources/downloads" class="relative h-[400px] overflow-hidden bg-bg-other flex-1 block max-lg:h-[280px]">
+          <img
+            src="/images/service-technology-book.webp"
+            alt="Selection Manual"
+            class="absolute inset-0 w-full h-full object-cover object-left"
+          />
+          <div class="absolute inset-0 bg-gradient-to-b from-transparent to-bg-other-1"></div>
+          <div class="absolute top-10 left-10 flex items-start justify-between w-[calc(100%-80px)]">
+            <h2 class="text-h2 mob-h3 text-text-primary">Selection Manual</h2>
+            <img src="/images/icon-arrow-card.svg" alt="" class="size-12 shrink-0" aria-hidden="true" />
+          </div>
+        </a>
+
+        <!-- User Control Software -->
+        <a href="/services/software" class="relative h-[400px] overflow-hidden bg-bg-alternative flex-1 block max-lg:h-[280px]">
+          <img
+            src="/images/service-technology-hero.webp"
+            alt="User Control Software"
+            class="absolute inset-0 w-full h-full object-cover opacity-50"
+          />
+          <div class="absolute top-10 left-10 flex items-start justify-between w-[calc(100%-80px)]">
+            <h2 class="text-h2 mob-h3 text-text-primary w-[291px]">User control software</h2>
+            <img src="/images/icon-arrow-card.svg" alt="" class="size-12 shrink-0" aria-hidden="true" />
+          </div>
+        </a>
+
+      </div>
+    </div>
+  </section>
+
 </Layout>

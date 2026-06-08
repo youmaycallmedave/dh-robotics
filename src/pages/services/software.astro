@@ -1,17 +1,198 @@
 ---
 import Layout from '../../layouts/Layout.astro'
-import Breadcrumbs from '../../components/ui/Breadcrumbs.astro'
-import Section from '../../components/ui/Section.astro'
+import PageHero from '../../components/ui/PageHero.astro'
+import DownloadRow from '../../components/ui/DownloadRow.astro'
+import { client } from '../../lib/sanity'
+
+const fallbackDownloads = [
+  { _id: '1', title: 'DH-Robotics PC Debugging Software', version: 'V2.3.1', fileFormat: 'EXE', date: '2024-03-15', fileUrl: '#' },
+  { _id: '2', title: 'DH-Robotics USB Driver', version: 'V1.0.2', fileFormat: 'ZIP', date: '2024-01-10', fileUrl: '#' },
+  { _id: '3', title: 'DH-Robotics ROS2 Plugin', version: 'V1.2.0', fileFormat: 'ZIP', date: '2023-11-20', fileUrl: '#' },
+  { _id: '4', title: 'DH-Robotics LabVIEW Driver', version: 'V1.1.0', fileFormat: 'ZIP', date: '2023-09-05', fileUrl: '#' },
+]
+
+const cmsDownloads = await client.fetch(
+  `*[_type == "download" && 'software' in pages] | order(date desc) {
+    _id, title, version, fileFormat, date, fileUrl
+  }`
+)
+
+const downloads = cmsDownloads.length > 0 ? cmsDownloads : fallbackDownloads
 ---
 <Layout title="User Control Software">
-  <Breadcrumbs crumbs={[{ label: 'Service', href: '/services' }, { label: 'User Control Software' }]} />
-  <Section pt="page" pb="lg">
-    <h1>User Control Software</h1>
-    <ul>
-      <li>1. Hero — title, текст, кнопка</li>
-      <li>2. Описание — title, текст, схема + 2 карточки с title и пунктами</li>
-      <li>3. Инфо секция — картинка + текст</li>
-      <li>4. Software Download — список загрузок (из CMS, Downloads)</li>
-    </ul>
-  </Section>
+
+  <PageHero
+    title="User control software"
+    description="Learn about the host computer debugging software"
+    image="/images/service-software-hero.webp"
+    imageAlt="User Control Software interface"
+    scrollTarget="debugging-software"
+    buttonLabel="Downloads"
+    buttonHref="#software-downloads"
+    buttonVariant="black"
+  />
+
+  <!-- Debugging Software section -->
+  <section id="debugging-software" class="bg-bg-secondary pt-[160px] pb-[160px] max-lg:pt-20 max-lg:pb-20">
+    <div class="global-padding">
+      <div class="mx-auto max-w-[1200px]">
+
+        <!-- Title + description -->
+        <div class="max-w-[1000px] mb-[72px] max-lg:mb-10">
+          <h2 class="text-h2 mob-h3 text-text-primary mb-10">Host Computer Debugging Software（PC Side）</h2>
+          <p class="text-large text-text-primary">The host computer debugging software was self-developed by DH-Robotics, it can help customers easily and quickly complete various function parameters adjustments, testing and initialization setting on the PC side. At the meaning time, various status information is provided in real time, which can save a lot of production line setup time and reduce the difficulty of operation and maintenance for on-site engineers.</p>
+        </div>
+
+        <!-- Flow steps (desktop) -->
+        <div class="mb-[72px] max-lg:mb-10 max-lg:hidden">
+          <div class="relative">
+            <div class="absolute top-0 right-[73px] w-[193px] h-[27px] pointer-events-none">
+              <svg width="193" height="27" viewBox="0 0 193 27" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M192 1H1V27" stroke="var(--color-blue-200)" stroke-width="1"/>
+              </svg>
+            </div>
+            <div class="flex items-center mt-[27px]">
+              <div class="border border-border-other-2 bg-bg-primary rounded-[4px] px-4 py-[13px] shrink-0">
+                <span class="text-small text-text-primary whitespace-nowrap">Connect PC and gripper</span>
+              </div>
+              <svg class="shrink-0 mx-3 text-text-secondary" width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 6h8M7 3l3 3-3 3" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              <div class="border border-border-other-2 bg-bg-primary rounded-[4px] px-4 py-[13px] shrink-0">
+                <span class="text-small text-text-primary whitespace-nowrap">Open the debugging software</span>
+              </div>
+              <svg class="shrink-0 mx-3 text-text-secondary" width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 6h8M7 3l3 3-3 3" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              <div class="border border-border-other-2 bg-bg-primary rounded-[4px] px-4 py-[13px] shrink-0">
+                <span class="text-small text-text-primary whitespace-nowrap">Adjust parameters in the interface</span>
+              </div>
+              <svg class="shrink-0 mx-3 text-text-secondary" width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 6h8M7 3l3 3-3 3" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              <div class="border border-border-other-2 bg-bg-primary rounded-[4px] px-4 py-[13px] shrink-0">
+                <span class="text-small text-text-primary whitespace-nowrap">Run or test gripper</span>
+              </div>
+              <svg class="shrink-0 mx-3 text-text-secondary" width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 6h8M7 3l3 3-3 3" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              <div class="border border-border-other-2 bg-bg-primary rounded-[4px] px-4 py-[13px] shrink-0">
+                <span class="text-small text-text-primary whitespace-nowrap">Get feedback adjustment results</span>
+              </div>
+            </div>
+            <div class="mt-0">
+              <svg width="193" height="27" viewBox="0 0 193 27" fill="none" xmlns="http://www.w3.org/2000/svg" class="ml-[384px]">
+                <path d="M1 1H192V27" stroke="var(--color-blue-200)" stroke-width="1"/>
+              </svg>
+            </div>
+          </div>
+        </div>
+
+        <!-- Mobile steps (vertical) -->
+        <div class="hidden max-lg:flex flex-col gap-3 mb-10">
+          {[
+            'Connect PC and gripper',
+            'Open the debugging software',
+            'Adjust parameters in the interface',
+            'Run or test gripper',
+            'Get feedback adjustment results',
+          ].map((step) => (
+            <div class="border border-border-other-2 bg-bg-primary rounded-[4px] px-4 py-3">
+              <span class="text-small text-text-primary">{step}</span>
+            </div>
+          ))}
+        </div>
+
+        <!-- Feature cards -->
+        <div class="grid grid-cols-2 gap-4 max-lg:grid-cols-1">
+
+          <!-- Parameters Adjustable -->
+          <div class="bg-bg-primary border border-border-other-2 rounded-[4px] p-10 max-lg:p-6">
+            <h3 class="text-h5 text-text-primary mb-8">Parameters Adjustable</h3>
+            <ul class="flex flex-col gap-5">
+              {[
+                'Gripping force',
+                'Fingertip position',
+                'Gripping speed',
+                'Rotation angle*',
+                'Rotation speed*',
+                'Rotation force(torque force)*',
+              ].map((item) => (
+                <li class="flex items-center gap-4">
+                  <div class="shrink-0 size-[6px] bg-bg-tertiary"></div>
+                  <span class="text-large text-text-primary">{item}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <!-- Real-time feedback -->
+          <div class="bg-bg-primary border border-border-other-2 rounded-[4px] p-10 max-lg:p-6">
+            <h3 class="text-h5 text-text-primary mb-8">Real-time feedback</h3>
+            <ul class="flex flex-col gap-5">
+              <li class="flex items-start gap-4">
+                <div class="shrink-0 size-[6px] bg-bg-tertiary mt-[9px]"></div>
+                <div>
+                  <span class="text-large text-text-primary">Four gripping states</span>
+                  <ol class="mt-3 flex flex-col gap-2 list-none">
+                    {['Movement status', 'In place', 'Clamp state', 'Dropped state'].map((sub, i) => (
+                      <li class="text-large text-text-secondary pl-4">{i + 1}. {sub}</li>
+                    ))}
+                  </ol>
+                </div>
+              </li>
+              <li class="flex items-center gap-4">
+                <div class="shrink-0 size-[6px] bg-bg-tertiary"></div>
+                <span class="text-large text-text-primary">Location versus time graph</span>
+              </li>
+              <li class="flex items-center gap-4">
+                <div class="shrink-0 size-[6px] bg-bg-tertiary"></div>
+                <span class="text-large text-text-primary">Clamping current as a fuction of time</span>
+              </li>
+            </ul>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Laptop mockup section -->
+  <section class="bg-bg-primary pt-[160px] pb-[160px] max-lg:pt-20 max-lg:pb-20">
+    <div class="global-padding">
+      <div class="mx-auto max-w-[1200px] flex flex-col items-center">
+        <div class="w-full max-w-[1000px] mb-12">
+          <img
+            src="/images/service-software-laptop.webp"
+            alt="DH-Robotics PC software interface on MacBook"
+            class="w-full h-auto"
+          />
+        </div>
+        <div class="text-center">
+          <p class="text-h5 text-text-primary mb-6">Example: DH-Robotics PC software</p>
+          <p class="text-large-medium text-text-tertiary">* Please consult sales person for specific applicable models</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Software downloads -->
+  <section id="software-downloads" class="bg-bg-secondary pt-[120px] pb-[120px] max-lg:pt-20 max-lg:pb-20">
+    <div class="global-padding">
+      <div class="mx-auto max-w-[1200px]">
+
+        <div class="text-center mb-[72px] max-lg:mb-10">
+          <h2 class="text-h2 mob-h3 text-text-primary mb-6">Software downloads</h2>
+          <p class="text-large text-text-secondary max-w-[492px] mx-auto">Essential software, drivers, and development tools for your automation projects.</p>
+        </div>
+
+        <div class="max-w-[1000px] mx-auto">
+          {downloads.map((item: any) => (
+            <DownloadRow
+              title={item.title}
+              version={item.version}
+              fileFormat={item.fileFormat}
+              date={item.date}
+              fileUrl={item.fileUrl}
+            />
+          ))}
+          <div class="border-t border-border-other-2"></div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
 </Layout>
