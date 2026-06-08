@@ -1,8 +1,10 @@
 ---
 import Layout from '../../layouts/Layout.astro'
+import Breadcrumbs from '../../components/ui/Breadcrumbs.astro'
 import Section from '../../components/ui/Section.astro'
 ---
 <Layout title="User Control Software">
+  <Breadcrumbs crumbs={[{ label: 'Service', href: '/services' }, { label: 'User Control Software' }]} />
   <Section pt="page" pb="lg">
     <h1>User Control Software</h1>
     <ul>

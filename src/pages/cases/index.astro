@@ -1,5 +1,6 @@
 ---
 import Layout from '../../layouts/Layout.astro'
+import Breadcrumbs from '../../components/ui/Breadcrumbs.astro'
 import { client } from '../../lib/sanity'
 
 const cases = await client.fetch(`
@@ -21,6 +22,7 @@ function assetUrl(ref: string | undefined, w = 400) {
 ---
 
 <Layout title="Demonstration Cases">
+  <Breadcrumbs crumbs={[{ label: 'Cases' }]} />
   <section class="bg-bg-primary pt-page pb-lg">
     <div class="global-padding">
       <div class="mx-auto max-w-[1200px] flex flex-col gap-14">

@@ -1,5 +1,6 @@
 ---
 import Layout from '../../layouts/Layout.astro'
+import Breadcrumbs from '../../components/ui/Breadcrumbs.astro'
 import NewsSection from '../../components/sections/NewsSection.astro'
 import { client, urlFor } from '../../lib/sanity'
 
@@ -39,5 +40,6 @@ const page = {
 }
 ---
 <Layout title="News">
+  <Breadcrumbs crumbs={[{ label: 'News' }]} />
   <NewsSection featured={featured} gridCards={page.data} page={page} />
 </Layout>

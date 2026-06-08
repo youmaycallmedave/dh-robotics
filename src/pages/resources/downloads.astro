@@ -1,7 +1,9 @@
 ---
 import Layout from '../../layouts/Layout.astro'
+import Breadcrumbs from '../../components/ui/Breadcrumbs.astro'
 import DownloadsSection from '../../components/sections/DownloadsSection.astro'
 ---
 <Layout title="Download Center">
+  <Breadcrumbs crumbs={[{ label: 'Download Center' }]} />
   <DownloadsSection />
 </Layout>

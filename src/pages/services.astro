@@ -1,14 +1,85 @@
 ---
 import Layout from '../layouts/Layout.astro'
-import Section from '../components/ui/Section.astro'
+import Breadcrumbs from '../components/ui/Breadcrumbs.astro'
+import Button from '../components/ui/Button.astro'
 ---
+
 <Layout title="Service">
-  <Section pt="page" pb="lg">
-    <h1>Service</h1>
-    <ul>
-      <li>1. Hero — заголовок + текст</li>
-      <li>2. Блок Technology — текст + кнопка → /service/technology</li>
-      <li>3. Блок Software — текст + кнопка → /service/software</li>
-    </ul>
-  </Section>
+  <Breadcrumbs crumbs={[{ label: 'Service' }]} />
+
+  <!-- Hero -->
+  <section class="bg-bg-primary pt-page pb-14">
+    <div class="global-padding">
+      <div class="mx-auto max-w-[795px] flex flex-col gap-10">
+        <h1 class="text-h1 mob-h2 text-text-primary">Service</h1>
+        <div class="flex items-start justify-between gap-6 max-lg:flex-col">
+          <p class="text-regular text-text-primary max-w-[592px]">
+            Based on the accurately understanding on the customer needs, DH-Robotics develops the electric grippers and actuators with the advantages of "precision, intelligence, flexibility, and User-friendly". After 6 years development, DH-Robotics already became the leading company of precision motion control solutions in Chinese market.
+          </p>
+          <div class="flex flex-col gap-3 items-center justify-center shrink-0 max-lg:hidden">
+            <div class="flex items-center justify-center h-[58px] w-[9px]">
+              <span class="-rotate-90 text-tiny text-text-secondary whitespace-nowrap">View more</span>
+            </div>
+            <svg class="text-text-secondary" width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+              <path d="M6 1.875V10.125" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M2.625 6.75L6 10.125L9.375 6.75" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Cards — div, not section, чтобы overflow:clip не ломал sticky -->
+  <div class="bg-bg-primary pb-lg">
+    <div class="global-padding">
+      <div class="flex items-start gap-0 xl:gap-0">
+
+        <!-- Sticky sidebar (xl+) -->
+        <div class="hidden xl:block shrink-0 w-[200px]">
+          <div class="sticky top-24 flex flex-col gap-5 pl-4 border-l border-border-secondary relative">
+            <div class="absolute -left-px top-0 w-px h-[9px] bg-fg-alternative"></div>
+            <a href="/services/software" class="text-tiny-medium text-text-primary whitespace-nowrap hover:text-text-tertiary transition-colors duration-150">User control software</a>
+            <a href="/services/technology" class="text-tiny-medium text-text-secondary whitespace-nowrap hover:text-text-tertiary transition-colors duration-150">Technology</a>
+          </div>
+        </div>
+
+        <!-- Cards: centered между sidebar и правым отступом -->
+        <div class="flex-1 flex flex-col gap-14 items-center">
+
+          <!-- Card: Software -->
+          <div class="relative h-[483px] rounded-[4px] overflow-hidden w-full max-w-[795px] bg-bg-alternative max-lg:aspect-[795/483] max-lg:h-auto">
+            <div class="absolute top-10 left-10 flex flex-col gap-4 w-[220px] max-lg:max-w-[220px]">
+              <div class="flex flex-col gap-5">
+                <h2 class="text-h4 mob-h5 text-text-alternate">User control software</h2>
+                <p class="text-tiny-medium text-text-alternate opacity-70 w-[187px] max-lg:w-auto">Learn about the host computer debugging software</p>
+              </div>
+              <Button label="Explore" href="/services/software" variant="white" />
+            </div>
+          </div>
+
+          <!-- Card: Technology -->
+          <div class="relative h-[483px] rounded-[4px] overflow-hidden w-full max-w-[795px] bg-bg-other max-lg:aspect-[795/483] max-lg:h-auto">
+            <img
+              src="/images/service-technology-bg.webp"
+              alt="DH-Robotics Technology"
+              class="absolute inset-0 w-full h-full object-cover object-left-top"
+            />
+            <div class="absolute top-10 left-10 flex flex-col gap-4 w-[263px] max-lg:max-w-[263px]">
+              <div class="flex flex-col gap-5">
+                <h2 class="text-h4 mob-h5 text-text-primary">DH-Robotics Technology</h2>
+                <p class="text-tiny-medium text-text-primary">With deep technical background, DH-Robotics has developed the robotic and precision motion control technologies for many years.</p>
+              </div>
+              <Button label="Explore" href="/services/technology" variant="black" />
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Right spacer to keep cards visually centered -->
+        <div class="hidden xl:block shrink-0 w-[200px]"></div>
+
+      </div>
+    </div>
+  </div>
 </Layout>

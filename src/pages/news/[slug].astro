@@ -1,5 +1,6 @@
 ---
 import Layout from '../../layouts/Layout.astro'
+import Breadcrumbs from '../../components/ui/Breadcrumbs.astro'
 import { client, urlFor } from '../../lib/sanity'
 import type { PostBlock } from '../../types/post'
 import PostContent from '../../components/ui/PostContent.astro'
@@ -99,6 +100,7 @@ const otherArticles = otherRaw.map((item: any) => ({
 ---
 
 <Layout title={raw.title}>
+  <Breadcrumbs crumbs={[{ label: 'News', href: '/news' }, { label: raw.title }]} />
   <section class="bg-bg-primary pt-page pb-none">
 
     <!-- Back + Title -->

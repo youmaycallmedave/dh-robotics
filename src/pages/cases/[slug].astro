@@ -1,5 +1,6 @@
 ---
 import Layout from '../../layouts/Layout.astro'
+import Breadcrumbs from '../../components/ui/Breadcrumbs.astro'
 import SwiperSlider from '../../components/ui/SwiperSlider.astro'
 import { client } from '../../lib/sanity'
 
@@ -67,6 +68,7 @@ const otherCases = otherRaw.map((c: any) => ({
 ---
 
 <Layout title={raw.title}>
+  <Breadcrumbs crumbs={[{ label: 'Cases', href: '/cases' }, { label: raw.title }]} />
 
   <section class="bg-bg-primary pt-page pb-md">
     <div class="global-padding">

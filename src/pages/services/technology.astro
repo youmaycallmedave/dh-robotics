@@ -1,8 +1,10 @@
 ---
 import Layout from '../../layouts/Layout.astro'
+import Breadcrumbs from '../../components/ui/Breadcrumbs.astro'
 import Section from '../../components/ui/Section.astro'
 ---
 <Layout title="DH-Robotics Technology">
+  <Breadcrumbs crumbs={[{ label: 'Service', href: '/services' }, { label: 'Technology' }]} />
   <Section pt="page" pb="lg">
     <h1>DH-Robotics Technology</h1>
     <ul>

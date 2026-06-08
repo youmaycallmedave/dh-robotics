@@ -1,7 +1,9 @@
 ---
 import Layout from '../../layouts/Layout.astro'
+import Breadcrumbs from '../../components/ui/Breadcrumbs.astro'
 import FaqSection from '../../components/sections/FaqSection.astro'
 ---
 <Layout title="FAQ">
+  <Breadcrumbs crumbs={[{ label: 'FAQ' }]} />
   <FaqSection />
 </Layout>

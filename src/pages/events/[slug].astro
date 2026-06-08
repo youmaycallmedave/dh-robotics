@@ -1,5 +1,6 @@
 ---
 import Layout from '../../layouts/Layout.astro'
+import Breadcrumbs from '../../components/ui/Breadcrumbs.astro'
 import Button from '../../components/ui/Button.astro'
 import PostContent from '../../components/ui/PostContent.astro'
 import { client, urlFor } from '../../lib/sanity'
@@ -92,6 +93,7 @@ const otherEvents = otherRaw.map((e: any) => ({
 ---
 
 <Layout title={raw.title}>
+  <Breadcrumbs crumbs={[{ label: 'Events', href: '/events' }, { label: raw.title }]} />
 
   <section class="bg-bg-primary pt-page pb-lg">
 

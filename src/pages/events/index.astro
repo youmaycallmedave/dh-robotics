@@ -1,7 +1,9 @@
 ---
 import Layout from '../../layouts/Layout.astro'
+import Breadcrumbs from '../../components/ui/Breadcrumbs.astro'
 import EventsSection from '../../components/sections/EventsSection.astro'
 ---
 <Layout title="Events">
+  <Breadcrumbs crumbs={[{ label: 'Events' }]} />
   <EventsSection />
 </Layout>
