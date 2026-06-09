@@ -20,7 +20,7 @@ button, [role="button"], summary, label[for], select {
 ):not(.text-trim-off)::before {
   content: "";
   display: table;
-  margin-bottom: calc(-0.5lh + 0.38em);
+  margin-bottom: calc(-0.5lh + 0.45em);
 }
 
 :is(
@@ -34,7 +34,7 @@ button, [role="button"], summary, label[for], select {
 ):not(.text-trim-off)::after {
   content: "";
   display: table;
-  margin-bottom: calc(-0.5lh + 0.38em);
+  margin-bottom: calc(-0.5lh + 0.45em);
 }
 
 html { font-size: 1rem; }

@@ -48,7 +48,7 @@ const dlData = JSON.stringify({ categories, series: seriesList, products, downlo
 
         <!-- Category -->
         <div class="flex flex-col gap-[2px] flex-1 min-w-0 dl-select-field" id="field-category">
-          <label class="text-small text-text-primary">Product Category</label>
+          <label class="text-small text-text-primary text-trim-off">Product Category</label>
           <input type="hidden" id="filter-category" value="" />
           <div class="relative">
             <div class="input-row border-b flex items-center gap-4 py-4 cursor-pointer select-none dl-select-trigger" data-for="filter-category" data-placeholder="All Categories">
@@ -82,7 +82,7 @@ const dlData = JSON.stringify({ categories, series: seriesList, products, downlo
 
         <!-- Series -->
         <div class="flex flex-col gap-[2px] flex-1 min-w-0 dl-select-field" id="field-series">
-          <label class="text-small text-text-primary">Series</label>
+          <label class="text-small text-text-primary text-trim-off">Series</label>
           <input type="hidden" id="filter-series" value="" />
           <div class="relative">
             <div class="input-row border-b flex items-center gap-4 py-4 cursor-pointer select-none dl-select-trigger" data-for="filter-series" data-placeholder="All Series">
@@ -116,7 +116,7 @@ const dlData = JSON.stringify({ categories, series: seriesList, products, downlo
 
         <!-- Product -->
         <div class="flex flex-col gap-[2px] flex-1 min-w-0 dl-select-field" id="field-product">
-          <label class="text-small text-text-primary">Product Model</label>
+          <label class="text-small text-text-primary text-trim-off">Product Model</label>
           <input type="hidden" id="filter-product" value="" />
           <div class="relative">
             <div class="input-row border-b flex items-center gap-4 py-4 cursor-pointer select-none dl-select-trigger" data-for="filter-product" data-placeholder="All Models">
@@ -150,7 +150,7 @@ const dlData = JSON.stringify({ categories, series: seriesList, products, downlo
 
         <!-- Search -->
         <div class="flex flex-col gap-[2px] flex-1 min-w-0">
-          <label for="downloads-search" class="text-small text-text-primary">Search</label>
+          <label for="downloads-search" class="text-small text-text-primary text-trim-off">Search</label>
           <div class="input-row border-b flex items-center gap-4 py-4">
             <input
               id="downloads-search"
