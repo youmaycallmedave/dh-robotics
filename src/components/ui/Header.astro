@@ -116,6 +116,14 @@ const navItems: NavItem[] = [
           ))}
         </nav>
 
+        <!-- Search -->
+        <button id="search-btn" class="size-8 flex items-center justify-center text-text-secondary hover:text-text-primary transition-colors max-lg:hidden" aria-label="Search">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+            <circle cx="7" cy="7" r="5" stroke="currentColor" stroke-width="1.5"/>
+            <path d="M11 11l3 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+        </button>
+
         <!-- Language -->
         <button class="flex items-center gap-1 px-2 py-1 rounded-[4px] text-small-medium text-text-primary hover:bg-bg-secondary transition-colors duration-150 uppercase max-lg:hidden">
           EN
@@ -139,6 +147,14 @@ const navItems: NavItem[] = [
             <path d="M9 18l6-6-6-6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
           </svg>
         </a>
+
+        <!-- Search mobile -->
+        <button id="search-btn-mobile" class="lg:hidden size-8 flex items-center justify-center text-text-secondary hover:text-text-primary transition-colors" aria-label="Search">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+            <circle cx="7" cy="7" r="5" stroke="currentColor" stroke-width="1.5"/>
+            <path d="M11 11l3 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+        </button>
 
         <!-- Burger (mobile only) -->
         <button id="burger-btn" class="lg:hidden border border-border-other-2 rounded-[4px] p-3 flex items-center justify-center hover:border-border-alternative transition-colors duration-200" aria-label="Menu" aria-expanded="false">
@@ -242,6 +258,47 @@ const navItems: NavItem[] = [
 
 <!-- Spacer so content doesn't go under fixed header -->
 <div class="h-[80px] max-lg:h-[65px]"></div>
+
+<!-- Search overlay -->
+<div id="search-overlay" class="fixed inset-0 z-[200] bg-bg-primary flex-col hidden">
+
+  <div class="global-padding border-b border-border-other-2">
+    <div class="mx-auto max-w-[1200px] h-[80px] max-lg:h-[65px] flex items-center gap-4">
+      <svg width="20" height="20" viewBox="0 0 20 20" fill="none" class="shrink-0 text-text-tertiary" aria-hidden="true">
+        <circle cx="9" cy="9" r="6.5" stroke="currentColor" stroke-width="1.5"/>
+        <path d="M14 14l4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+      </svg>
+      <input
+        id="search-input"
+        type="text"
+        placeholder="Search products, applications, news…"
+        autocomplete="off"
+        class="flex-1 bg-transparent text-text-primary outline-none placeholder:text-text-tertiary text-h5 mob-h6"
+      />
+      <button id="search-close" class="size-8 flex items-center justify-center text-text-secondary hover:text-text-primary transition-colors shrink-0" aria-label="Close">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+          <path d="M1 1l12 12M13 1L1 13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <div class="flex-1 overflow-y-auto">
+    <div class="global-padding py-8">
+      <div class="mx-auto max-w-[1200px]">
+        <div id="search-results" class="flex flex-col"></div>
+        <div id="search-see-all-wrap" class="hidden mt-8">
+          <a id="search-see-all" href="/search" class="inline-flex items-center gap-2 text-small-caps text-text-primary hover:opacity-70 transition-opacity">
+            VIEW ALL RESULTS
+            <svg width="5" height="9" viewBox="0 0 5 9" fill="none" aria-hidden="true">
+              <path d="M1 1L4 4.5L1 8" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 
 <style>
   @media (hover: hover) and (pointer: fine) {
@@ -352,6 +409,117 @@ const navItems: NavItem[] = [
       chevron?.classList.toggle('rotate-180', !isOpen)
       btn.setAttribute('aria-expanded', String(!isOpen))
     })
+  })
+
+  // ── Search overlay ───────────────────────────────────────────
+  const SEARCH_PROJECT = import.meta.env.PUBLIC_SANITY_PROJECT_ID ?? '0ufm7kaw'
+  const SEARCH_DATASET  = import.meta.env.PUBLIC_SANITY_DATASET ?? 'production'
+
+  const searchOverlay    = document.getElementById('search-overlay')
+  const searchInput      = document.getElementById('search-input') as HTMLInputElement | null
+  const searchClose      = document.getElementById('search-close')
+  const searchResults    = document.getElementById('search-results')
+  const searchSeeAll     = document.getElementById('search-see-all') as HTMLAnchorElement | null
+  const searchSeeAllWrap = document.getElementById('search-see-all-wrap')
+  const searchBtnEl      = document.getElementById('search-btn')
+  const searchBtnMob     = document.getElementById('search-btn-mobile')
+
+  let searchDebounce: ReturnType<typeof setTimeout> | null = null
+
+  const RESULT_LABELS: Record<string, string> = {
+    product: 'Product', series: 'Series', industry: 'Industry',
+    action: 'Application', news: 'News', case: 'Case', event: 'Event',
+  }
+
+  function getResultHref(type: string, slug: string) {
+    const map: Record<string, string> = {
+      product:  `/products/product/${slug}`,
+      series:   `/products/series/${slug}`,
+      industry: `/applications/industry/${slug}`,
+      action:   `/applications/action/${slug}`,
+      news:     `/news/${slug}`,
+      case:     `/cases/${slug}`,
+      event:    `/events/${slug}`,
+    }
+    return map[type] ?? '/'
+  }
+
+  function openSearch() {
+    searchOverlay?.classList.remove('hidden')
+    searchOverlay?.classList.add('flex')
+    document.body.style.overflow = 'hidden'
+    setTimeout(() => searchInput?.focus(), 50)
+  }
+
+  function closeSearch() {
+    searchOverlay?.classList.add('hidden')
+    searchOverlay?.classList.remove('flex')
+    document.body.style.overflow = ''
+    if (searchInput) searchInput.value = ''
+    if (searchResults) searchResults.innerHTML = ''
+    searchSeeAllWrap?.classList.add('hidden')
+  }
+
+  function renderSearchResults(results: any[], query: string) {
+    if (!searchResults) return
+    if (!results.length) {
+      searchResults.innerHTML = `<p class="text-regular text-text-secondary py-4">No results for "${query}"</p>`
+      searchSeeAllWrap?.classList.add('hidden')
+      return
+    }
+    searchResults.innerHTML = results.map((r: any) => `
+      <a href="${getResultHref(r._type, r.slug?.current ?? '')}"
+         class="flex items-center gap-4 py-3 border-b border-border-other-2 hover:opacity-70 transition-opacity group">
+        <span class="text-tiny text-text-tertiary uppercase shrink-0 w-[88px]">${RESULT_LABELS[r._type] ?? r._type}</span>
+        <span class="flex-1 text-small-medium text-text-primary truncate">${r.title ?? ''}</span>
+        <svg width="6" height="10" viewBox="0 0 6 10" fill="none" class="shrink-0 text-text-tertiary group-hover:text-text-primary transition-colors" aria-hidden="true">
+          <path d="M1 1l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </a>
+    `).join('')
+    if (searchSeeAll) searchSeeAll.href = `/search?q=${encodeURIComponent(query)}`
+    searchSeeAllWrap?.classList.remove('hidden')
+  }
+
+  async function runSearch(query: string) {
+    const safe = query.replace(/["\\]/g, '').trim()
+    if (!safe) {
+      if (searchResults) searchResults.innerHTML = ''
+      searchSeeAllWrap?.classList.add('hidden')
+      return
+    }
+    if (searchResults) searchResults.innerHTML = '<p class="text-tiny text-text-tertiary py-3">Searching…</p>'
+    try {
+      const groq = `*[_type in ["product","series","industry","action","news","case","event"] && title match "${safe}*"][0...8]{_type, title, slug}`
+      const url = `https://${SEARCH_PROJECT}.api.sanity.io/v2024-01-01/data/query/${SEARCH_DATASET}?query=${encodeURIComponent(groq)}`
+      const res = await fetch(url)
+      const data = await res.json()
+      renderSearchResults(data.result ?? [], query)
+    } catch (err) {
+      console.error('Search error:', err)
+      if (searchResults) searchResults.innerHTML = '<p class="text-tiny text-text-tertiary py-3">Search unavailable</p>'
+    }
+  }
+
+  searchBtnEl?.addEventListener('click', openSearch)
+  searchBtnMob?.addEventListener('click', openSearch)
+  searchClose?.addEventListener('click', closeSearch)
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape' && !searchOverlay?.classList.contains('hidden')) closeSearch()
+  })
+
+  searchInput?.addEventListener('input', () => {
+    const q = searchInput.value.trim()
+    if (searchDebounce) clearTimeout(searchDebounce)
+    searchDebounce = setTimeout(() => runSearch(q), 220)
+  })
+
+  searchInput?.addEventListener('keydown', e => {
+    if (e.key === 'Enter') {
+      const q = searchInput.value.trim()
+      if (q) window.location.href = `/search?q=${encodeURIComponent(q)}`
+    }
   })
 
   // ── Hide on scroll down, show on scroll up ───────────────────

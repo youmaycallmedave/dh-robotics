@@ -1,0 +1,219 @@
+---
+import Layout from '../layouts/Layout.astro'
+import Breadcrumbs from '../components/ui/Breadcrumbs.astro'
+---
+
+<Layout title="Search — DH Robotics">
+
+  <Breadcrumbs crumbs={[{ label: 'Search' }]} />
+
+  <section class="bg-bg-primary pb-[120px] max-lg:pb-20">
+    <div class="global-padding">
+      <div class="mx-auto max-w-[1200px]">
+
+        <!-- Search input -->
+        <div class="pt-[80px] pb-8 max-lg:pt-14 max-lg:pb-6 border-b border-border-other-2 mb-10 max-lg:mb-8 flex items-center gap-4">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" class="shrink-0 text-text-tertiary" aria-hidden="true">
+            <circle cx="10.5" cy="10.5" r="7.5" stroke="currentColor" stroke-width="1.5"/>
+            <path d="M16 16l4.5 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+          <input
+            id="sq-input"
+            type="text"
+            placeholder="Search…"
+            autocomplete="off"
+            class="flex-1 text-h2 mob-h3 bg-transparent text-text-primary outline-none placeholder:text-text-tertiary"
+          />
+        </div>
+
+        <!-- Tabs -->
+        <div class="flex gap-2 flex-wrap mb-10 max-lg:mb-8" id="sq-tabs">
+          <button class="sq-tab" data-tab="all">All</button>
+          <button class="sq-tab" data-tab="product">Products</button>
+          <button class="sq-tab" data-tab="series">Series</button>
+          <button class="sq-tab" data-tab="industry">Industries</button>
+          <button class="sq-tab" data-tab="action">Applications</button>
+          <button class="sq-tab" data-tab="news">News</button>
+        </div>
+
+        <!-- Loading -->
+        <div id="sq-loading" class="hidden">
+          <p class="text-regular text-text-secondary">Searching…</p>
+        </div>
+
+        <!-- Results list -->
+        <div id="sq-results"></div>
+
+        <!-- Empty state -->
+        <div id="sq-empty" class="hidden py-6">
+          <p class="text-large text-text-secondary">No results for "<span id="sq-query-label"></span>"</p>
+        </div>
+
+        <!-- Idle state -->
+        <div id="sq-idle">
+          <p class="text-regular text-text-secondary">Enter a search query above</p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+</Layout>
+
+<style>
+  .sq-tab {
+    padding: 0.375rem 0.875rem;
+    border-radius: 4px;
+    font-size: var(--text-small-medium-size, 0.8125rem);
+    font-weight: 500;
+    color: var(--color-text-secondary);
+    border: 1px solid var(--color-border-other-2);
+    transition: border-color 0.15s, color 0.15s, background-color 0.15s;
+    cursor: pointer;
+    background: transparent;
+  }
+  .sq-tab:hover {
+    border-color: var(--color-text-primary);
+    color: var(--color-text-primary);
+  }
+  .sq-tab.active {
+    border-color: var(--color-text-primary);
+    color: var(--color-text-primary);
+    background-color: var(--color-bg-secondary);
+  }
+</style>
+
+<script>
+  const PROJECT_ID = import.meta.env.PUBLIC_SANITY_PROJECT_ID ?? '0ufm7kaw'
+  const DATASET     = import.meta.env.PUBLIC_SANITY_DATASET ?? 'production'
+
+  const sqInput      = document.getElementById('sq-input') as HTMLInputElement | null
+  const sqResults    = document.getElementById('sq-results')!
+  const sqEmpty      = document.getElementById('sq-empty')!
+  const sqIdle       = document.getElementById('sq-idle')!
+  const sqLoading    = document.getElementById('sq-loading')!
+  const sqQueryLabel = document.getElementById('sq-query-label')!
+  const tabBtns      = Array.from(document.querySelectorAll<HTMLButtonElement>('.sq-tab'))
+
+  let allResults: any[] = []
+  let activeTab = 'all'
+  let searchDebounce: ReturnType<typeof setTimeout> | null = null
+
+  const TYPE_LABELS: Record<string, string> = {
+    product: 'Product', series: 'Series', industry: 'Industry',
+    action: 'Application', news: 'News', case: 'Case', event: 'Event',
+  }
+
+  function getHref(type: string, slug: string) {
+    const map: Record<string, string> = {
+      product:  `/products/product/${slug}`,
+      series:   `/products/series/${slug}`,
+      industry: `/applications/industry/${slug}`,
+      action:   `/applications/action/${slug}`,
+      news:     `/news/${slug}`,
+      case:     `/cases/${slug}`,
+      event:    `/events/${slug}`,
+    }
+    return map[type] ?? '/'
+  }
+
+  function updateTabCounts() {
+    tabBtns.forEach(btn => {
+      const tab = btn.dataset.tab ?? 'all'
+      const count = tab === 'all' ? allResults.length : allResults.filter(r => r._type === tab).length
+      const existing = btn.querySelector('.sq-tab-count')
+      if (existing) existing.remove()
+      if (count > 0) {
+        const span = document.createElement('span')
+        span.className = 'sq-tab-count'
+        span.style.cssText = 'margin-left: 4px; opacity: 0.5; font-weight: 400;'
+        span.textContent = `${count}`
+        btn.appendChild(span)
+      }
+    })
+  }
+
+  function renderResults() {
+    const query = sqInput?.value.trim() ?? ''
+    const filtered = activeTab === 'all' ? allResults : allResults.filter(r => r._type === activeTab)
+
+    sqEmpty.classList.add('hidden')
+    sqIdle.classList.add('hidden')
+
+    if (!filtered.length) {
+      sqResults.innerHTML = ''
+      sqEmpty.classList.remove('hidden')
+      sqQueryLabel.textContent = query
+      return
+    }
+
+    sqResults.innerHTML = filtered.map((r: any) => `
+      <a href="${getHref(r._type, r.slug?.current ?? '')}"
+         class="flex items-center gap-6 py-5 border-b border-border-other-2 hover:opacity-70 transition-opacity group max-lg:gap-4">
+        <span class="text-tiny text-text-tertiary uppercase shrink-0 w-[100px] max-sm:hidden">${TYPE_LABELS[r._type] ?? r._type}</span>
+        <div class="flex-1 min-w-0">
+          <p class="text-medium-medium text-text-primary">${r.title ?? ''}</p>
+          ${r.subtitle ? `<p class="text-small text-text-secondary mt-1">${r.subtitle}</p>` : ''}
+        </div>
+        <svg width="8" height="12" viewBox="0 0 8 12" fill="none" class="shrink-0 text-text-tertiary group-hover:text-text-primary transition-colors" aria-hidden="true">
+          <path d="M2 2l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </a>
+    `).join('')
+  }
+
+  async function search(query: string) {
+    const safe = query.replace(/["\\]/g, '').trim()
+    if (!safe) {
+      sqResults.innerHTML = ''
+      sqEmpty.classList.add('hidden')
+      sqIdle.classList.remove('hidden')
+      allResults = []
+      updateTabCounts()
+      return
+    }
+
+    sqLoading.classList.remove('hidden')
+    sqResults.innerHTML = ''
+    sqEmpty.classList.add('hidden')
+    sqIdle.classList.add('hidden')
+
+    const groq = `*[_type in ["product","series","industry","action","news","case","event"] && title match "${safe}*"][0...50]{_type, title, slug, subtitle}`
+    const url = `https://${PROJECT_ID}.api.sanity.io/v2024-01-01/data/query/${DATASET}?query=${encodeURIComponent(groq)}`
+    try {
+      const res = await fetch(url)
+      const { result } = await res.json()
+      allResults = result ?? []
+    } catch {
+      allResults = []
+    }
+
+    sqLoading.classList.add('hidden')
+    updateTabCounts()
+    renderResults()
+  }
+
+  tabBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      activeTab = btn.dataset.tab ?? 'all'
+      tabBtns.forEach(b => b.classList.toggle('active', b === btn))
+      renderResults()
+    })
+  })
+
+  sqInput?.addEventListener('input', () => {
+    const q = sqInput.value.trim()
+    history.replaceState(null, '', q ? `?q=${encodeURIComponent(q)}` : location.pathname)
+    if (searchDebounce) clearTimeout(searchDebounce)
+    searchDebounce = setTimeout(() => search(q), 250)
+  })
+
+  const initQ = new URLSearchParams(location.search).get('q') ?? ''
+  tabBtns[0]?.classList.add('active')
+
+  if (initQ && sqInput) {
+    sqInput.value = initQ
+    sqIdle.classList.add('hidden')
+    search(initQ)
+  }
+</script>
