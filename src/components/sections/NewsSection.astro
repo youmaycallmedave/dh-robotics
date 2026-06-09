@@ -91,8 +91,13 @@ const tabs = [
                 data-category={item.category}
               >
                 <div class="news-fill-bg"></div>
-                <div class="card-text flex flex-col gap-4 flex-1 relative z-[1]">
-                  <p class="card-date text-small text-text-primary">{item.date}</p>
+                <div class="card-text flex flex-col flex-1 relative z-[1]">
+                  <div class="card-meta flex items-center justify-between">
+                    <span class="lg:hidden bg-fg-alternative text-text-alternate text-small-caps px-2 py-2 leading-none whitespace-nowrap shrink-0">
+                      {item.category === 'news' ? 'News' : 'Insights'}
+                    </span>
+                    <p class="card-date text-small text-text-primary">{item.date}</p>
+                  </div>
                   <p class="card-title text-text-primary text-trim-off line-clamp-2">{item.title}</p>
                 </div>
                 <div class="card-image relative overflow-hidden bg-bg-secondary shrink-0">
@@ -102,7 +107,7 @@ const tabs = [
                     class="w-full h-full object-cover transition-transform duration-700 ease-in-out lg:group-hover:scale-110"
                     loading="lazy"
                   />
-                  <span class="card-badge absolute bg-fg-alternative text-text-alternate text-small-caps px-2 py-2">
+                  <span class="card-badge absolute bg-fg-alternative text-text-alternate text-small-caps px-2 py-2 max-lg:hidden">
                     {item.category === 'news' ? 'News' : 'Insights'}
                   </span>
                 </div>
@@ -229,8 +234,8 @@ const tabs = [
   }
 
   #news-grid .card-text {
-    padding: 1.25rem;
-    gap: 0.75rem;
+    padding: 1.5rem;
+    gap: 1.25rem;
   }
 
   #news-grid .card-badge {
@@ -239,17 +244,21 @@ const tabs = [
   }
 
   #news-grid .card-title {
-    font-family: var(--font-secondary);
-    font-size: 1.125rem;
-    line-height: 1.333em;
-    letter-spacing: -0.0225rem;
-    font-weight: 600;
+    font-family: var(--font-primary);
+    font-size: 1.5rem;
+    line-height: 1.167em;
+    letter-spacing: -0.03125rem;
+    font-weight: 500;
     min-height: auto;
   }
 
   #news-grid .card-date {
-    color: var(--color-text-secondary);
+    color: var(--color-text-primary);
     font-size: 0.875rem;
+  }
+
+  #news-grid .card-meta {
+    margin-bottom: 0;
   }
 
   @media (min-width: 1024px) {
@@ -261,6 +270,8 @@ const tabs = [
 
     #news-grid .news-card.is-large { grid-column: span 3; }
     #news-grid .news-card.is-small { grid-column: span 2; }
+
+    #news-grid .card-date { color: var(--color-text-secondary); }
 
     #news-grid .news-card.is-large .card-image { height: 282px; aspect-ratio: unset; }
     #news-grid .news-card.is-small .card-image { height: 188px; aspect-ratio: unset; }
