@@ -28,7 +28,7 @@ import Breadcrumbs from '../components/ui/Breadcrumbs.astro'
         <div class="flex gap-2 flex-wrap mb-10 max-lg:mb-8">
           <button class="sq-tab" data-tab="all">All</button>
           <button class="sq-tab" data-tab="product">Products</button>
-          <button class="sq-tab" data-tab="series">Series</button>
+          <button class="sq-tab" data-tab="productSeries">Series</button>
           <button class="sq-tab" data-tab="industry">Industries</button>
           <button class="sq-tab" data-tab="action">Applications</button>
           <button class="sq-tab" data-tab="news">News</button>
@@ -94,8 +94,8 @@ import Breadcrumbs from '../components/ui/Breadcrumbs.astro'
   let searchDebounce: ReturnType<typeof setTimeout> | null = null
 
   const TYPE_LABELS: Record<string, string> = {
-    product: 'Product', series: 'Series', industry: 'Industry',
-    action: 'Application', news: 'News', case: 'Case', event: 'Event',
+    product: 'Product', productSeries: 'Series', industry: 'Industry',
+    action: 'Application', news: 'News', caseStudy: 'Case', event: 'Event',
   }
 
   const ACTION_ICONS: Record<string, string> = {
@@ -111,13 +111,13 @@ import Breadcrumbs from '../components/ui/Breadcrumbs.astro'
 
   function getHref(type: string, slug: string) {
     const map: Record<string, string> = {
-      product:  `/products/product/${slug}`,
-      series:   `/products/series/${slug}`,
-      industry: `/applications/industry/${slug}`,
-      action:   `/applications/action/${slug}`,
-      news:     `/news/${slug}`,
-      case:     `/cases/${slug}`,
-      event:    `/events/${slug}`,
+      product:       `/products/product/${slug}`,
+      productSeries: `/products/series/${slug}`,
+      industry:      `/applications/industry/${slug}`,
+      action:        `/applications/action/${slug}`,
+      news:          `/news/${slug}`,
+      caseStudy:     `/cases/${slug}`,
+      event:         `/events/${slug}`,
     }
     return map[type] ?? '/'
   }
@@ -226,12 +226,12 @@ import Breadcrumbs from '../components/ui/Breadcrumbs.astro'
   }
 
   const GRID_CLASS: Record<string, string> = {
-    all:      'flex flex-col',
-    product:  'grid grid-cols-4 gap-4 max-lg:grid-cols-2 max-sm:grid-cols-1',
-    series:   'grid grid-cols-4 gap-4 max-lg:grid-cols-2 max-sm:grid-cols-1',
-    industry: 'grid grid-cols-3 gap-4 max-lg:grid-cols-2 max-sm:grid-cols-1',
-    action:   'grid grid-cols-4 gap-4 max-lg:grid-cols-2 max-sm:grid-cols-1',
-    news:     'grid grid-cols-3 gap-4 max-lg:grid-cols-2 max-sm:grid-cols-1',
+    all:           'flex flex-col',
+    product:       'grid grid-cols-4 gap-4 max-lg:grid-cols-2 max-sm:grid-cols-1',
+    productSeries: 'grid grid-cols-4 gap-4 max-lg:grid-cols-2 max-sm:grid-cols-1',
+    industry:      'grid grid-cols-3 gap-4 max-lg:grid-cols-2 max-sm:grid-cols-1',
+    action:        'grid grid-cols-4 gap-4 max-lg:grid-cols-2 max-sm:grid-cols-1',
+    news:          'grid grid-cols-3 gap-4 max-lg:grid-cols-2 max-sm:grid-cols-1',
   }
 
   function updateTabCounts() {
@@ -269,10 +269,10 @@ import Breadcrumbs from '../components/ui/Breadcrumbs.astro'
 
     sqResults.innerHTML = filtered.map(r => {
       if (activeTab === 'all') return cardAll(r)
-      if (r._type === 'product' || r._type === 'series') return cardProduct(r)
+      if (r._type === 'product' || r._type === 'productSeries') return cardProduct(r)
       if (r._type === 'industry') return cardIndustry(r)
       if (r._type === 'action') return cardAction(r)
-      if (r._type === 'news' || r._type === 'case' || r._type === 'event') return cardNews(r)
+      if (r._type === 'news' || r._type === 'caseStudy' || r._type === 'event') return cardNews(r)
       return cardAll(r)
     }).join('')
   }
@@ -294,7 +294,7 @@ import Breadcrumbs from '../components/ui/Breadcrumbs.astro'
     sqEmpty.classList.add('hidden')
     sqIdle.classList.add('hidden')
 
-    const groq = `*[_type in ["product","series","industry","action","news","case","event"] && title match "${safe}*"][0...50]{
+    const groq = `*[_type in ["product","productSeries","industry","action","news","caseStudy","event"] && title match "${safe}*"][0...50]{
       _type, title, slug, subtitle, description, date, category,
       "heroImageUrl": heroImage.asset->url,
       "coverImageUrl": image.asset->url,

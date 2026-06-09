@@ -427,19 +427,19 @@ const navItems: NavItem[] = [
   let searchDebounce: ReturnType<typeof setTimeout> | null = null
 
   const RESULT_LABELS: Record<string, string> = {
-    product: 'Product', series: 'Series', industry: 'Industry',
-    action: 'Application', news: 'News', case: 'Case', event: 'Event',
+    product: 'Product', productSeries: 'Series', industry: 'Industry',
+    action: 'Application', news: 'News', caseStudy: 'Case', event: 'Event',
   }
 
   function getResultHref(type: string, slug: string) {
     const map: Record<string, string> = {
-      product:  `/products/product/${slug}`,
-      series:   `/products/series/${slug}`,
-      industry: `/applications/industry/${slug}`,
-      action:   `/applications/action/${slug}`,
-      news:     `/news/${slug}`,
-      case:     `/cases/${slug}`,
-      event:    `/events/${slug}`,
+      product:       `/products/product/${slug}`,
+      productSeries: `/products/series/${slug}`,
+      industry:      `/applications/industry/${slug}`,
+      action:        `/applications/action/${slug}`,
+      news:          `/news/${slug}`,
+      caseStudy:     `/cases/${slug}`,
+      event:         `/events/${slug}`,
     }
     return map[type] ?? '/'
   }
@@ -490,7 +490,7 @@ const navItems: NavItem[] = [
     }
     if (searchResults) searchResults.innerHTML = '<p class="text-tiny text-text-tertiary py-3">Searching…</p>'
     try {
-      const groq = `*[_type in ["product","series","industry","action","news","case","event"] && title match "${safe}*"][0...8]{_type, title, slug}`
+      const groq = `*[_type in ["product","productSeries","industry","action","news","caseStudy","event"] && title match "${safe}*"][0...8]{_type, title, slug}`
       const url = `https://${SEARCH_PROJECT}.api.sanity.io/v2024-01-01/data/query/${SEARCH_DATASET}?query=${encodeURIComponent(groq)}`
       const res = await fetch(url)
       const data = await res.json()
