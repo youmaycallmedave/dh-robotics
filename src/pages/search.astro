@@ -157,10 +157,10 @@ import Breadcrumbs from '../components/ui/Breadcrumbs.astro'
 
   function cardIndustry(r: any) {
     const href = getHref('industry', r.slug?.current ?? '')
-    const img = r.coverImageUrl ?? ''
+    const img = r.coverImageUrl ?? '/images/applications-medical.webp'
     return `
       <a href="${href}" class="group relative aspect-[4/3] overflow-hidden bg-bg-secondary rounded-[4px]">
-        ${img ? `<img src="${img}" alt="${r.title}" loading="lazy" class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"/>` : ''}
+        <img src="${img}" alt="${r.title}" loading="lazy" class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"/>
         <div class="absolute inset-0 bg-gradient-to-t from-[rgba(5,11,19,0.75)] to-transparent"></div>
         <span class="absolute bottom-5 left-5 text-medium-medium text-text-alternate">${r.title ?? ''}</span>
       </a>
