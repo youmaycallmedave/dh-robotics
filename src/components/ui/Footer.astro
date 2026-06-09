@@ -5,26 +5,78 @@
   <div class="global-padding pt-20 pb-10 max-lg:pt-14 max-lg:pb-10">
     <div class="mx-auto max-w-[1200px] flex flex-col gap-9 max-lg:gap-8">
 
-      <!-- Top: logo + nav -->
-      <div class="flex items-start justify-between gap-10 max-lg:flex-col max-lg:gap-10">
+      <!-- TOP: Logo (left) + Nav (right) on desktop / stacked on mobile -->
+      <div class="flex items-start justify-between gap-10 max-lg:flex-col max-lg:gap-0">
 
-        <!-- Logo + description: row on mobile -->
+        <!-- Logo + desc -->
         <div class="flex flex-col gap-6 shrink-0 max-w-[244px] max-lg:flex-row max-lg:items-start max-lg:gap-6 max-lg:max-w-full">
           <a href="/" aria-label="DH-Robotics" class="shrink-0">
-            <img src="/logotype-dh-robotics.svg" alt="DH-Robotics" class="h-[63px] w-auto" />
+            <img src="/logotype-dh-robotics.svg" alt="DH-Robotics" class="h-[53px] w-auto" />
           </a>
           <p class="text-tiny text-text-primary">
             DH-Robotics is a high-tech company which is dedicated on providing core components of precision and motion controls for industrial intelligent manufacturing scenarios.
           </p>
         </div>
 
-        <!-- Nav -->
-        <nav class="flex items-start gap-8 max-lg:flex-wrap max-lg:gap-x-0 max-lg:gap-y-4 max-lg:w-full">
+        <!-- Mobile only: subscription + phone + email + up -->
+        <div class="lg:hidden w-full mt-10 flex flex-col gap-10">
 
-          <!-- Products -->
-          <div class="flex flex-col gap-4 max-lg:w-full">
-            <a href="/products" class="footer-link text-small-medium text-text-primary"><span>Products</span></a>
-            <div class="flex gap-8 max-lg:gap-4">
+          <!-- Email subscription -->
+          <div class="flex gap-4 items-end">
+            <div class="flex-1 flex flex-col gap-0.5">
+              <p class="text-small text-text-primary mb-1">Get the latest news from DH-Robotics</p>
+              <div class="flex items-center border-b border-border-other-2 py-4">
+                <input
+                  type="email"
+                  placeholder="Enter your e-mail..."
+                  class="flex-1 bg-transparent text-regular text-text-primary placeholder:text-text-secondary outline-none"
+                />
+              </div>
+            </div>
+            <button class="bg-btn-black-default p-2 rounded-[2px] flex items-center justify-center shrink-0 size-10" aria-label="Subscribe">
+              <svg class="size-6" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="M5 12h14M13 6l6 6-6 6" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </button>
+          </div>
+
+          <!-- Phone -->
+          <div class="flex flex-col gap-4">
+            <p class="text-tiny text-text-secondary">Phone</p>
+            <a href="tel:+8618814357627" class="footer-link footer-link-large text-h5 text-text-primary whitespace-nowrap"><span>+86 18814357627</span></a>
+          </div>
+
+          <!-- E-mail -->
+          <div class="flex flex-col gap-4">
+            <p class="text-tiny text-text-secondary">E-mail</p>
+            <a href="mailto:info@dh-robotics.com" class="footer-link footer-link-large text-h5 text-text-primary whitespace-nowrap"><span>info@dh-robotics.com</span></a>
+          </div>
+
+          <!-- Up -->
+          <div class="flex flex-col gap-3">
+            <p class="text-tiny text-text-secondary">Up</p>
+            <button id="scroll-to-top-mobile" class="border border-border-other-2 rounded-[8px] p-3 w-fit flex items-center justify-center hover:border-border-alternative transition-colors duration-200 cursor-pointer" aria-label="Scroll to top">
+              <svg class="size-6 text-text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 15l-6-6-6 6"/></svg>
+            </button>
+          </div>
+
+        </div>
+
+        <!-- Nav -->
+        <nav class="flex items-start gap-8
+                    max-lg:flex-wrap max-lg:gap-4 max-lg:w-full
+                    max-lg:border-t max-lg:border-border-other-2 max-lg:pt-14 max-lg:mt-10">
+
+          <!-- PRODUCTS (desktop: label+sub-cols / mobile: flat col 1 of 2) -->
+          <div class="flex flex-col gap-4 max-lg:w-[calc(50%-8px)]">
+
+            <!-- Desktop header (link) -->
+            <a href="/products" class="footer-link text-small-medium text-text-primary max-lg:hidden"><span>Products</span></a>
+            <!-- Mobile header (gray label) -->
+            <p class="hidden max-lg:block text-tiny text-text-secondary">Products</p>
+
+            <!-- Desktop: Automation + Robotics sub-cols -->
+            <div class="flex gap-8 max-lg:hidden">
               <div class="flex flex-col gap-1">
                 <p class="text-tiny text-text-secondary mb-1">Automation</p>
                 <a href="/products" class="footer-link text-small-medium text-text-primary py-2 block"><span>Electric Grippers</span></a>
@@ -40,61 +92,107 @@
                 <a href="/products" class="footer-link text-small-medium text-text-primary py-2 block"><span>Hexapods</span></a>
               </div>
             </div>
+
+            <!-- Mobile: flat Automation links -->
+            <div class="hidden max-lg:flex max-lg:flex-col">
+              <a href="/products" class="footer-link text-small-medium text-text-primary py-2 block"><span>All products</span></a>
+              <a href="/products" class="footer-link text-small-medium text-text-primary py-2 block"><span>Electric Grippers</span></a>
+              <a href="/products" class="footer-link text-small-medium text-text-primary py-2 block"><span>Rotary Electric Grippers</span></a>
+              <a href="/products" class="footer-link text-small-medium text-text-primary py-2 block"><span>Servo Drive</span></a>
+              <a href="/products" class="footer-link text-small-medium text-text-primary py-2 block"><span>Linear Coil Actuator</span></a>
+              <a href="/products" class="footer-link text-small-medium text-text-primary py-2 block"><span>Servo Electric Cylinder</span></a>
+            </div>
           </div>
 
-          <!-- Applications + Service -->
-          <div class="flex gap-8 max-lg:w-full max-lg:gap-0 max-lg:justify-between">
-            <div class="flex flex-col gap-2 max-lg:w-[calc(50%-8px)]">
-              <a href="/applications" class="footer-link text-small-medium text-text-primary mb-2 block"><span>Applications</span></a>
+          <!-- PRODUCTS OVERFLOW: mobile only — Robotics links in col 2 -->
+          <div class="hidden max-lg:flex max-lg:flex-col max-lg:w-[calc(50%-8px)] max-lg:pt-4">
+            <a href="/products" class="footer-link text-small-medium text-text-primary py-2 block"><span>Dexterous Hand</span></a>
+            <a href="/products" class="footer-link text-small-medium text-text-primary py-2 block"><span>iFM Intelligent Flexible Motion System</span></a>
+            <a href="/products" class="footer-link text-small-medium text-text-primary py-2 block"><span>Hexapods</span></a>
+          </div>
+
+          <!-- APPLICATIONS + SERVICE (desktop: side by side / mobile: each ~50%) -->
+          <div class="flex gap-8 max-lg:gap-0 max-lg:flex-wrap max-lg:w-full">
+
+            <div class="flex flex-col gap-2 max-lg:w-[calc(50%-8px)] max-lg:mr-4">
+              <a href="/applications" class="footer-link text-small-medium text-text-primary mb-2 block max-lg:hidden"><span>Applications</span></a>
+              <p class="hidden max-lg:block text-tiny text-text-secondary mb-1">Applications</p>
+              <a href="/applications" class="footer-link text-small-medium text-text-primary py-2 block"><span>All Applications</span></a>
               <a href="/applications" class="footer-link text-small-medium text-text-primary py-2 block"><span>Industry</span></a>
-              <a href="/applications" class="footer-link text-small-medium text-text-primary py-2 block"><span>Tasks</span></a>
-              <a href="/cases" class="footer-link text-small-medium text-text-primary py-2 block"><span>Case</span></a>
+              <a href="/applications/action" class="footer-link text-small-medium text-text-primary py-2 block"><span>Processes</span></a>
+              <a href="/cases" class="footer-link text-small-medium text-text-primary py-2 block max-lg:hidden"><span>Case</span></a>
             </div>
+
             <div class="flex flex-col gap-2 max-lg:w-[calc(50%-8px)]">
-              <a href="/services" class="footer-link text-small-medium text-text-primary mb-2 block"><span>Service</span></a>
+              <a href="/services" class="footer-link text-small-medium text-text-primary mb-2 block max-lg:hidden"><span>Service</span></a>
+              <p class="hidden max-lg:block text-tiny text-text-secondary mb-1">Service</p>
+              <a href="/services" class="footer-link text-small-medium text-text-primary py-2 block"><span>All Services</span></a>
               <a href="/services/technology" class="footer-link text-small-medium text-text-primary py-2 block"><span>Technology</span></a>
               <a href="/services/software" class="footer-link text-small-medium text-text-primary py-2 block"><span>User Control Software</span></a>
-              <a href="/resources/downloads" class="footer-link text-small-medium text-text-primary py-2 block"><span>Download Center</span></a>
+              <a href="/resources/downloads" class="footer-link text-small-medium text-text-primary py-2 block max-lg:hidden"><span>Download Center</span></a>
             </div>
+
           </div>
 
-          <!-- Resources + About -->
-          <div class="flex gap-8 max-lg:w-full max-lg:gap-0 max-lg:justify-between">
-            <div class="flex flex-col gap-2 max-lg:w-[calc(50%-8px)]">
-              <span class="text-small-medium text-text-primary mb-2 block">Resources</span>
+          <!-- RESOURCES + ABOUT (desktop: side by side / mobile: col 1 of last row) -->
+          <div class="flex gap-8 max-lg:gap-0 max-lg:flex-wrap max-lg:w-full">
+
+            <div class="flex flex-col gap-2 max-lg:w-[calc(50%-8px)] max-lg:mr-4">
+              <span class="text-tiny text-text-secondary mb-1 block max-lg:hidden">Resources</span>
+              <p class="hidden max-lg:block text-tiny text-text-secondary mb-1">Resources</p>
               <a href="/news" class="footer-link text-small-medium text-text-primary py-2 block"><span>News</span></a>
-              <a href="/news?category=insights" class="footer-link text-small-medium text-text-primary py-2 block"><span>Insights</span></a>
+              <a href="/news?category=insights" class="footer-link text-small-medium text-text-primary py-2 block max-lg:hidden"><span>Insights</span></a>
               <a href="/events" class="footer-link text-small-medium text-text-primary py-2 block"><span>Events</span></a>
               <a href="/resources/faq" class="footer-link text-small-medium text-text-primary py-2 block"><span>FAQ</span></a>
+              <a href="/cases" class="footer-link text-small-medium text-text-primary py-2 block max-lg:block"><span>Case</span></a>
+              <a href="/resources/downloads" class="footer-link text-small-medium text-text-primary py-2 block max-lg:block"><span>Download Center</span></a>
+
+              <!-- Mobile: Company + Contact us in same column -->
+              <div class="hidden max-lg:flex max-lg:flex-col max-lg:mt-6">
+                <p class="text-tiny text-text-secondary mb-1">Company</p>
+                <a href="/about" class="footer-link text-small-medium text-text-primary py-2 block"><span>About us</span></a>
+                <p class="text-tiny text-text-secondary mb-1 mt-4">Get in Touch</p>
+                <a href="/contact" class="footer-link text-small-medium text-text-primary py-2 block"><span>Contact us</span></a>
+              </div>
             </div>
-            <div class="flex flex-col gap-2 max-lg:w-[calc(50%-8px)]">
+
+            <!-- Desktop: About column -->
+            <div class="flex flex-col gap-2 max-lg:hidden">
               <a href="/about" class="footer-link text-small-medium text-text-primary mb-2 block"><span>About</span></a>
             </div>
+
+            <!-- Mobile: Social media text links in col 2 of last row -->
+            <div class="hidden max-lg:flex max-lg:flex-col max-lg:w-[calc(50%-8px)]">
+              <p class="text-tiny text-text-secondary mb-1">Social media</p>
+              <a href="https://www.linkedin.com/company/dh-robotics" target="_blank" rel="noopener noreferrer" class="footer-link text-small-medium text-text-primary py-2 block"><span>Linkedin</span></a>
+              <a href="https://www.youtube.com/@dh-robotics" target="_blank" rel="noopener noreferrer" class="footer-link text-small-medium text-text-primary py-2 block"><span>Youtube</span></a>
+              <a href="https://www.facebook.com/dhrobotics" target="_blank" rel="noopener noreferrer" class="footer-link text-small-medium text-text-primary py-2 block"><span>Facebook</span></a>
+            </div>
+
           </div>
 
-          <!-- Contact us -->
-          <div class="flex flex-col max-lg:w-full">
+          <!-- CONTACT US (desktop only) -->
+          <div class="flex flex-col max-lg:hidden">
             <a href="/contact" class="footer-link text-small-medium text-text-primary block whitespace-nowrap"><span>Contact us</span></a>
           </div>
 
         </nav>
       </div>
 
-      <!-- Middle -->
-      <div class="border-t border-border-other-2 pt-14 flex items-end justify-between gap-8 max-lg:flex-col max-lg:items-start max-lg:gap-10 max-lg:pt-8">
+      <!-- MIDDLE: Phone + Email + Social/Up — desktop only -->
+      <div class="max-lg:hidden border-t border-border-other-2 pt-14 flex items-end justify-between gap-8">
 
-        <div class="flex flex-col gap-6 max-lg:gap-4">
+        <div class="flex flex-col gap-6">
           <p class="text-tiny text-text-secondary">Phone</p>
-          <a href="tel:+8618814357627" class="footer-link footer-link-large text-h3 mob-h5 text-text-primary whitespace-nowrap"><span>+86 18814357627</span></a>
+          <a href="tel:+8618814357627" class="footer-link footer-link-large text-h3 text-text-primary whitespace-nowrap"><span>+86 18814357627</span></a>
         </div>
 
-        <div class="flex flex-col gap-6 max-lg:gap-4">
+        <div class="flex flex-col gap-6">
           <p class="text-tiny text-text-secondary">E-mail</p>
-          <a href="mailto:info@dh-robotics.com" class="footer-link footer-link-large text-h3 mob-h5 text-text-primary whitespace-nowrap"><span>info@dh-robotics.com</span></a>
+          <a href="mailto:info@dh-robotics.com" class="footer-link footer-link-large text-h3 text-text-primary whitespace-nowrap"><span>info@dh-robotics.com</span></a>
         </div>
 
-        <!-- Social + Up -->
-        <div class="flex items-end gap-8 max-lg:w-full max-lg:justify-between">
+        <div class="flex items-end gap-8">
           <div class="flex flex-col gap-3">
             <p class="text-tiny text-text-secondary">Social media</p>
             <div class="flex items-center gap-2">
@@ -119,7 +217,7 @@
 
       </div>
 
-      <!-- Bottom -->
+      <!-- BOTTOM -->
       <div class="border-t border-border-other-2 pt-8 flex items-center justify-between gap-4 max-lg:flex-col max-lg:items-center max-lg:gap-6">
         <p class="text-tiny text-text-primary whitespace-nowrap max-lg:text-center">© 2017-2026 DH-Robotics Technology Co., Ltd. all rights reserved.</p>
         <div class="flex items-center gap-6 flex-wrap max-lg:justify-center">
@@ -163,6 +261,9 @@
 
 <script>
   document.getElementById('scroll-to-top')?.addEventListener('click', () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+  })
+  document.getElementById('scroll-to-top-mobile')?.addEventListener('click', () => {
     window.scrollTo({ top: 0, behavior: 'smooth' })
   })
 </script>

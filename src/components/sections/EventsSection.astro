@@ -67,16 +67,15 @@ const hasMore = events.length > PAGE_SIZE
       <div
         class:list={[
           "event-item relative group border-t border-border-other-2 pt-12 px-6 flex gap-3 items-start",
-          "max-lg:flex-col max-lg:pt-8 max-lg:px-0",
-          "max-md:pt-6",
-          i === events.length - 1 ? "pb-12 max-lg:pb-8 max-md:pb-6" : "",
+          "max-lg:flex-col max-lg:gap-6 max-lg:pt-6 max-lg:px-0",
+          i === events.length - 1 ? "pb-12 max-lg:pb-6" : "",
           i >= PAGE_SIZE ? "hidden" : "",
         ]}
         data-index={i}
       >
 
         <!-- Date + tag -->
-        <div class="flex flex-col items-start justify-center gap-4 shrink-0 w-[10rem] max-lg:flex-row max-lg:items-center max-lg:gap-2 max-lg:w-auto">
+        <div class="flex flex-col items-start justify-center gap-4 shrink-0 w-[10rem] max-lg:flex-row max-lg:items-center max-lg:justify-between max-lg:w-full">
           <span class="text-regular text-text-primary">{event.date}</span>
           <span class:list={[
             "inline-flex items-center px-2 py-2 rounded-[4px] text-small text-text-primary leading-none whitespace-nowrap",
@@ -87,7 +86,7 @@ const hasMore = events.length > PAGE_SIZE
         </div>
 
         <!-- Image + text -->
-        <div class="flex flex-1 gap-4 items-start min-w-0 max-lg:flex-col max-lg:w-full">
+        <div class="flex flex-1 gap-4 items-start min-w-0 max-lg:flex-col max-lg:gap-6 max-lg:w-full">
 
           <a href={event.href} class="bg-bg-secondary rounded-[4px] overflow-hidden shrink-0 w-[390px] h-[216px] max-lg:w-full max-lg:h-auto max-lg:aspect-video block">
             <img
@@ -98,32 +97,32 @@ const hasMore = events.length > PAGE_SIZE
             />
           </a>
 
-          <div class="flex flex-col justify-between self-stretch flex-1 min-w-0 max-lg:gap-4">
+          <div class="flex flex-col justify-between self-stretch flex-1 min-w-0 max-lg:gap-8">
             <a href={event.href} class="text-h6 text-text-primary text-trim-off pr-[10rem] max-lg:pr-0 hover:text-text-tertiary transition-colors duration-200">{event.title}</a>
 
-            <div class="flex gap-x-14 lg:group-hover:gap-x-8 transition-all duration-300 ease-in-out max-md:gap-x-5 max-md:flex-wrap">
+            <div class="flex gap-x-14 lg:group-hover:gap-x-8 transition-all duration-300 ease-in-out max-lg:flex-wrap max-lg:gap-4">
 
               <div class="flex flex-col gap-2">
-                <span class="text-small text-text-secondary max-md:hidden">Location</span>
-                <div class="flex items-center gap-3 max-md:flex-col max-md:items-start max-md:gap-3">
-                  <img src="/images/icons/location.svg" alt="" class="shrink-0 size-5 max-md:size-4" aria-hidden="true" />
-                  <span class="text-regular max-md:text-small text-text-primary whitespace-nowrap">{event.location}</span>
+                <span class="text-small text-text-secondary max-lg:hidden">Location</span>
+                <div class="flex items-center gap-3">
+                  <img src="/images/icons/location.svg" alt="" class="shrink-0 size-5" aria-hidden="true" />
+                  <span class="text-regular text-text-primary whitespace-nowrap">{event.location}</span>
                 </div>
               </div>
 
               <div class="flex flex-col gap-2">
-                <span class="text-small text-text-secondary max-md:hidden">Date</span>
-                <div class="flex items-center gap-3 max-md:flex-col max-md:items-start max-md:gap-3">
-                  <img src="/images/icons/date.svg" alt="" class="shrink-0 size-5 max-md:size-4" aria-hidden="true" />
-                  <span class="text-regular max-md:text-small text-text-primary whitespace-nowrap">{event.eventDate}</span>
+                <span class="text-small text-text-secondary max-lg:hidden">Date</span>
+                <div class="flex items-center gap-3">
+                  <img src="/images/icons/date.svg" alt="" class="shrink-0 size-5" aria-hidden="true" />
+                  <span class="text-regular text-text-primary whitespace-nowrap">{event.eventDate}</span>
                 </div>
               </div>
 
               <div class="flex flex-col gap-2">
-                <span class="text-small text-text-secondary max-md:hidden">Time</span>
-                <div class="flex items-center gap-3 max-md:flex-col max-md:items-start max-md:gap-3">
-                  <img src="/images/icons/time.svg" alt="" class="shrink-0 size-5 max-md:size-4" aria-hidden="true" />
-                  <span class="text-regular max-md:text-small text-text-primary whitespace-nowrap">{event.time}</span>
+                <span class="text-small text-text-secondary max-lg:hidden">Time</span>
+                <div class="flex items-center gap-3">
+                  <img src="/images/icons/time.svg" alt="" class="shrink-0 size-5" aria-hidden="true" />
+                  <span class="text-regular text-text-primary whitespace-nowrap">{event.time}</span>
                 </div>
               </div>
 
