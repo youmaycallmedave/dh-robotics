@@ -92,26 +92,28 @@ const {
   :global([data-industries-swiper]) { overflow: visible !important; }
   :global([data-industries-swiper] .swiper-slide) { display: flex; flex-direction: column; }
 
-  :global(.slide-image-wrap) {
-    clip-path: inset(0 0 20% 0);
-    transition: clip-path 0.55s cubic-bezier(.21, 1, .34, 1);
-  }
-  :global(.swiper-slide-active .slide-image-wrap) {
-    clip-path: inset(0 0 0% 0);
-  }
+  @media (min-width: 1024px) {
+    :global(.slide-image-wrap) {
+      clip-path: inset(0 0 20% 0);
+      transition: clip-path 0.55s cubic-bezier(.21, 1, .34, 1);
+    }
+    :global(.swiper-slide-active .slide-image-wrap) {
+      clip-path: inset(0 0 0% 0);
+    }
 
-  :global(.slide-item .slide-text) {
-    opacity: 0;
-    transform: translateY(12px);
-    transition:
-      opacity   0.45s cubic-bezier(.21, 1, .34, 1) 0.15s,
-      transform 0.45s cubic-bezier(.21, 1, .34, 1) 0.15s;
-    pointer-events: none;
-  }
-  :global(.swiper-slide-active .slide-text) {
-    opacity: 1;
-    transform: translateY(0);
-    pointer-events: auto;
+    :global(.slide-item .slide-text) {
+      opacity: 0;
+      transform: translateY(12px);
+      transition:
+        opacity   0.45s cubic-bezier(.21, 1, .34, 1) 0.15s,
+        transform 0.45s cubic-bezier(.21, 1, .34, 1) 0.15s;
+      pointer-events: none;
+    }
+    :global(.swiper-slide-active .slide-text) {
+      opacity: 1;
+      transform: translateY(0);
+      pointer-events: auto;
+    }
   }
 </style>
 
@@ -124,7 +126,8 @@ const {
     const progress  = wrap.querySelector<HTMLElement>('.ind-progress')
     const prevBtn   = wrap.querySelector<HTMLButtonElement>('.ind-prev')
     const nextBtn   = wrap.querySelector<HTMLButtonElement>('.ind-next')
-    const initialSlide = parseInt(swiperEl.dataset.initial ?? '2')
+    const isMobile = window.innerWidth < 1024
+    const initialSlide = isMobile ? 0 : parseInt(swiperEl.dataset.initial ?? '2')
 
     const swiper = new Swiper(swiperEl, {
       centeredSlides: true,

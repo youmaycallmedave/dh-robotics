@@ -73,13 +73,14 @@ function getYoutubeId(url: string): string | null {
         </div>
 
         <!-- Icon navigation: all action types -->
-        <div class="flex flex-wrap gap-4 pt-10 border-t border-border-other-2 mb-[120px] max-lg:mb-20">
+        <div data-actions-nav class="flex flex-wrap gap-4 pt-10 border-t border-border-other-2 mb-[120px] max-lg:mb-20 max-lg:flex-nowrap max-lg:overflow-x-auto max-lg:w-[100dvw] max-lg:-ml-4 max-lg:px-4">
           {(allActions as any[]).map((a) => {
             const isActive = a.slug?.current === slug
             const iconSrc = a.icon ? urlFor(a.icon).width(80).url() : iconMap[a.slug?.current] ?? ''
             return (
               <a
                 href={`/applications/action/${a.slug?.current}`}
+                data-active-action={isActive ? 'true' : undefined}
                 class:list={[
                   'flex flex-col gap-4 items-center group',
                 ]}
@@ -95,7 +96,7 @@ function getYoutubeId(url: string): string | null {
                   )}
                 </div>
                 <span class:list={[
-                  'text-small-medium',
+                  'text-small-medium text-trim-off text-center',
                   isActive ? 'text-text-primary' : 'text-text-secondary group-hover:text-text-primary',
                 ]}>
                   {a.title}
@@ -183,9 +184,9 @@ function getYoutubeId(url: string): string | null {
                             {(section.series as any[]).map((s) => (
                               <a
                                 href={`/products/series/${s.slug?.current}`}
-                                class="group w-[288px] shrink-0 flex flex-col bg-bg-secondary"
+                                class="group w-[288px] max-lg:w-full shrink-0 flex flex-col bg-bg-secondary"
                               >
-                                <div class="h-[259px] overflow-hidden relative">
+                                <div class="h-[259px] max-lg:h-auto max-lg:aspect-square overflow-hidden relative">
                                   {s.heroImage ? (
                                     <img
                                       src={urlFor(s.heroImage).width(576).url()}
@@ -262,6 +263,18 @@ function getYoutubeId(url: string): string | null {
 </Layout>
 
 <script>
+  // Scroll active task icon into view
+  const activeIcon = document.querySelector<HTMLElement>('[data-active-action]')
+  if (activeIcon) {
+    const container = activeIcon.closest<HTMLElement>('[data-actions-nav]')
+    if (container) {
+      const containerRect = container.getBoundingClientRect()
+      const itemRect = activeIcon.getBoundingClientRect()
+      const scrollLeft = activeIcon.offsetLeft - container.offsetLeft - (containerRect.width / 2) + (itemRect.width / 2)
+      container.scrollLeft = Math.max(0, scrollLeft)
+    }
+  }
+
   // Industry slider
   const slider = document.getElementById('ind-slider') as HTMLElement
   const progress = document.getElementById('ind-progress') as HTMLElement
