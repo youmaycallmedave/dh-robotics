@@ -11,7 +11,6 @@ import Breadcrumbs from '../components/ui/Breadcrumbs.astro'
     <div class="global-padding">
       <div class="mx-auto max-w-[1200px]">
 
-        <!-- Search input -->
         <div class="pt-[80px] pb-8 max-lg:pt-14 max-lg:pb-6 border-b border-border-other-2 mb-10 max-lg:mb-8 flex items-center gap-4">
           <svg width="20" height="20" viewBox="0 0 20 20" fill="none" class="shrink-0 text-text-tertiary" aria-hidden="true">
             <circle cx="9" cy="9" r="6.5" stroke="currentColor" stroke-width="1.5"/>
@@ -26,8 +25,7 @@ import Breadcrumbs from '../components/ui/Breadcrumbs.astro'
           />
         </div>
 
-        <!-- Tabs -->
-        <div class="flex gap-2 flex-wrap mb-10 max-lg:mb-8" id="sq-tabs">
+        <div class="flex gap-2 flex-wrap mb-10 max-lg:mb-8">
           <button class="sq-tab" data-tab="all">All</button>
           <button class="sq-tab" data-tab="product">Products</button>
           <button class="sq-tab" data-tab="series">Series</button>
@@ -36,20 +34,16 @@ import Breadcrumbs from '../components/ui/Breadcrumbs.astro'
           <button class="sq-tab" data-tab="news">News</button>
         </div>
 
-        <!-- Loading -->
         <div id="sq-loading" class="hidden">
           <p class="text-regular text-text-secondary">Searching…</p>
         </div>
 
-        <!-- Results list -->
         <div id="sq-results"></div>
 
-        <!-- Empty state -->
         <div id="sq-empty" class="hidden py-6">
           <p class="text-large text-text-secondary">No results for "<span id="sq-query-label"></span>"</p>
         </div>
 
-        <!-- Idle state -->
         <div id="sq-idle">
           <p class="text-regular text-text-secondary">Enter a search query above</p>
         </div>
@@ -104,6 +98,17 @@ import Breadcrumbs from '../components/ui/Breadcrumbs.astro'
     action: 'Application', news: 'News', case: 'Case', event: 'Event',
   }
 
+  const ACTION_ICONS: Record<string, string> = {
+    'grabbing':            '/images/icon-task-grabbing.svg',
+    'clamping':            '/images/icon-task-clamping.svg',
+    'counterpoint':        '/images/icon-task-counterpoint.svg',
+    'transport':           '/images/icon-task-transport.svg',
+    'rotation':            '/images/icon-task-rotation.png',
+    'assembly':            '/images/icon-task-assembly.svg',
+    'loading-unloading':   '/images/icon-task-loading.svg',
+    'opening-closing-lid': '/images/icon-task-opening.svg',
+  }
+
   function getHref(type: string, slug: string) {
     const map: Record<string, string> = {
       product:  `/products/product/${slug}`,
@@ -117,16 +122,128 @@ import Breadcrumbs from '../components/ui/Breadcrumbs.astro'
     return map[type] ?? '/'
   }
 
+  function formatDate(iso: string) {
+    if (!iso) return ''
+    return new Date(iso).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })
+  }
+
+  function cardProduct(r: any) {
+    const href = getHref(r._type, r.slug?.current ?? '')
+    const img = r.heroImageUrl ?? ''
+    return `
+      <a href="${href}" class="group flex flex-col bg-bg-secondary hover:opacity-90 transition-opacity">
+        <div class="h-[220px] overflow-hidden relative bg-bg-secondary flex items-center justify-center p-6">
+          ${img
+            ? `<img src="${img}" alt="${r.title}" loading="lazy" class="max-w-full max-h-full object-contain"/>`
+            : `<span class="text-tiny text-text-tertiary">${r.title}</span>`
+          }
+        </div>
+        <div class="flex flex-col gap-3 p-5 border-t border-border-other-2">
+          <div class="flex items-end justify-between gap-4">
+            <div class="flex flex-col gap-2 min-w-0">
+              <span class="text-h6 text-text-primary tracking-[-0.03125rem]">${r.title ?? ''}</span>
+              ${r.subtitle ? `<span class="text-small text-text-secondary">${r.subtitle}</span>` : ''}
+            </div>
+            <div class="size-10 bg-btn-black-default flex items-center justify-center rounded-[2px] shrink-0 self-end group-hover:opacity-80 transition-opacity">
+              <svg width="6" height="10" viewBox="0 0 6 10" fill="none" aria-hidden="true">
+                <path d="M1 1L5 5L1 9" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </div>
+          </div>
+        </div>
+      </a>
+    `
+  }
+
+  function cardIndustry(r: any) {
+    const href = getHref('industry', r.slug?.current ?? '')
+    const img = r.coverImageUrl ?? ''
+    return `
+      <a href="${href}" class="group relative aspect-[4/3] overflow-hidden bg-bg-secondary rounded-[4px]">
+        ${img ? `<img src="${img}" alt="${r.title}" loading="lazy" class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"/>` : ''}
+        <div class="absolute inset-0 bg-gradient-to-t from-[rgba(5,11,19,0.75)] to-transparent"></div>
+        <span class="absolute bottom-5 left-5 text-medium-medium text-text-alternate">${r.title ?? ''}</span>
+      </a>
+    `
+  }
+
+  function cardAction(r: any) {
+    const href = getHref('action', r.slug?.current ?? '')
+    const iconUrl = r.iconUrl ?? ACTION_ICONS[r.slug?.current ?? ''] ?? ''
+    return `
+      <a href="${href}" class="group bg-bg-primary border border-border-other-2 p-8 flex flex-col justify-between h-[220px] hover:border-text-primary transition-colors">
+        <div class="flex items-start justify-between gap-2">
+          <span class="text-large-medium text-text-primary uppercase leading-[1.3]">${r.title ?? ''}</span>
+          <div class="shrink-0 size-8 border border-border-other-2 rounded-[4px] flex items-center justify-center text-text-secondary group-hover:border-text-primary group-hover:text-text-primary transition-colors">
+            <svg width="8" height="12" viewBox="0 0 8 12" fill="none" aria-hidden="true">
+              <path d="M2 2L6 6L2 10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+        </div>
+        ${iconUrl ? `<div class="size-[72px]"><img src="${iconUrl}" alt="" class="size-full object-contain" aria-hidden="true"/></div>` : ''}
+      </a>
+    `
+  }
+
+  function cardNews(r: any) {
+    const href = getHref(r._type, r.slug?.current ?? '')
+    const img = r.heroImageUrl ?? ''
+    const date = formatDate(r.date ?? '')
+    return `
+      <a href="${href}" class="group border border-border-other-2 flex flex-col overflow-hidden hover:opacity-90 transition-opacity">
+        ${img ? `
+          <div class="aspect-video overflow-hidden relative bg-bg-secondary">
+            <img src="${img}" alt="${r.title}" loading="lazy" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"/>
+            ${r.category ? `<span class="absolute top-4 left-4 bg-fg-alternative text-text-alternate text-small-caps px-2 py-1">${r.category === 'insights' ? 'Insights' : 'News'}</span>` : ''}
+          </div>
+        ` : ''}
+        <div class="p-5 flex flex-col gap-3 flex-1">
+          ${date ? `<span class="text-tiny text-text-tertiary">${date}</span>` : ''}
+          <span class="text-medium-medium text-text-primary line-clamp-2">${r.title ?? ''}</span>
+        </div>
+      </a>
+    `
+  }
+
+  function cardAll(r: any) {
+    const href = getHref(r._type, r.slug?.current ?? '')
+    const img = r.heroImageUrl ?? r.coverImageUrl ?? ''
+    return `
+      <a href="${href}" class="flex items-center gap-4 py-4 border-b border-border-other-2 hover:opacity-70 transition-opacity group">
+        ${img
+          ? `<div class="size-12 shrink-0 bg-bg-secondary overflow-hidden rounded-[2px]"><img src="${img}" alt="" loading="lazy" class="w-full h-full object-cover"/></div>`
+          : `<div class="size-12 shrink-0 bg-bg-secondary rounded-[2px]"></div>`
+        }
+        <div class="flex-1 min-w-0">
+          <span class="text-small-medium text-text-primary block">${r.title ?? ''}</span>
+          <span class="text-tiny text-text-tertiary uppercase mt-0.5 block">${TYPE_LABELS[r._type] ?? r._type}</span>
+        </div>
+        <svg width="6" height="10" viewBox="0 0 6 10" fill="none" class="shrink-0 text-text-tertiary group-hover:text-text-primary transition-colors" aria-hidden="true">
+          <path d="M1 1l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </a>
+    `
+  }
+
+  const GRID_CLASS: Record<string, string> = {
+    all:      'flex flex-col',
+    product:  'grid grid-cols-4 gap-4 max-lg:grid-cols-2 max-sm:grid-cols-1',
+    series:   'grid grid-cols-4 gap-4 max-lg:grid-cols-2 max-sm:grid-cols-1',
+    industry: 'grid grid-cols-3 gap-4 max-lg:grid-cols-2 max-sm:grid-cols-1',
+    action:   'grid grid-cols-4 gap-4 max-lg:grid-cols-2 max-sm:grid-cols-1',
+    news:     'grid grid-cols-3 gap-4 max-lg:grid-cols-2 max-sm:grid-cols-1',
+  }
+
   function updateTabCounts() {
     tabBtns.forEach(btn => {
       const tab = btn.dataset.tab ?? 'all'
       const count = tab === 'all' ? allResults.length : allResults.filter(r => r._type === tab).length
-      const existing = btn.querySelector('.sq-tab-count')
+      const existing = btn.querySelector('.sq-count')
       if (existing) existing.remove()
       if (count > 0) {
         const span = document.createElement('span')
-        span.className = 'sq-tab-count'
-        span.style.cssText = 'margin-left: 4px; opacity: 0.5; font-weight: 400;'
+        span.className = 'sq-count'
+        span.style.cssText = 'margin-left:4px;opacity:0.5;font-weight:400'
         span.textContent = `${count}`
         btn.appendChild(span)
       }
@@ -141,30 +258,29 @@ import Breadcrumbs from '../components/ui/Breadcrumbs.astro'
     sqIdle.classList.add('hidden')
 
     if (!filtered.length) {
+      sqResults.className = ''
       sqResults.innerHTML = ''
       sqEmpty.classList.remove('hidden')
       sqQueryLabel.textContent = query
       return
     }
 
-    sqResults.innerHTML = filtered.map((r: any) => `
-      <a href="${getHref(r._type, r.slug?.current ?? '')}"
-         class="flex items-center gap-6 py-5 border-b border-border-other-2 hover:opacity-70 transition-opacity group max-lg:gap-4">
-        <span class="text-tiny text-text-tertiary uppercase shrink-0 w-[100px] max-sm:hidden">${TYPE_LABELS[r._type] ?? r._type}</span>
-        <div class="flex-1 min-w-0">
-          <p class="text-medium-medium text-text-primary">${r.title ?? ''}</p>
-          ${r.subtitle ? `<p class="text-small text-text-secondary mt-1">${r.subtitle}</p>` : ''}
-        </div>
-        <svg width="8" height="12" viewBox="0 0 8 12" fill="none" class="shrink-0 text-text-tertiary group-hover:text-text-primary transition-colors" aria-hidden="true">
-          <path d="M2 2l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
-      </a>
-    `).join('')
+    sqResults.className = GRID_CLASS[activeTab] ?? 'flex flex-col'
+
+    sqResults.innerHTML = filtered.map(r => {
+      if (activeTab === 'all') return cardAll(r)
+      if (r._type === 'product' || r._type === 'series') return cardProduct(r)
+      if (r._type === 'industry') return cardIndustry(r)
+      if (r._type === 'action') return cardAction(r)
+      if (r._type === 'news' || r._type === 'case' || r._type === 'event') return cardNews(r)
+      return cardAll(r)
+    }).join('')
   }
 
   async function search(query: string) {
     const safe = query.replace(/["\\]/g, '').trim()
     if (!safe) {
+      sqResults.className = ''
       sqResults.innerHTML = ''
       sqEmpty.classList.add('hidden')
       sqIdle.classList.remove('hidden')
@@ -178,7 +294,12 @@ import Breadcrumbs from '../components/ui/Breadcrumbs.astro'
     sqEmpty.classList.add('hidden')
     sqIdle.classList.add('hidden')
 
-    const groq = `*[_type in ["product","series","industry","action","news","case","event"] && title match "${safe}*"][0...50]{_type, title, slug, subtitle}`
+    const groq = `*[_type in ["product","series","industry","action","news","case","event"] && title match "${safe}*"][0...50]{
+      _type, title, slug, subtitle, description, date, category,
+      "heroImageUrl": heroImage.asset->url,
+      "coverImageUrl": image.asset->url,
+      "iconUrl": icon.asset->url
+    }`
     const url = `https://${PROJECT_ID}.api.sanity.io/v2024-01-01/data/query/${DATASET}?query=${encodeURIComponent(groq)}`
     try {
       const res = await fetch(url)
@@ -210,7 +331,6 @@ import Breadcrumbs from '../components/ui/Breadcrumbs.astro'
 
   const initQ = new URLSearchParams(location.search).get('q') ?? ''
   tabBtns[0]?.classList.add('active')
-
   if (initQ && sqInput) {
     sqInput.value = initQ
     sqIdle.classList.add('hidden')
