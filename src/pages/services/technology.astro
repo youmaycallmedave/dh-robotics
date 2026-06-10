@@ -117,7 +117,7 @@ const features = [
     </div>
 
     <!-- Mobile: 3 static groups -->
-    <div class="lg:hidden px-4 py-[120px] flex flex-col gap-[72px]">
+    <div class="lg:hidden px-4 py-[72px] flex flex-col gap-12">
 
       <div class="flex flex-col gap-12">
         <p class="text-h5 mob-h6 text-text-primary">
@@ -160,7 +160,7 @@ const features = [
       <div class="mx-auto max-w-[1000px] flex flex-col gap-[144px] max-lg:gap-20">
 
         <!-- R&D History -->
-        <div class="flex items-start gap-[72px] max-lg:flex-col max-lg:gap-10">
+        <div class="flex items-start gap-[72px] max-lg:flex-col max-lg:gap-6">
           <div class="relative shrink-0 w-[594px] h-[451px] bg-bg-alternative rounded-[8px] overflow-hidden max-lg:w-full max-lg:h-[260px] max-lg:aspect-auto">
             <img
               src="/images/service-technology-rd.webp"
@@ -171,26 +171,26 @@ const features = [
               <img src="/logotype-dh-robotics.svg" alt="DH-Robotics" class="h-14 w-auto" />
             </div>
           </div>
-          <div class="flex flex-col gap-10 flex-1">
-            <h2 class="text-h4 mob-h5 text-text-primary">The history of DH-Robotics R&D</h2>
+          <div class="flex flex-col gap-[36px] flex-1">
+            <h2 class="text-h4 text-text-primary">The history of DH-Robotics R&D</h2>
             <p class="text-regular text-text-primary">The core team of DH-Robotics is under the tutelage of the industry leader, Prof. Jian S. Dai, an authoritative expert in robotics in international theoretical kinematics and reconfigurable mechanisms.</p>
             <p class="text-regular text-text-primary">The DH-Robotics team has been deeply involved in the field of robotics for more than ten years, and has participated in three "EU Seventh Framework" projects on robotic dexterous hands, SQUIRREL, TOMSY, and DEXDEB, and has rich technical accumulation and application experience.</p>
           </div>
         </div>
 
         <!-- Core Technologies -->
-        <div class="flex items-start gap-[72px] max-lg:flex-col-reverse max-lg:gap-10">
-          <div class="flex flex-col gap-10 flex-1">
-            <h2 class="text-h4 mob-h5 text-text-primary">Core<br/>Technologies</h2>
-            <p class="text-regular text-text-primary">DH-Robotics has developed the industry-leading direct drive force feedback technology, precision control technology, and integrated integration technology, combining precision clamping motion, linear motion, rotary motion and real-time control to create a benchmark product in the industry.</p>
-            <p class="text-regular text-text-primary">DH-Robotics' products have good dynamic performance, high force control accuracy, precise stroke, simple structure, easy operation, long working life, precise speed control and smooth and quiet performance, and can provide maximum output force, good adaptation to industrial manufacturing scenarios that require high precision and reliability.</p>
-          </div>
+        <div class="flex items-start gap-[72px] max-lg:flex-col max-lg:gap-6">
           <div class="relative shrink-0 w-[594px] h-[451px] bg-bg-alternative rounded-[8px] overflow-hidden max-lg:w-full max-lg:h-[260px] max-lg:aspect-auto">
             <img
               src="/images/service-technology-core.webp"
               alt="DH-Robotics core technology"
               class="absolute inset-0 w-full h-full object-cover"
             />
+          </div>
+          <div class="flex flex-col gap-[36px] flex-1">
+            <h2 class="text-h4 text-text-primary">Core<br/>Technologies</h2>
+            <p class="text-regular text-text-primary">DH-Robotics has developed the industry-leading direct drive force feedback technology, precision control technology, and integrated integration technology, combining precision clamping motion, linear motion, rotary motion and real-time control to create a benchmark product in the industry.</p>
+            <p class="text-regular text-text-primary">DH-Robotics' products have good dynamic performance, high force control accuracy, precise stroke, simple structure, easy operation, long working life, precise speed control and smooth and quiet performance, and can provide maximum output force, good adaptation to industrial manufacturing scenarios that require high precision and reliability.</p>
           </div>
         </div>
 
@@ -201,9 +201,9 @@ const features = [
   <!-- Core Advantages header -->
   <section class="bg-bg-other pt-[160px] pb-[88px] max-lg:pt-[72px] max-lg:pb-10">
     <div class="global-padding">
-      <div class="mx-auto max-w-[1200px] flex items-start justify-between gap-10 max-lg:flex-col max-lg:gap-6">
-        <h2 class="text-h2 mob-h3 text-text-primary shrink-0">Core Advantages</h2>
-        <p class="text-large text-text-secondary max-w-[592px] text-balance">Thanks to the top-equipped components and high-standard process accessories, we have built our unique competitiveness, delivering electric actuators that outperform the market.</p>
+      <div class="mx-auto max-w-[1200px] flex items-start justify-between gap-10 max-lg:flex-col max-lg:gap-8">
+        <h2 class="text-h2 text-text-primary shrink-0">Core Advantages</h2>
+        <p class="text-large text-text-secondary max-w-[592px] max-lg:max-w-full text-balance">Thanks to the top-equipped components and high-standard process accessories, we have built our unique competitiveness, delivering electric actuators that outperform the market.</p>
       </div>
     </div>
   </section>
@@ -214,9 +214,9 @@ const features = [
       <div class="mx-auto max-w-[1200px] flex flex-col gap-20 max-lg:gap-12">
 
         {features.map((f) => (
-          <div class="flex items-center justify-between gap-10 max-lg:flex-col max-lg:items-start max-lg:gap-8">
+          <div class="flex items-center justify-between gap-10 max-lg:flex-col max-lg:items-start max-lg:gap-4">
 
-            <div class="shrink-0 w-[593px] h-[334px] bg-bg-secondary rounded-[4px] overflow-hidden max-xl:w-[480px] max-xl:h-auto max-xl:aspect-[593/334] max-lg:w-full max-lg:h-[343px] max-lg:aspect-auto">
+            <div class="shrink-0 w-[593px] h-[334px] bg-bg-secondary rounded-[4px] overflow-hidden max-xl:w-[480px] max-xl:h-auto max-xl:aspect-[593/334] max-lg:w-full max-lg:h-[192px] max-lg:aspect-auto">
               <img src={f.image} alt={f.title} class="w-full h-full object-cover" />
             </div>
 
@@ -225,7 +225,7 @@ const features = [
                 <div class="shrink-0 size-[56px] flex items-center justify-center">
                   <img src={f.icon} alt="" class="size-12" aria-hidden="true" />
                 </div>
-                <h3 class="text-h4 mob-h5 text-text-primary">{f.title}</h3>
+                <h3 class="text-h4 text-text-primary">{f.title}</h3>
               </div>
               <ul class="flex flex-col gap-3">
                 {f.items.map((item) => (
@@ -247,11 +247,11 @@ const features = [
 
   <!-- Bottom CTA cards -->
   <section class="bg-bg-primary">
-    <div class="global-padding py-10 max-lg:py-0 max-lg:px-0">
-      <div class="mx-auto max-w-[1200px] flex gap-4 max-lg:flex-col max-lg:gap-0">
+    <div class="global-padding py-10 max-lg:py-6 max-lg:px-4">
+      <div class="mx-auto max-w-[1200px] flex gap-4 max-lg:flex-col max-lg:gap-4">
 
         <!-- Selection Manual -->
-        <a href="/resources/downloads" class="relative h-[400px] overflow-hidden bg-bg-other flex-1 block max-lg:h-[208px]">
+        <a href="/resources/downloads" class="relative h-[400px] overflow-hidden bg-bg-other flex-1 block max-lg:h-[343px]">
           <div class="absolute w-[140%] h-[577px] left-[-22%] top-[14px] max-lg:inset-0 max-lg:w-full max-lg:h-full">
             <img
               src="/images/service-technology-book-card.webp"
@@ -260,14 +260,14 @@ const features = [
               class="w-full h-full object-cover"
             />
           </div>
-          <div class="absolute top-10 left-10 flex items-center justify-between w-[calc(100%-80px)]">
-            <h2 class="text-h2 mob-h3 text-text-primary">Selection Manual</h2>
-            <img src="/images/icon-arrow-card.svg" alt="" class="size-12 shrink-0" aria-hidden="true" />
+          <div class="absolute top-10 left-10 max-lg:top-6 max-lg:left-6 flex items-center justify-between w-[calc(100%-80px)] max-lg:w-[calc(100%-48px)]">
+            <h2 class="text-h2 text-text-primary">Selection Manual</h2>
+            <img src="/images/icon-arrow-card.svg" alt="" class="size-12 max-lg:size-8 shrink-0" aria-hidden="true" />
           </div>
         </a>
 
         <!-- User Control Software -->
-        <a href="/services/software" class="relative h-[400px] overflow-hidden bg-bg-alternative flex-1 block max-lg:h-[208px]">
+        <a href="/services/software" class="relative h-[400px] overflow-hidden bg-bg-alternative flex-1 block max-lg:h-[343px]">
           <div class="absolute w-[149%] h-[496px] left-[-1%] top-[-48px] max-lg:inset-0 max-lg:w-full max-lg:h-full">
             <img
               src="/images/service-technology-products-card.jpg"
@@ -276,9 +276,9 @@ const features = [
               class="w-full h-full object-cover"
             />
           </div>
-          <div class="absolute top-10 left-10 flex items-start justify-between w-[calc(100%-80px)]">
-            <h2 class="text-h2 mob-h3 text-text-primary w-[291px]">User control software</h2>
-            <img src="/images/icon-arrow-card.svg" alt="" class="size-12 shrink-0" aria-hidden="true" />
+          <div class="absolute top-10 left-10 max-lg:top-6 max-lg:left-6 flex items-start justify-between w-[calc(100%-80px)] max-lg:w-[calc(100%-48px)]">
+            <h2 class="text-h2 text-text-primary w-[291px] max-lg:w-auto">User control software</h2>
+            <img src="/images/icon-arrow-card.svg" alt="" class="size-12 max-lg:size-8 shrink-0" aria-hidden="true" />
           </div>
         </a>
 
