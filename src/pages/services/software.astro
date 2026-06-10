@@ -46,78 +46,14 @@ const downloads = cmsDownloads.length > 0 ? cmsDownloads : fallbackDownloads
           <p class="text-large text-text-primary">The host computer debugging software was self-developed by DH-Robotics, it can help customers easily and quickly complete various function parameters adjustments, testing and initialization setting on the PC side. At the meaning time, various status information is provided in real time, which can save a lot of production line setup time and reduce the difficulty of operation and maintenance for on-site engineers.</p>
         </div>
 
-        <!-- Flow steps (desktop) -->
-        <div class="mb-[72px] max-lg:mb-10 max-lg:hidden">
-          <div class="relative pt-[27px] pb-[27px]">
-
-            <!-- Top connector: absolutely above steps row, right side (step 4→5) -->
-            <div class="absolute top-0 right-0 w-[193px] h-[27px] pointer-events-none">
-              <svg width="193" height="27" viewBox="0 0 193 27" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <defs>
-                  <marker id="arrow-down" markerWidth="8" markerHeight="8" refX="4" refY="6" orient="auto">
-                    <path d="M2 2L4 6L6 2" stroke="#00367f" stroke-width="1" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
-                  </marker>
-                  <marker id="dot-top" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto">
-                    <circle cx="3" cy="3" r="2.5" fill="#00367f"/>
-                  </marker>
-                </defs>
-                <path d="M192 1H1V27" stroke="#00367f" stroke-width="1" marker-start="url(#dot-top)" marker-end="url(#arrow-down)"/>
-              </svg>
-            </div>
-
-            <!-- Steps row -->
-            <div class="flex items-center gap-2">
-              {[
-                'Connect PC and gripper',
-                'Open the debugging software',
-                'Adjust parameters in the interface',
-                'Run or test gripper',
-                'Get feedback adjustment results',
-              ].map((step, i, arr) => (
-                <>
-                  <div class="bg-[rgba(0,54,127,0.16)] rounded-[4px] px-4 py-[10px] shrink-0">
-                    <span class="text-tiny-medium text-text-tertiary whitespace-nowrap text-trim-off">{step}</span>
-                  </div>
-                  {i < arr.length - 1 && (
-                    <svg class="shrink-0 text-text-tertiary" width="12" height="12" viewBox="0 0 12 12" fill="none">
-                      <path d="M2 6h8M7 3l3 3-3 3" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"/>
-                    </svg>
-                  )}
-                </>
-              ))}
-            </div>
-
-            <!-- Bottom connector: absolutely below steps row, middle (step 3→4) -->
-            <div class="absolute bottom-0 left-[384px] w-[193px] h-[27px] pointer-events-none">
-              <svg width="193" height="27" viewBox="0 0 193 27" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <defs>
-                  <marker id="arrow-up" markerWidth="8" markerHeight="8" refX="4" refY="2" orient="auto">
-                    <path d="M2 6L4 2L6 6" stroke="#00367f" stroke-width="1" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
-                  </marker>
-                  <marker id="dot-bot" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto">
-                    <circle cx="3" cy="3" r="2.5" fill="#00367f"/>
-                  </marker>
-                </defs>
-                <path d="M1 27H192V1" stroke="#00367f" stroke-width="1" marker-start="url(#dot-bot)" marker-end="url(#arrow-up)"/>
-              </svg>
-            </div>
-
-          </div>
+        <!-- Flow diagram desktop -->
+        <div class="mb-[72px] max-lg:hidden">
+          <img src="/images/flow-desktop.svg" alt="Software flow diagram" class="w-full h-auto" />
         </div>
 
-        <!-- Mobile steps (vertical) -->
-        <div class="hidden max-lg:flex flex-col gap-2 mb-10">
-          {[
-            'Connect PC and gripper',
-            'Open the debugging software',
-            'Adjust parameters in the interface',
-            'Run or test gripper',
-            'Get feedback adjustment results',
-          ].map((step) => (
-            <div class="bg-[rgba(0,54,127,0.16)] rounded-[4px] p-4">
-              <span class="text-tiny-medium text-text-tertiary">{step}</span>
-            </div>
-          ))}
+        <!-- Flow diagram mobile -->
+        <div class="hidden max-lg:block mb-10">
+          <img src="/images/flow-mobile.svg" alt="Software flow diagram" class="w-full h-auto max-w-[344px]" />
         </div>
 
         <!-- Feature cards -->

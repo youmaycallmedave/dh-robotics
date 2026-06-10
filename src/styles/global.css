@@ -37,7 +37,7 @@ button, [role="button"], summary, label[for], select {
   margin-bottom: calc(-0.5lh + 0.45em);
 }
 
-html { font-size: 1rem; }
+html { font-size: 1rem; scroll-behavior: smooth; }
 @media screen and (max-width: 1920px) { html { font-size: 1rem; } }
 @media screen and (max-width: 1440px) { html { font-size: calc(0.3973214285714286rem + 0.6696428571428571vw); } }
 @media screen and (max-width: 992px)  { html { font-size: calc(0.7582846003898636rem + 0.38986354775828463vw); } }
