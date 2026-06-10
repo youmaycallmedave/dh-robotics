@@ -49,26 +49,26 @@ const features = [
 
   <!-- Intro: sticky scroll (300vh desktop / static mobile) -->
   <section id="intro-section" class="bg-bg-other relative lg:h-[300vh]" data-intro>
-    <div class="lg:sticky lg:top-0 lg:h-screen lg:overflow-hidden flex items-center py-[96px] max-lg:py-[72px]">
+
+    <!-- Desktop: sticky scroll animation -->
+    <div class="hidden lg:flex lg:sticky lg:top-0 lg:h-screen lg:overflow-hidden items-center py-[96px]">
       <div class="global-padding w-full">
-        <div class="mx-auto max-w-[1200px] flex items-start gap-[100px] max-lg:flex-col max-lg:gap-12">
+        <div class="mx-auto max-w-[1200px] flex items-start gap-[100px]">
 
-          <!-- Content: text + image -->
-          <div class="flex items-start gap-[70px] flex-1 max-lg:flex-col max-lg:gap-12">
+          <div class="flex items-start gap-[70px] flex-1">
 
-            <!-- Text column -->
-            <div class="shrink-0 w-[438px] max-xl:w-[360px] max-lg:w-full flex flex-col justify-between lg:h-[636px]">
-              <div class="relative lg:overflow-hidden flex-1">
+            <div class="shrink-0 w-[438px] max-xl:w-[360px] flex flex-col justify-between h-[636px]">
+              <div class="relative overflow-hidden flex-1">
 
-                <div class="intro-text transition-all duration-500 lg:absolute lg:inset-0" data-idx="0">
-                  <p class="text-h5 mob-h6 text-text-primary">
+                <div class="intro-text transition-all duration-500 absolute inset-0" data-idx="0">
+                  <p class="text-h5 text-text-primary">
                     Nowadays, with the continuous development of high-end intelligent manufacturing, more and more factories have higher requirements for automation.
                     <br/><br/>
                     Accurately understanding customer needs and developing corresponding products are the driving force and competitiveness of DH-Robotics team.
                   </p>
                 </div>
 
-                <div class="intro-text hidden lg:block transition-all duration-500 lg:absolute lg:inset-0" data-idx="1" style="opacity:0;transform:translateY(20px)">
+                <div class="intro-text transition-all duration-500 absolute inset-0" data-idx="1" style="opacity:0;transform:translateY(20px)">
                   <p class="text-h5 text-text-primary">
                     Based on the accurately understanding on the customer needs, DH-Robotics develops the electric grippers and actuators with the advantages of "precision, intelligence, flexibility, and User-friendly".
                     <br/><br/>
@@ -76,7 +76,7 @@ const features = [
                   </p>
                 </div>
 
-                <div class="intro-text hidden lg:block transition-all duration-500 lg:absolute lg:inset-0" data-idx="2" style="opacity:0;transform:translateY(20px)">
+                <div class="intro-text transition-all duration-500 absolute inset-0" data-idx="2" style="opacity:0;transform:translateY(20px)">
                   <p class="text-h5 text-text-primary">
                     DH-Robotics electric grippers have been widely used in electronics, New energy, Semiconductor equipment, Medical Automation and other industries. In the future, DH-Robotics will continue to launch new products.
                   </p>
@@ -86,26 +86,21 @@ const features = [
               <ScrollIndicator label="Keep scrolling" variant="vertical" />
             </div>
 
-            <!-- Image column -->
-            <div class="relative overflow-hidden shrink-0 bg-bg-alternative w-[389px] h-[636px] max-xl:w-[320px] max-xl:h-auto max-xl:aspect-[389/636] max-lg:w-full max-lg:h-[560px] max-lg:aspect-auto">
-
+            <div class="relative overflow-hidden shrink-0 bg-bg-alternative w-[389px] h-[636px] max-xl:w-[320px] max-xl:aspect-[389/636] max-xl:h-auto">
               <div class="intro-img absolute inset-0 transition-transform duration-700 ease-out" data-idx="0">
                 <img src="/images/service-technology-product-home.webp" alt="DH-Robotics products" class="w-full h-full object-cover" />
               </div>
-
-              <div class="intro-img hidden lg:block absolute inset-0 transition-transform duration-700 ease-out" data-idx="1" style="transform:translateY(100%)">
+              <div class="intro-img absolute inset-0 transition-transform duration-700 ease-out" data-idx="1" style="transform:translateY(100%)">
                 <img src="/images/service-technology-product2.webp" alt="DH-Robotics gripper" class="w-full h-full object-cover" />
               </div>
-
-              <div class="intro-img hidden lg:block absolute inset-0 transition-transform duration-700 ease-out" data-idx="2" style="transform:translateY(100%)">
+              <div class="intro-img absolute inset-0 transition-transform duration-700 ease-out" data-idx="2" style="transform:translateY(100%)">
                 <img src="/images/service-technology-product3.webp" alt="DH-Robotics precision actuator" class="w-full h-full object-cover" />
               </div>
-
             </div>
+
           </div>
 
-          <!-- Progress bar (desktop only) -->
-          <div class="hidden lg:flex flex-col gap-1 shrink-0 self-center">
+          <div class="flex flex-col gap-1 shrink-0 self-center">
             <div class="intro-prog relative w-[2px] overflow-hidden bg-[rgba(10,15,21,0.12)]" data-idx="0" style="height:80px;transition:height 0.4s ease">
               <div class="absolute inset-x-0 top-0 bg-bg-tertiary" style="height:0%;transition:height 0.35s ease"></div>
             </div>
@@ -120,6 +115,43 @@ const features = [
         </div>
       </div>
     </div>
+
+    <!-- Mobile: 3 static groups -->
+    <div class="lg:hidden px-4 py-[120px] flex flex-col gap-[72px]">
+
+      <div class="flex flex-col gap-12">
+        <p class="text-h5 mob-h6 text-text-primary">
+          Nowadays, with the continuous development of high-end intelligent manufacturing, more and more factories have higher requirements for automation.
+          <br/><br/>
+          Accurately understanding customer needs and developing corresponding products are the driving force and competitiveness of DH-Robotics team.
+        </p>
+        <div class="w-full h-[560px] overflow-hidden bg-bg-alternative">
+          <img src="/images/service-technology-product-home.webp" alt="DH-Robotics products" class="w-full h-full object-cover" />
+        </div>
+      </div>
+
+      <div class="flex flex-col gap-12">
+        <p class="text-h5 mob-h6 text-text-primary">
+          Based on the accurately understanding on the customer needs, DH-Robotics develops the electric grippers and actuators with the advantages of "precision, intelligence, flexibility, and User-friendly".
+          <br/><br/>
+          After 6 years development, DH-Robotics already became the leading company of precision motion control solutions in Chinese market.
+        </p>
+        <div class="w-full h-[560px] overflow-hidden bg-bg-alternative">
+          <img src="/images/service-technology-product2.webp" alt="DH-Robotics gripper" class="w-full h-full object-cover" />
+        </div>
+      </div>
+
+      <div class="flex flex-col gap-12">
+        <p class="text-h5 mob-h6 text-text-primary">
+          DH-Robotics electric grippers have been widely used in electronics, New energy, Semiconductor equipment, Medical Automation and other industries. In the future, DH-Robotics will continue to launch new products.
+        </p>
+        <div class="w-full h-[560px] overflow-hidden bg-bg-alternative">
+          <img src="/images/service-technology-product3.webp" alt="DH-Robotics precision actuator" class="w-full h-full object-cover" />
+        </div>
+      </div>
+
+    </div>
+
   </section>
 
   <!-- R&D History + Core Technologies -->
