@@ -3,6 +3,7 @@ interface Props {
   label?: string
   href?: string
   variant?: 'horizontal' | 'vertical'
+  showOnMobile?: boolean
   class?: string
 }
 
@@ -10,6 +11,7 @@ const {
   label = 'View more',
   href,
   variant = 'horizontal',
+  showOnMobile = false,
   class: className,
 } = Astro.props
 
@@ -33,7 +35,7 @@ const {
 ) : (
   <a
     href={href}
-    class:list={['flex flex-col gap-3 items-center self-start max-lg:hidden', href && 'scroll-indicator-link cursor-pointer', className]}
+    class:list={['flex flex-col gap-3 items-center self-start', !showOnMobile && 'max-lg:hidden', href && 'scroll-indicator-link cursor-pointer', className]}
   >
     <div class="flex items-center justify-center h-[77px] w-[9px]">
       <span class="-rotate-90 text-tiny text-text-secondary whitespace-nowrap">{label}</span>

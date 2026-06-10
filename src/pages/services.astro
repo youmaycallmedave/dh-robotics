@@ -2,20 +2,23 @@
 import Layout from '../layouts/Layout.astro'
 import Button from '../components/ui/Button.astro'
 import ScrollIndicator from '../components/ui/ScrollIndicator.astro'
+import Breadcrumbs from '../components/ui/Breadcrumbs.astro'
 ---
 
 <Layout title="Service">
+
+  <Breadcrumbs crumbs={[{ label: 'Service' }]} />
 
   <!-- Hero -->
   <section class="bg-bg-primary pt-[208px] pb-14 max-lg:pt-[72px] max-lg:pb-10">
     <div class="global-padding">
       <div class="mx-auto max-w-[795px] flex flex-col gap-10 max-lg:gap-9">
         <h1 class="text-h1 mob-h2 text-text-primary">Service</h1>
-        <div class="flex items-start justify-between gap-6 max-lg:flex-col">
+        <div class="flex items-end justify-between gap-10">
           <p class="text-regular text-text-primary max-w-[592px]">
             Based on the accurately understanding on the customer needs, DH-Robotics develops the electric grippers and actuators with the advantages of "precision, intelligence, flexibility, and User-friendly". After 6 years development, DH-Robotics already became the leading company of precision motion control solutions in Chinese market.
           </p>
-          <ScrollIndicator variant="vertical" href="#service-cards" />
+          <ScrollIndicator variant="vertical" href="#service-cards" showOnMobile={true} />
         </div>
       </div>
     </div>
@@ -27,8 +30,8 @@ import ScrollIndicator from '../components/ui/ScrollIndicator.astro'
       <div class="flex items-start gap-0">
 
         <!-- Sticky sidebar (xl+) -->
-        <div class="hidden xl:block shrink-0 w-[200px]">
-          <div id="service-nav" class="sticky top-24 flex flex-col gap-5 pl-4 border-l border-border-secondary relative ml-auto w-fit mr-10">
+        <div class="hidden xl:block shrink-0 w-[200px] self-stretch">
+          <div id="service-nav" class="sticky top-[45vh] flex flex-col gap-5 pl-4 border-l border-border-secondary ml-auto w-fit mr-2">
             <div id="service-nav-indicator" class="absolute -left-px top-0 w-px h-[9px] bg-fg-alternative transition-transform duration-300 ease-out"></div>
             <a href="#service-software" data-nav-link="0" class="text-tiny-medium text-text-primary whitespace-nowrap hover:text-text-tertiary transition-colors duration-150">User control software</a>
             <a href="#service-technology" data-nav-link="1" class="text-tiny-medium text-text-secondary whitespace-nowrap hover:text-text-tertiary transition-colors duration-150">Technology</a>
@@ -41,7 +44,7 @@ import ScrollIndicator from '../components/ui/ScrollIndicator.astro'
           <!-- Card: Software -->
           <div id="service-software" class="relative h-[483px] rounded-[4px] overflow-hidden w-full max-w-[795px] max-lg:h-[343px]">
             <img
-              src="/images/service-software-photo.png"
+              src="/images/service-content-1.webp"
               alt=""
               class="absolute inset-0 w-full h-full object-cover"
               aria-hidden="true"
@@ -64,7 +67,7 @@ import ScrollIndicator from '../components/ui/ScrollIndicator.astro'
           <!-- Card: Technology -->
           <div id="service-technology" class="relative h-[483px] rounded-[4px] overflow-hidden w-full max-w-[795px] bg-[#f9f9f9] max-lg:h-[343px]">
             <img
-              src="/images/service-technology-bg.webp"
+              src="/images/service-content-2.webp"
               alt="DH-Robotics Technology"
               class="absolute inset-0 w-full h-full object-cover object-left-top"
             />

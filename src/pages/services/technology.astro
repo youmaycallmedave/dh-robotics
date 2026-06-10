@@ -2,6 +2,7 @@
 import Layout from '../../layouts/Layout.astro'
 import PageHero from '../../components/ui/PageHero.astro'
 import ScrollIndicator from '../../components/ui/ScrollIndicator.astro'
+import Breadcrumbs from '../../components/ui/Breadcrumbs.astro'
 
 const features = [
   {
@@ -35,6 +36,8 @@ const features = [
 ]
 ---
 <Layout title="DH-Robotics Technology">
+
+  <Breadcrumbs crumbs={[{ label: 'Service', href: '/services' }, { label: 'DH-Robotics Technology' }]} />
 
   <PageHero
     title="DH-Robotics Technology"

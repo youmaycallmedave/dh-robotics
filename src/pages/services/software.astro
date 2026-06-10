@@ -2,6 +2,7 @@
 import Layout from '../../layouts/Layout.astro'
 import PageHero from '../../components/ui/PageHero.astro'
 import DownloadRow from '../../components/ui/DownloadRow.astro'
+import Breadcrumbs from '../../components/ui/Breadcrumbs.astro'
 import { client } from '../../lib/sanity'
 
 const fallbackDownloads = [
@@ -20,6 +21,8 @@ const cmsDownloads = await client.fetch(
 const downloads = cmsDownloads.length > 0 ? cmsDownloads : fallbackDownloads
 ---
 <Layout title="User Control Software">
+
+  <Breadcrumbs crumbs={[{ label: 'Service', href: '/services' }, { label: 'User control software' }]} />
 
   <PageHero
     title="User control software"
