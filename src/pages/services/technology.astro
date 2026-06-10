@@ -107,13 +107,13 @@ const features = [
           <!-- Progress bar (desktop only) -->
           <div class="hidden lg:flex flex-col gap-1 shrink-0 self-center">
             <div class="intro-prog relative w-[2px] overflow-hidden bg-[rgba(10,15,21,0.12)]" data-idx="0" style="height:80px;transition:height 0.4s ease">
-              <div class="absolute inset-x-0 top-0 h-full bg-bg-tertiary origin-top" style="transform:scaleY(0);transition:transform 0.35s ease"></div>
+              <div class="absolute inset-x-0 top-0 bg-bg-tertiary" style="height:0%;transition:height 0.35s ease"></div>
             </div>
             <div class="intro-prog relative w-[2px] overflow-hidden bg-[rgba(10,15,21,0.12)]" data-idx="1" style="height:40px;transition:height 0.4s ease">
-              <div class="absolute inset-x-0 top-0 h-full bg-bg-tertiary origin-top" style="transform:scaleY(0);transition:transform 0.35s ease"></div>
+              <div class="absolute inset-x-0 top-0 bg-bg-tertiary" style="height:0%;transition:height 0.35s ease"></div>
             </div>
             <div class="intro-prog relative w-[2px] overflow-hidden bg-[rgba(10,15,21,0.12)]" data-idx="2" style="height:40px;transition:height 0.4s ease">
-              <div class="absolute inset-x-0 top-0 h-full bg-bg-tertiary origin-top" style="transform:scaleY(0);transition:transform 0.35s ease"></div>
+              <div class="absolute inset-x-0 top-0 bg-bg-tertiary" style="height:0%;transition:height 0.35s ease"></div>
             </div>
           </div>
 
@@ -257,39 +257,55 @@ const features = [
 </Layout>
 
 <script>
-const section = document.querySelector<HTMLElement>('[data-intro]')
-if (section && window.innerWidth >= 1024) {
-  const slides = section.querySelectorAll<HTMLElement>('.intro-text')
-  const imgs   = section.querySelectorAll<HTMLElement>('.intro-img')
-  const progs  = section.querySelectorAll<HTMLElement>('.intro-prog')
+import gsap from 'gsap'
+import ScrollTrigger from 'gsap/ScrollTrigger'
 
-  function update() {
-    const rect     = section.getBoundingClientRect()
-    const scrolled = Math.max(0, -rect.top)
-    const total    = Math.max(1, section.offsetHeight - window.innerHeight)
-    const progress = Math.min(1, scrolled / total)
+gsap.registerPlugin(ScrollTrigger)
 
-    const raw  = progress * 3
-    const idx  = Math.min(2, Math.floor(raw))
-    const zone = raw - Math.floor(raw)
+if (window.innerWidth >= 1024) {
+  const sec   = document.querySelector<HTMLElement>('[data-intro]')!
+  const texts = gsap.utils.toArray<HTMLElement>('[data-intro] .intro-text')
+  const imgs  = gsap.utils.toArray<HTMLElement>('[data-intro] .intro-img')
+  const bars  = gsap.utils.toArray<HTMLElement>('[data-intro] .intro-prog')
+  const fills = bars.map(b => b.firstElementChild as HTMLElement)
 
-    slides.forEach((el, i) => {
-      el.style.opacity   = i === idx ? '1' : '0'
-      el.style.transform = i === idx ? 'translateY(0)' : i < idx ? 'translateY(-20px)' : 'translateY(20px)'
-    })
+  gsap.set(texts[1], { opacity: 0, y: 20 })
+  gsap.set(texts[2], { opacity: 0, y: 20 })
+  gsap.set(imgs[1],  { y: '100%' })
+  gsap.set(imgs[2],  { y: '100%' })
+  gsap.set(fills,    { height: '0%' })
+  gsap.set(bars[0],  { height: 80 })
+  gsap.set(bars[1],  { height: 40 })
+  gsap.set(bars[2],  { height: 40 })
 
-    imgs.forEach((el, i) => {
-      el.style.transform = i <= idx ? 'translateY(0)' : 'translateY(100%)'
-    })
+  const tl = gsap.timeline({
+    scrollTrigger: {
+      trigger: sec,
+      start: 'top top',
+      end: 'bottom bottom',
+      scrub: 1,
+    }
+  })
 
-    progs.forEach((el, i) => {
-      const fill = el.firstElementChild as HTMLElement
-      el.style.height       = i === idx ? '80px' : '40px'
-      fill.style.transform  = i < idx ? 'scaleY(1)' : i === idx ? `scaleY(${zone})` : 'scaleY(0)'
-    })
-  }
+  // Slide 1 — fill bar 0
+  tl.to(fills[0], { height: '100%', ease: 'none', duration: 1 }, 0)
+  // Transition → slide 2
+  tl.to(texts[0], { opacity: 0, y: -20, duration: 0.2 }, 0.85)
+  tl.to(texts[1], { opacity: 1, y: 0,   duration: 0.2 }, 0.85)
+  tl.to(imgs[1],  { y: '0%',            duration: 0.3 }, 0.85)
+  tl.to(bars[0],  { height: 40,          duration: 0.15 }, 1)
+  tl.to(bars[1],  { height: 80,          duration: 0.15 }, 1)
 
-  window.addEventListener('scroll', update, { passive: true })
-  update()
+  // Slide 2 — fill bar 1
+  tl.to(fills[1], { height: '100%', ease: 'none', duration: 1 }, 1)
+  // Transition → slide 3
+  tl.to(texts[1], { opacity: 0, y: -20, duration: 0.2 }, 1.85)
+  tl.to(texts[2], { opacity: 1, y: 0,   duration: 0.2 }, 1.85)
+  tl.to(imgs[2],  { y: '0%',            duration: 0.3 }, 1.85)
+  tl.to(bars[1],  { height: 40,          duration: 0.15 }, 2)
+  tl.to(bars[2],  { height: 80,          duration: 0.15 }, 2)
+
+  // Slide 3 — fill bar 2
+  tl.to(fills[2], { height: '100%', ease: 'none', duration: 1 }, 2)
 }
 </script>
