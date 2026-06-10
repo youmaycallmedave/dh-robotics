@@ -45,9 +45,9 @@ const features = [
   />
 
   <!-- Intro: text + dark product image -->
-  <section id="intro-section" class="bg-bg-other py-[96px] max-lg:py-20">
+  <section id="intro-section" class="bg-bg-other py-[96px] max-lg:py-[72px]">
     <div class="global-padding">
-      <div class="mx-auto max-w-[1200px] flex items-start justify-between gap-[70px] max-lg:flex-col max-lg:gap-10">
+      <div class="mx-auto max-w-[1200px] flex items-start justify-between gap-[70px] max-lg:flex-col max-lg:gap-12">
 
         <div class="flex flex-col justify-between shrink-0 w-[438px] max-xl:w-[360px] max-lg:w-full">
           <p class="text-h5 mob-h6 text-text-primary text-balance mb-[139px] max-lg:mb-10">
@@ -58,7 +58,7 @@ const features = [
           <ScrollIndicator label="Keep scrolling" variant="vertical" />
         </div>
 
-        <div class="bg-bg-alternative rounded-[8px] overflow-hidden shrink-0 w-[389px] h-[636px] max-xl:w-[320px] max-xl:h-auto max-xl:aspect-[389/636] max-lg:w-full max-lg:aspect-[389/500]">
+        <div class="bg-bg-alternative rounded-[8px] overflow-hidden shrink-0 w-[389px] h-[636px] max-xl:w-[320px] max-xl:h-auto max-xl:aspect-[389/636] max-lg:w-full max-lg:h-[208px] max-lg:aspect-auto">
           <img
             src="/images/service-technology-product-home.webp"
             alt="DH-Robotics products"
@@ -71,13 +71,13 @@ const features = [
   </section>
 
   <!-- R&D History + Core Technologies -->
-  <section class="bg-bg-primary py-[160px] max-lg:py-20">
+  <section class="bg-bg-primary py-[160px] max-lg:py-[88px]">
     <div class="global-padding">
       <div class="mx-auto max-w-[1000px] flex flex-col gap-[144px] max-lg:gap-20">
 
         <!-- R&D History -->
         <div class="flex items-start gap-[72px] max-lg:flex-col max-lg:gap-10">
-          <div class="relative shrink-0 w-[594px] h-[451px] bg-bg-alternative rounded-[8px] overflow-hidden max-lg:w-full max-lg:h-auto max-lg:aspect-[594/451]">
+          <div class="relative shrink-0 w-[594px] h-[451px] bg-bg-alternative rounded-[8px] overflow-hidden max-lg:w-full max-lg:h-[260px] max-lg:aspect-auto">
             <img
               src="/images/service-technology-rd.webp"
               alt="DH-Robotics R&D history"
@@ -101,7 +101,7 @@ const features = [
             <p class="text-regular text-text-primary">DH-Robotics has developed the industry-leading direct drive force feedback technology, precision control technology, and integrated integration technology, combining precision clamping motion, linear motion, rotary motion and real-time control to create a benchmark product in the industry.</p>
             <p class="text-regular text-text-primary">DH-Robotics' products have good dynamic performance, high force control accuracy, precise stroke, simple structure, easy operation, long working life, precise speed control and smooth and quiet performance, and can provide maximum output force, good adaptation to industrial manufacturing scenarios that require high precision and reliability.</p>
           </div>
-          <div class="relative shrink-0 w-[594px] h-[451px] bg-bg-alternative rounded-[8px] overflow-hidden max-lg:w-full max-lg:h-auto max-lg:aspect-[594/451]">
+          <div class="relative shrink-0 w-[594px] h-[451px] bg-bg-alternative rounded-[8px] overflow-hidden max-lg:w-full max-lg:h-[260px] max-lg:aspect-auto">
             <img
               src="/images/service-technology-core.webp"
               alt="DH-Robotics core technology"
@@ -115,7 +115,7 @@ const features = [
   </section>
 
   <!-- Core Advantages header -->
-  <section class="bg-bg-other pt-[160px] pb-[88px] max-lg:pt-20 max-lg:pb-10">
+  <section class="bg-bg-other pt-[160px] pb-[88px] max-lg:pt-[72px] max-lg:pb-10">
     <div class="global-padding">
       <div class="mx-auto max-w-[1200px] flex items-start justify-between gap-10 max-lg:flex-col max-lg:gap-6">
         <h2 class="text-h2 mob-h3 text-text-primary shrink-0">Core Advantages</h2>
@@ -125,14 +125,14 @@ const features = [
   </section>
 
   <!-- Core Advantages features -->
-  <section class="bg-bg-other pb-[160px] max-lg:pb-20">
+  <section class="bg-bg-other pb-[160px] max-lg:pb-[88px]">
     <div class="global-padding">
-      <div class="mx-auto max-w-[1200px] flex flex-col gap-20 max-lg:gap-16">
+      <div class="mx-auto max-w-[1200px] flex flex-col gap-20 max-lg:gap-12">
 
         {features.map((f) => (
           <div class="flex items-center justify-between gap-10 max-lg:flex-col max-lg:items-start max-lg:gap-8">
 
-            <div class="shrink-0 w-[593px] h-[334px] bg-bg-secondary rounded-[4px] overflow-hidden max-xl:w-[480px] max-xl:h-auto max-xl:aspect-[593/334] max-lg:w-full">
+            <div class="shrink-0 w-[593px] h-[334px] bg-bg-secondary rounded-[4px] overflow-hidden max-xl:w-[480px] max-xl:h-auto max-xl:aspect-[593/334] max-lg:w-full max-lg:h-[192px] max-lg:aspect-auto">
               <img src={f.image} alt={f.title} class="w-full h-full object-cover" />
             </div>
 
@@ -167,7 +167,7 @@ const features = [
       <div class="mx-auto max-w-[1200px] flex max-lg:flex-col">
 
         <!-- Selection Manual -->
-        <a href="/resources/downloads" class="relative h-[400px] overflow-hidden bg-bg-other flex-1 block max-lg:h-[280px]">
+        <a href="/resources/downloads" class="relative h-[400px] overflow-hidden bg-bg-other flex-1 block max-lg:h-[208px]">
           <img
             src="/images/service-technology-book.webp"
             alt="Selection Manual"
@@ -181,7 +181,7 @@ const features = [
         </a>
 
         <!-- User Control Software -->
-        <a href="/services/software" class="relative h-[400px] overflow-hidden bg-bg-alternative flex-1 block max-lg:h-[280px]">
+        <a href="/services/software" class="relative h-[400px] overflow-hidden bg-bg-alternative flex-1 block max-lg:h-[208px]">
           <img
             src="/images/service-technology-hero.webp"
             alt="User Control Software"
