@@ -47,27 +47,53 @@ src/
 |-----|------|----------|
 | `/` | `pages/index.astro` | Главная |
 | `/sitemap` | `pages/sitemap.astro` | Навигация по страницам (dev only) |
-| `/products` | `pages/products/index.astro` | Все категории |
-| `/products/category` | `pages/products/category.astro` | Серии категории |
-| `/products/series` | `pages/products/series.astro` | Страница серии |
-| `/products/product` | `pages/products/product.astro` | Один продукт |
-| `/applications` | `pages/applications/index.astro` | Все applications (?) |
-| `/applications/industry/template` | `pages/applications/industry/template.astro` | Industry detail |
-| `/applications/processes/template` | `pages/applications/processes/template.astro` | Process detail |
+| `/products` | `pages/products/index.astro` | Все категории — левый сайдбар иконок, правая часть со слайдерами серий по категории |
+| `/products/[category]` | `pages/products/category.astro` | Страница категории — сетка карточек серий |
+| `/products/[category]/[series]` | `pages/products/series.astro` | Страница серии — hero анимация + секции |
+| `/products/[category]/[series]/specifications` | *(встроено в series.astro или отдельная страница)* | Таблица сравнения моделей в серии |
+| `/products/[category]/[series]/downloads` | *(отдельная страница)* | Загрузки для серии — каталоги, мануалы |
+| `/applications` | `pages/applications/index.astro` | Все applications |
+| `/applications/industry/[slug]` | `pages/applications/industry/[slug].astro` | Industry detail |
+| `/applications/action/[slug]` | `pages/applications/action/[slug].astro` | Process/action detail |
 | `/services` | `pages/services.astro` | Разводящая страница |
 | `/services/technology` | `pages/services/technology.astro` | Technology |
 | `/services/software` | `pages/services/software.astro` | User Control Software |
 | `/news` | `pages/news/index.astro` | Листинг новостей |
-| `/news/template` | `pages/news/template.astro` | Статья (→ CMS) |
+| `/news/[slug]` | `pages/news/[slug].astro` | Статья (→ CMS) |
 | `/events` | `pages/events/index.astro` | Листинг событий |
-| `/events/template` | `pages/events/template.astro` | Событие (→ CMS) |
+| `/events/[slug]` | `pages/events/[slug].astro` | Событие (→ CMS) |
 | `/cases` | `pages/cases/index.astro` | Листинг кейсов |
-| `/cases/template` | `pages/cases/template.astro` | Кейс (→ CMS) |
+| `/cases/[slug]` | `pages/cases/[slug].astro` | Кейс (→ CMS) |
 | `/resources/downloads` | `pages/resources/downloads.astro` | Download Center |
 | `/resources/faq` | `pages/resources/faq.astro` | FAQ |
 | `/contact` | `pages/contact.astro` | Контакты |
 | `/privacy-policy` | `pages/privacy-policy.astro` | Privacy Policy |
 | `/404` | `pages/404.astro` | 404 |
+
+## Структура раздела Products
+
+```
+/products                          — все категории с горизонтальными слайдерами серий
+  └── /[category]                  — страница категории (все серии этой категории в сетке)
+        └── /[series]              — страница серии (Overview)
+              ├── sticky scroll hero (анимация: bg→white card→image+text transition)
+              ├── text+video секция
+              ├── gallery продуктов серии
+              ├── Product Features
+              ├── More Features (иконки)
+              ├── Applications
+              ├── Main Specifications (таблица моделей)
+              ├── Gallery (слайдер)
+              └── CTA
+              /specifications       — таблица сравнения всех моделей (горизонт. скролл)
+              /downloads            — загрузки для серии (каталоги, мануалы, фильтры)
+```
+
+### Sticky nav для серии (appears в hero и фиксирован при скролле)
+```
+| [Series Name] | Overview (underline) | Specifications | Downloads | [GET IN TOUCH btn] |
+```
+Синяя линия снизу = active indicator.
 
 ## CMS — Sanity типы документов (планируется)
 ```

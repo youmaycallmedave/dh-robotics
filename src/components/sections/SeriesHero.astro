@@ -1,0 +1,348 @@
+---
+interface Props {
+  seriesName?: string
+  seriesTitle?: string
+  bgImage?: string
+  productImage?: string
+  text1?: string
+  text2?: string
+  category?: string
+  categorySlug?: string
+  slug?: string
+}
+
+const {
+  seriesName = 'AG Series',
+  seriesTitle = 'Linkage-type Adaptive Electric Gripper',
+  bgImage = '/images/service-technology-hero.webp',
+  productImage = '/images/news-placeholder.webp',
+  text1 = `Meet the AG series from DH-Robotics, a self-developed linkage-type <span class="sh-accent">adaptive electric gripper</span>. It features <span class="sh-accent">Plug & Play</span> installation, significantly simplifying the set-up and offering easy operations.<br><br>With an exquisite structural design, this device provides a flexible gripping range for <span class="sh-accent">collaborative robots.</span>`,
+  text2 = `Available in <span class="sh-accent">two-finger and three-finger</span> configurations, these cobot adaptive grippers <span class="sh-accent">seamlessly integrate</span> into your automation process, maximizing manufacturing efficiency.<br><br>Backed by DH-Robotics technology, this device has become one of our <span class="sh-accent">top-selling adaptive grippers.</span>`,
+  category = 'Electric Grippers',
+  categorySlug = 'electric-grippers',
+  slug = 'ag-series',
+} = Astro.props
+---
+
+<div class="sh-container">
+  <div class="sh-sticky">
+
+    <!-- L1: background hero -->
+    <div class="sh-l1">
+      <div class="section-bg">
+        <img src={bgImage} alt="" />
+      </div>
+
+      <div class="sh-breadcrumbs">
+        <a href="/" aria-label="Home">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+            <path d="M1.5 6.5L8 1.5L14.5 6.5V14.5H10V10H6V14.5H1.5V6.5Z" stroke="currentColor" stroke-width="1.2" fill="none" stroke-linejoin="round"/>
+          </svg>
+        </a>
+        <svg class="sh-crumb-arrow" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+          <path d="M6 12L10 8L6 4" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <a href="/products" class="text-tiny text-text-primary">Products</a>
+        <svg class="sh-crumb-arrow" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+          <path d="M6 12L10 8L6 4" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <a href={`/products/${categorySlug}`} class="text-tiny text-text-primary">{category}</a>
+        <svg class="sh-crumb-arrow" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+          <path d="M6 12L10 8L6 4" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <span class="text-tiny text-text-secondary">{seriesName}</span>
+      </div>
+
+      <div class="sh-title">
+        <p class="text-h6 text-text-primary sh-series-tag">{seriesName}</p>
+        <h1 class="text-h1 text-text-primary">{seriesTitle}</h1>
+      </div>
+
+      <div class="sh-scroll-down">
+        <span class="text-tiny-medium text-text-primary">Scroll down</span>
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+          <path d="M12 5V19M5 12L12 19L19 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+    </div>
+
+    <!-- L2: white card with horizontal track -->
+    <div class="sh-l2">
+
+      <!-- Track: [text2 | image | text1] — starts at -50dvw, slides to 0 -->
+      <div class="sh-track">
+
+        <!-- Slot 1: text2 (hidden left initially, enters on scroll) -->
+        <div class="sh-slot sh-slot-left">
+          <div class="sh-text2 text-h6-regular text-text-primary" set:html={text2} />
+        </div>
+
+        <!-- Slot 2: image (visible on left initially, moves right on scroll) -->
+        <div class="sh-slot sh-slot-img">
+          <img class="sh-product-img" src={productImage} alt={seriesName} />
+        </div>
+
+        <!-- Slot 3: text1 (visible on right initially, exits right on scroll) -->
+        <div class="sh-slot sh-slot-right">
+          <div class="sh-text1 text-h6-regular text-text-primary" set:html={text1} />
+        </div>
+
+      </div>
+
+      <nav class="sh-nav" aria-label="Series navigation">
+        <span class="text-small-medium text-text-primary">{seriesName}</span>
+        <div class="sh-nav-links">
+          <a href="#overview" class="text-small-medium text-text-primary sh-nav-active">Overview</a>
+          <a href={`/products/${categorySlug}/${slug}/specifications`} class="text-small-medium text-text-primary">Specifications</a>
+          <a href={`/products/${categorySlug}/${slug}/downloads`} class="text-small-medium text-text-primary">Downloads</a>
+        </div>
+        <a href="/contact" class="sh-contact-btn text-small-caps">
+          Get in touch
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M9 18L15 12L9 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </a>
+      </nav>
+
+    </div>
+  </div>
+</div>
+
+<style>
+  .sh-container {
+    height: 380vh;
+    margin-top: -80px;
+  }
+
+  @media (max-width: 1023px) {
+    .sh-container {
+      margin-top: -65px;
+    }
+  }
+
+  .sh-sticky {
+    position: sticky;
+    top: 0;
+    height: 100dvh;
+    overflow: hidden;
+  }
+
+  .sh-l1,
+  .sh-l2 {
+    position: absolute;
+    inset: 0;
+  }
+
+  .sh-l1 {
+    z-index: 1;
+    background-color: var(--color-black-150);
+  }
+
+  /* Starts below viewport — GSAP initializes y:'100%' immediately */
+  .sh-l2 {
+    z-index: 2;
+    background-color: var(--color-black-100);
+    transform: translateY(100%);
+  }
+
+  /* Breadcrumbs */
+  .sh-breadcrumbs {
+    position: absolute;
+    top: 80px;
+    left: 0;
+    right: 0;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 20px 40px;
+    color: var(--color-text-primary);
+  }
+
+  @media (max-width: 1023px) {
+    .sh-breadcrumbs {
+      top: 65px;
+    }
+  }
+
+  .sh-crumb-arrow {
+    flex-shrink: 0;
+    opacity: 0.4;
+  }
+
+  .sh-title {
+    position: absolute;
+    right: 40px;
+    top: calc(80px + 56px);
+    width: 491px;
+    z-index: 2;
+  }
+
+  @media (max-width: 1023px) {
+    .sh-title {
+      top: calc(65px + 56px);
+    }
+  }
+
+  .sh-series-tag {
+    margin-bottom: 24px;
+  }
+
+  .sh-scroll-down {
+    position: absolute;
+    bottom: 40px;
+    right: 40px;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--color-text-primary);
+  }
+
+  /* Horizontal track: 3 × 50vw = 150vw */
+  .sh-track {
+    display: flex;
+    width: 150vw;
+    height: calc(100dvh - 60px);
+  }
+
+  .sh-slot {
+    width: 50vw;
+    flex-shrink: 0;
+    height: 100%;
+  }
+
+  /* Text slots */
+  .sh-slot-left,
+  .sh-slot-right {
+    display: flex;
+    align-items: center;
+    padding: 0 80px;
+  }
+
+  .sh-text1,
+  .sh-text2 {
+    max-width: 420px;
+  }
+
+  /* Image slot — 50vw window, image inside is 100vw */
+  .sh-slot-img {
+    overflow: hidden;
+    position: relative;
+  }
+
+  .sh-product-img {
+    width: 100vw;
+    max-width: none;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  :global(.sh-accent) {
+    color: var(--color-text-quaternary);
+  }
+
+  /* Nav bar */
+  .sh-nav {
+    position: absolute;
+    bottom: 12px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 592px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border: 1px solid var(--color-border-other-2);
+    background: var(--color-bg-primary);
+    padding: 8px 8px 8px 16px;
+    border-radius: 2px;
+    z-index: 10;
+  }
+
+  .sh-nav::after {
+    content: '';
+    position: absolute;
+    bottom: -1px;
+    left: -1px;
+    width: 223px;
+    height: 2px;
+    background-color: var(--color-bg-tertiary);
+    border-radius: 0;
+  }
+
+  .sh-nav-links {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .sh-nav-active {
+    text-decoration: underline;
+  }
+
+  .sh-contact-btn {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    padding: 8px 2px 8px 8px;
+    background-color: var(--color-btn-blue-default);
+    color: var(--color-text-alternate);
+    border-radius: 2px;
+    text-decoration: none;
+    transition: background-color 0.2s ease;
+  }
+
+  .sh-contact-btn:hover {
+    background-color: var(--color-btn-blue-hover);
+  }
+</style>
+
+<script>
+  import { gsap } from 'gsap'
+  import { ScrollTrigger } from 'gsap/ScrollTrigger'
+
+  gsap.registerPlugin(ScrollTrigger)
+
+  const container = document.querySelector<HTMLElement>('.sh-container')
+  const l2        = document.querySelector<HTMLElement>('.sh-l2')
+  const l1Title   = document.querySelector<HTMLElement>('.sh-title')
+  const l1Crumbs  = document.querySelector<HTMLElement>('.sh-breadcrumbs')
+  const l1Scroll  = document.querySelector<HTMLElement>('.sh-scroll-down')
+  const track     = document.querySelector<HTMLElement>('.sh-track')
+  const img       = document.querySelector<HTMLElement>('.sh-product-img')
+  const text1     = document.querySelector<HTMLElement>('.sh-text1')
+  const text2     = document.querySelector<HTMLElement>('.sh-text2')
+
+  if (!container || !l2 || !track) {
+    console.warn('SeriesHero: required elements not found')
+  } else {
+    gsap.set(l2, { y: '100%' })
+    gsap.set(track, { x: '-50vw' })
+    gsap.set(text2, { autoAlpha: 0 })
+
+    const tl = gsap.timeline({
+      scrollTrigger: {
+        trigger: container,
+        start: 'top top',
+        end: 'bottom bottom',
+        scrub: 1.5,
+      },
+    })
+
+    // Phase 1 (0–40%): white card rises, L1 elements fade up
+    tl.to(l2,       { y: '0%',             ease: 'none', duration: 0.4 }, 0)
+    tl.to(l1Title,  { y: -80, autoAlpha: 0, ease: 'none', duration: 0.3 }, 0)
+    tl.to(l1Crumbs, { y: -40, autoAlpha: 0, ease: 'none', duration: 0.25 }, 0)
+    tl.to(l1Scroll, { y: -40, autoAlpha: 0, ease: 'none', duration: 0.2 }, 0.05)
+
+    // Phase 2 (40–80%): horizontal slide + mask parallax + text opacity
+    tl.to(track, { x: '0vw',   ease: 'none', duration: 0.4 }, 0.4)
+    tl.to(img,   { x: '-50vw', ease: 'none', duration: 0.4 }, 0.4)
+    tl.to(text1, { autoAlpha: 0, ease: 'none', duration: 0.25 }, 0.4)
+    tl.to(text2, { autoAlpha: 1, ease: 'none', duration: 0.25 }, 0.55)
+
+    // Hold final state (80–100%)
+    tl.to({}, { duration: 0.2 })
+  }
+</script>
