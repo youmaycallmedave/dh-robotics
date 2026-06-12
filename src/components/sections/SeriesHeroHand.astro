@@ -16,11 +16,11 @@ const {
 } = Astro.props
 
 const features = [
-  { label: 'Array Layout:', value: 'Fingertips & Palm',      img: '/images/service-technology-product2.webp' },
-  { label: 'Pressure Range:', value: '0–2 MPa',              img: '/images/news-placeholder.webp' },
-  { label: 'Sensitivity:', value: '2.5 kPa⁻¹',              img: '/images/service-technology-product2.webp' },
-  { label: 'Response Time:', value: '< 0.62 ms',             img: '/images/news-placeholder.webp' },
-  { label: 'Service Life:', value: '> 5 Million Cycles',     img: '/images/service-technology-product2.webp' },
+  { label: 'Array Layout:', value: 'Fingertips & Palm',      img: '/images/dh56-feat-1.jpg' },
+  { label: 'Pressure Range:', value: '0–2 MPa',              img: '/images/dh56-feat-2.jpg' },
+  { label: 'Sensitivity:', value: '2.5 kPa⁻¹',              img: '/images/dh56-feat-3.jpg' },
+  { label: 'Response Time:', value: '< 0.62 ms',             img: '/images/dh56-feat-4.jpg' },
+  { label: 'Service Life:', value: '> 5 Million Cycles',     img: '/images/dh56-feat-5.jpg' },
 ]
 ---
 
@@ -29,6 +29,7 @@ const features = [
 
     <!-- L1: initial hero -->
     <div class="shh-l1">
+      <img class="shh-hero-bg-img" src="/images/dh56-hero-bg.jpg" alt="" />
       <div class="shh-breadcrumbs">
         <a href="/" aria-label="Home">
           <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
@@ -49,7 +50,7 @@ const features = [
         <h1 class="text-h1 text-text-primary">{seriesTitle}</h1>
       </div>
       <div class="shh-hero-img-wrap">
-        <img class="shh-hero-img" src="/images/service-technology-product2.webp" alt={seriesName} />
+        <img class="shh-hero-img" src="/images/dh56-hero-product.png" alt={seriesName} />
       </div>
       <div class="shh-scroll-hint">
         <span class="text-tiny-medium text-text-primary">Scroll down</span>
@@ -62,8 +63,8 @@ const features = [
     <!-- L2: action photo card -->
     <div class="shh-l2">
       <div class="shh-l2-card">
-        <img class="shh-l2-img-action" src="/images/service-technology-intelligent.png" alt="" />
-        <img class="shh-l2-img-new" src="/images/news-placeholder.webp" alt="" />
+        <img class="shh-l2-img-action" src="/images/dh56-action.jpg" alt="" />
+        <img class="shh-l2-img-new" src="/images/dh56-feat-1.jpg" alt="" />
       </div>
       <div class="shh-l2-text">
         <p class="text-h6 text-text-primary">Advanced Structure – Gripping Lifespan Beyond One Million Cycles</p>
@@ -74,7 +75,7 @@ const features = [
     <!-- L3: right photo card (389×389 → grows full-height → moves to center → feature position → full screen) -->
     <div class="shh-l3">
       <div class="shh-l3-photo">
-        <img class="shh-l3-photo-main" src="/images/service-technology-product2.webp" alt="" />
+        <img class="shh-l3-photo-main" src="/images/dh56-right-card.jpg" alt="" />
         {features.map((f, i) => (
           <div class="shh-feat-img" data-fi={i}>
             <img src={f.img} alt="" />
@@ -214,6 +215,16 @@ const features = [
   .shh-l1 {
     z-index: 1;
     background-color: var(--color-bg-secondary);
+  }
+
+  .shh-hero-bg-img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    z-index: 0;
   }
 
   .shh-breadcrumbs {
