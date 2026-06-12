@@ -1,0 +1,677 @@
+---
+interface Props {
+  seriesName?: string
+  seriesTitle?: string
+  seriesTag?: string
+  categorySlug?: string
+  slug?: string
+}
+
+const {
+  seriesName = 'DH-5-6',
+  seriesTag = 'DH-5-6 Dexterous Hand',
+  seriesTitle = 'Touch the Future, Unleash Dexterity Without Limits',
+  categorySlug = 'dexterous-hands',
+  slug = 'dh-5-6',
+} = Astro.props
+
+const features = [
+  { label: 'Array Layout:', value: 'Fingertips & Palm',      img: '/images/service-technology-product2.webp' },
+  { label: 'Pressure Range:', value: '0–2 MPa',              img: '/images/news-placeholder.webp' },
+  { label: 'Sensitivity:', value: '2.5 kPa⁻¹',              img: '/images/service-technology-product2.webp' },
+  { label: 'Response Time:', value: '< 0.62 ms',             img: '/images/news-placeholder.webp' },
+  { label: 'Service Life:', value: '> 5 Million Cycles',     img: '/images/service-technology-product2.webp' },
+]
+---
+
+<div class="shh-container">
+  <div class="shh-sticky">
+
+    <!-- L1: initial hero -->
+    <div class="shh-l1">
+      <div class="shh-breadcrumbs">
+        <a href="/" aria-label="Home">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+            <path d="M1.5 6.5L8 1.5L14.5 6.5V14.5H10V10H6V14.5H1.5V6.5Z" stroke="currentColor" stroke-width="1.2" fill="none" stroke-linejoin="round"/>
+          </svg>
+        </a>
+        <svg class="shh-crumb-sep" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+          <path d="M6 12L10 8L6 4" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <a href="/products" class="text-tiny text-text-primary">Products</a>
+        <svg class="shh-crumb-sep" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+          <path d="M6 12L10 8L6 4" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <span class="text-tiny text-text-secondary">{seriesName}</span>
+      </div>
+      <div class="shh-hero-title">
+        <p class="text-h6 text-text-primary shh-hero-tag">{seriesTag}</p>
+        <h1 class="text-h1 text-text-primary">{seriesTitle}</h1>
+      </div>
+      <div class="shh-hero-img-wrap">
+        <img class="shh-hero-img" src="/images/service-technology-product2.webp" alt={seriesName} />
+      </div>
+      <div class="shh-scroll-hint">
+        <span class="text-tiny-medium text-text-primary">Scroll down</span>
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+          <path d="M12 5V19M5 12L12 19L19 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+    </div>
+
+    <!-- L2: action photo card -->
+    <div class="shh-l2">
+      <div class="shh-l2-card">
+        <img class="shh-l2-img-action" src="/images/service-technology-intelligent.png" alt="" />
+        <img class="shh-l2-img-new" src="/images/news-placeholder.webp" alt="" />
+      </div>
+      <div class="shh-l2-text">
+        <p class="text-h6 text-text-primary">Advanced Structure – Gripping Lifespan Beyond One Million Cycles</p>
+        <p class="text-regular text-text-secondary">Upgraded drive and transmission system ensures over one million reliable grips; built for high-frequency use and exceptional durability.</p>
+      </div>
+    </div>
+
+    <!-- L3: right photo card (389×389 → grows full-height → moves to center → feature position → full screen) -->
+    <div class="shh-l3">
+      <div class="shh-l3-photo">
+        <img class="shh-l3-photo-main" src="/images/service-technology-product2.webp" alt="" />
+        {features.map((f, i) => (
+          <div class="shh-feat-img" data-fi={i}>
+            <img src={f.img} alt="" />
+          </div>
+        ))}
+      </div>
+      <div class="shh-l3-text">
+        <p class="text-h6 text-text-primary">From Reliability to Delivery – End-to-End Assurance</p>
+        <p class="text-regular text-text-secondary">Precision-engineered for adaptability; stable control with modular, easy-to-maintain design.</p>
+      </div>
+    </div>
+
+    <!-- L4: text overlay only (L3 photo animates to center) -->
+    <div class="shh-l4">
+      <div class="shh-center-card">
+        <p class="text-h6 text-text-primary">Powered by Tactile Sensing – Multi-Modal Perception</p>
+        <p class="text-regular text-text-secondary">Optional high-sensitivity tactile sensor arrays enable precise object recognition, adaptive gripping, and intelligent adjustment for stable and interference-resistant performance.</p>
+      </div>
+    </div>
+
+    <!-- L5: feature section (5 slides) -->
+    <div class="shh-l5">
+      <div class="shh-icon-col">
+        <div class="shh-icon-dot"></div>
+        <div class="shh-icon-item">
+          <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+            <circle cx="16" cy="16" r="3" stroke="currentColor" stroke-width="1.5"/>
+            <path d="M16 5C9.925 5 5 9.925 5 16s4.925 11 11 11 11-4.925 11-11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+            <path d="M9 10C9 10 11 14 16 14s7-4 7-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+            <path d="M7 16C7 20.971 11.029 25 16 25" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <div class="shh-icon-item">
+          <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+            <path d="M6 22a11 11 0 1 1 20 0" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+            <path d="M16 22V11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+            <path d="M16 22l-5-7" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <div class="shh-icon-item">
+          <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+            <circle cx="16" cy="16" r="10" stroke="currentColor" stroke-width="1.5"/>
+            <circle cx="16" cy="16" r="5" stroke="currentColor" stroke-width="1.5"/>
+            <circle cx="16" cy="16" r="2" fill="currentColor"/>
+          </svg>
+        </div>
+        <div class="shh-icon-item">
+          <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+            <circle cx="16" cy="17" r="9" stroke="currentColor" stroke-width="1.5"/>
+            <path d="M12 8h8M16 8v3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+            <path d="M16 13v5l3 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <div class="shh-icon-item">
+          <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+            <path d="M8 16a8 8 0 1 0 8-8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+            <path d="M16 8l-4 4 4-4zm0 0l4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+      </div>
+
+      <div class="shh-feat-texts">
+        {features.map((f, i) => (
+          <div class="shh-feat-text" data-fi={i}>
+            <p class="shh-feat-label text-h6-regular text-text-primary">{f.label}</p>
+            <p class="text-h2 text-text-primary">{f.value}</p>
+          </div>
+        ))}
+      </div>
+
+      <div class="shh-scroll-feat">
+        <span class="text-tiny-medium text-text-primary">Scroll down</span>
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+          <path d="M12 5V19M5 12L12 19L19 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+    </div>
+
+    <!-- L6: final 3D overlay (transparent bg — featImgsWrap expanded below is the bg) -->
+    <div class="shh-l6">
+      <div class="shh-rotate-hint">
+        <span class="text-small-caps text-text-primary">Rotate</span>
+        <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
+          <path d="M10 24C10 33.941 18.059 42 28 42s18-8.059 18-18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          <path d="M42 18l4 6-6 2" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+    </div>
+
+    <!-- Nav: persistent from L2 onwards -->
+    <nav class="shh-nav" aria-label="Series navigation">
+      <span class="text-small-medium text-text-primary">{seriesName}</span>
+      <div class="shh-nav-links">
+        <a href="#overview" class="text-small-medium text-text-primary shh-nav-active">Overview</a>
+        <a href={`/products/${categorySlug}/${slug}/specifications`} class="text-small-medium text-text-primary">Specifications</a>
+        <a href={`/products/${categorySlug}/${slug}/downloads`} class="text-small-medium text-text-primary">Downloads</a>
+      </div>
+      <a href="/contact" class="shh-contact-btn text-small-caps">
+        Get in touch
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="M9 18L15 12L9 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </a>
+    </nav>
+
+  </div>
+</div>
+
+<style>
+  .shh-container {
+    height: 1800vh;
+    margin-top: -80px;
+  }
+  @media (max-width: 1023px) {
+    .shh-container { margin-top: -65px; }
+  }
+
+  .shh-sticky {
+    position: sticky;
+    top: 0;
+    height: 100dvh;
+    overflow: hidden;
+  }
+
+  /* layers */
+  .shh-l1,
+  .shh-l2,
+  .shh-l3,
+  .shh-l4,
+  .shh-l5,
+  .shh-l6 {
+    position: absolute;
+    inset: 0;
+  }
+
+  /* L1 */
+  .shh-l1 {
+    z-index: 1;
+    background-color: var(--color-bg-secondary);
+  }
+
+  .shh-breadcrumbs {
+    position: absolute;
+    top: 80px;
+    left: 0;
+    right: 0;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 20px 40px;
+    color: var(--color-text-primary);
+  }
+  @media (max-width: 1023px) {
+    .shh-breadcrumbs { top: 65px; }
+  }
+
+  .shh-crumb-sep {
+    flex-shrink: 0;
+    opacity: 0.4;
+  }
+
+  .shh-hero-title {
+    position: absolute;
+    top: 160px;
+    left: 50%;
+    transform: translateX(-50%);
+    text-align: center;
+    width: min(700px, 90%);
+    z-index: 2;
+  }
+
+  .shh-hero-tag {
+    margin-bottom: 16px;
+  }
+
+  .shh-hero-img-wrap {
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 760px;
+    height: 62%;
+    z-index: 1;
+  }
+
+  .shh-hero-img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    object-position: bottom center;
+    display: block;
+  }
+
+  .shh-scroll-hint {
+    position: absolute;
+    bottom: 40px;
+    left: 40px;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--color-text-primary);
+  }
+
+  /* L2 */
+  .shh-l2 {
+    z-index: 2;
+  }
+
+  .shh-l2-card {
+    position: absolute;
+    top: 16px;
+    left: 16px;
+    /* width/height set by GSAP on init */
+    border-radius: 8px;
+    overflow: hidden;
+    background: var(--color-bg-secondary);
+  }
+
+  .shh-l2-img-action,
+  .shh-l2-img-new {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .shh-l2-text {
+    position: absolute;
+    left: 16px;
+    top: 425px; /* 16 + 389 + 20 — appears below shrunken card */
+    width: 389px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  /* L3: photo card — elevated above L5 so it renders on top of feature bg */
+  .shh-l3 {
+    z-index: 6;
+    pointer-events: none;
+  }
+
+  .shh-l3-photo {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    width: 389px;
+    height: 389px;
+    border-radius: 8px;
+    overflow: hidden;
+    background: var(--color-bg-secondary);
+  }
+
+  .shh-l3-photo-main,
+  .shh-l3-photo-center {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .shh-l3-text {
+    position: absolute;
+    right: 16px;
+    top: 437px; /* 16 + 389 + 32 */
+    width: 389px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    pointer-events: auto;
+  }
+
+  /* L4: text overlay only, transparent bg */
+  .shh-l4 {
+    z-index: 7;
+    pointer-events: none;
+  }
+
+  .shh-center-card {
+    position: absolute;
+    left: calc(50% + 64px);
+    top: calc(50% + 48px);
+    width: 320px;
+    padding: 32px;
+    background: var(--color-bg-primary);
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    text-align: center;
+    pointer-events: auto;
+  }
+
+  /* L5 */
+  .shh-l5 {
+    z-index: 5;
+    background: var(--color-bg-primary);
+  }
+
+  .shh-icon-col {
+    position: absolute;
+    left: 24px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 64px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 28px;
+  }
+
+  .shh-icon-dot {
+    position: absolute;
+    width: 64px;
+    height: 64px;
+    background: var(--color-bg-tertiary);
+    border-radius: 4px;
+    left: 0;
+    top: -16px;
+    z-index: 0;
+  }
+
+  .shh-icon-item {
+    width: 32px;
+    height: 32px;
+    position: relative;
+    z-index: 1;
+    color: var(--color-text-primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .shh-feat-img {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+  }
+
+  .shh-feat-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .shh-feat-texts {
+    position: absolute;
+    left: calc(141px + 592px + 80px);
+    top: 50%;
+    transform: translateY(-50%);
+    width: 288px;
+  }
+
+  .shh-feat-text {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+    opacity: 0;
+  }
+
+  .shh-feat-label {
+    opacity: 0.72;
+  }
+
+  .shh-scroll-feat {
+    position: absolute;
+    bottom: 40px;
+    right: 40px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--color-text-primary);
+  }
+
+  /* L6 */
+  .shh-l6 {
+    z-index: 8;
+    background: transparent;
+  }
+
+  .shh-rotate-hint {
+    position: absolute;
+    left: 141px;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    align-items: flex-start;
+    color: var(--color-text-primary);
+  }
+
+  /* Nav */
+  .shh-nav {
+    position: absolute;
+    bottom: 12px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 592px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border: 1px solid var(--color-border-other-2);
+    background: var(--color-bg-primary);
+    padding: 8px 8px 8px 16px;
+    border-radius: 2px;
+    z-index: 100;
+  }
+
+  .shh-nav-links {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .shh-nav-active {
+    text-decoration: underline;
+  }
+
+  .shh-contact-btn {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    padding: 8px 2px 8px 8px;
+    background-color: var(--color-btn-blue-default);
+    color: var(--color-text-alternate);
+    border-radius: 2px;
+    text-decoration: none;
+    transition: background-color 0.2s ease;
+  }
+
+  .shh-contact-btn:hover {
+    background-color: var(--color-btn-blue-hover);
+  }
+</style>
+
+<script>
+  import { gsap } from 'gsap'
+  import { ScrollTrigger } from 'gsap/ScrollTrigger'
+
+  gsap.registerPlugin(ScrollTrigger)
+
+  const container = document.querySelector<HTMLElement>('.shh-container')
+
+  if (container) {
+    const l2 = container.querySelector<HTMLElement>('.shh-l2')
+    const l4 = container.querySelector<HTMLElement>('.shh-l4')
+    const l5 = container.querySelector<HTMLElement>('.shh-l5')
+    const l6 = container.querySelector<HTMLElement>('.shh-l6')
+    const nav = container.querySelector<HTMLElement>('.shh-nav')
+
+    const heroTitle   = container.querySelector<HTMLElement>('.shh-hero-title')
+    const heroCrumbs  = container.querySelector<HTMLElement>('.shh-breadcrumbs')
+    const heroScroll  = container.querySelector<HTMLElement>('.shh-scroll-hint')
+    const heroImgWrap = container.querySelector<HTMLElement>('.shh-hero-img-wrap')
+
+    const l2Card   = container.querySelector<HTMLElement>('.shh-l2-card')
+    const l2ImgNew = container.querySelector<HTMLElement>('.shh-l2-img-new')
+    const l2Text   = container.querySelector<HTMLElement>('.shh-l2-text')
+    const l3Photo  = container.querySelector<HTMLElement>('.shh-l3-photo')
+    const l3Text   = container.querySelector<HTMLElement>('.shh-l3-text')
+
+    const centerCard   = container.querySelector<HTMLElement>('.shh-center-card')
+    const iconDot      = container.querySelector<HTMLElement>('.shh-icon-dot')
+    const iconCol      = container.querySelector<HTMLElement>('.shh-icon-col')
+    const featTextsWrap= container.querySelector<HTMLElement>('.shh-feat-texts')
+    const scrollFeat   = container.querySelector<HTMLElement>('.shh-scroll-feat')
+
+    const featImgs  = container.querySelectorAll<HTMLElement>('.shh-feat-img')
+    const featTexts = container.querySelectorAll<HTMLElement>('.shh-feat-text')
+
+    const rotateHint = container.querySelector<HTMLElement>('.shh-rotate-hint')
+
+    const vw = window.innerWidth
+    const vh = window.innerHeight
+
+    // --- initial states ---
+    gsap.set(l2, { xPercent: -100 })
+    gsap.set([l4, l5, l6], { autoAlpha: 0 })
+    gsap.set(nav, { autoAlpha: 0 })
+
+    // L2 card: explicit width/height so GSAP can animate them
+    gsap.set(l2Card, { width: vw - 32, height: vh - 32 })
+    gsap.set(l2ImgNew, { yPercent: 100 })
+    gsap.set(l2Text, { autoAlpha: 0 })
+
+    // L3 starts off-screen right
+    gsap.set(l3Photo, { x: vw })
+    gsap.set(l3Text,  { x: vw * 1.2, autoAlpha: 0 })
+    gsap.set(centerCard, { autoAlpha: 0, y: 40 })
+
+    // L5 internal elements
+    gsap.set(iconCol,       { x: -120, autoAlpha: 0 })
+    gsap.set(featTextsWrap, { x: 200, autoAlpha: 0 })
+    gsap.set(scrollFeat,    { autoAlpha: 0 })
+
+    gsap.set(featImgs,     { autoAlpha: 0 })
+    gsap.set(featTexts,    { autoAlpha: 0, y: 24 })
+    gsap.set(featImgs[0],  { autoAlpha: 1 })
+    gsap.set(featTexts[0], { autoAlpha: 1, y: 0 })
+
+    gsap.set(rotateHint, { autoAlpha: 0 })
+
+    const tl = gsap.timeline({
+      scrollTrigger: {
+        trigger: container,
+        start: 'top top',
+        end: 'bottom bottom',
+        scrub: 1.5,
+      },
+    })
+
+    // Phase 1 (0–0.12): hero → L2 full-screen photo slides in from left
+    tl.to(l2,         { xPercent: 0,              ease: 'none', duration: 0.12 }, 0)
+    tl.to(heroTitle,  { y: -80, autoAlpha: 0,      ease: 'none', duration: 0.09 }, 0)
+    tl.to(heroCrumbs, { y: -40, autoAlpha: 0,      ease: 'none', duration: 0.07 }, 0)
+    tl.to(heroScroll, { autoAlpha: 0,              ease: 'none', duration: 0.06 }, 0.02)
+    tl.to(heroImgWrap,{ scale: 0.85, autoAlpha: 0, ease: 'none', duration: 0.09 }, 0)
+    tl.to(nav,        { autoAlpha: 1,              ease: 'none', duration: 0.04 }, 0.10)
+
+    // Hold (0.12–0.20)
+    tl.to({}, { duration: 0.08 })
+
+    // Phase 2 (0.20–0.34): L2 shrinks to left half, L3 square slides in, img swaps
+    const halfW = Math.round(vw / 2) - 24
+    tl.to(l2Card,  { width: halfW,    ease: 'none', duration: 0.12 }, 0.20)
+    tl.to(l2ImgNew,{ yPercent: 0,     ease: 'none', duration: 0.10 }, 0.24)
+    tl.to(l3Photo, { x: 0,            ease: 'none', duration: 0.12 }, 0.20)
+    tl.to(l3Text,  { x: 0, autoAlpha: 1, ease: 'none', duration: 0.02 }, 0.30)
+
+    // Hold on V3 split (0.34–0.42)
+
+    // Phase 3 (0.42–0.54): L2 shrinks to 389×389 square, L2 text appears, L3 grows to full height
+    const rightFullW = Math.round(vw / 2) - 24
+    const rightFullH = vh - 32
+    tl.to(l2Card, { width: 389, height: 389, ease: 'none', duration: 0.12 }, 0.42)
+    tl.to(l2Text, { autoAlpha: 1,              ease: 'none', duration: 0.02 }, 0.49)
+    tl.to(l3Photo,{ width: rightFullW, height: rightFullH, ease: 'none', duration: 0.12 }, 0.42)
+    tl.to(l3Text, { autoAlpha: 0,              ease: 'none', duration: 0.02 }, 0.42)
+
+    // Hold on V4 (0.54–0.60)
+
+    // Phase 4 (0.60–0.70): L2 exits left, L3 photo moves to center + resizes, text appears
+    const centerRight = Math.round((vw - 503) / 2)
+    const centerTop   = Math.round((vh - 503) / 2)
+    tl.to(l2,     { xPercent: -100,    ease: 'none', duration: 0.08 }, 0.60)
+    tl.to(l3Photo,       { right: centerRight, top: centerTop, width: 503, height: 503, ease: 'none', duration: 0.10 }, 0.60)
+
+    tl.to(l4,            { autoAlpha: 1, ease: 'none', duration: 0.01 }, 0.66)
+    tl.to(centerCard,{ y: 0, autoAlpha: 1, ease: 'none', duration: 0.02 }, 0.67)
+
+    // Hold on V5 center card (0.70–0.76)
+
+    // Phase 5 (0.70–0.78): l3Photo moves from center to feature position, elements appear
+    tl.to(l5,            { autoAlpha: 1,                                                              ease: 'none', duration: 0.01 }, 0.70)
+    tl.to(l4,            { autoAlpha: 0,                                                              ease: 'none', duration: 0.02 }, 0.70)
+    tl.to(l3Photo,       { right: vw - 733, top: 16, width: 592, height: vh - 32,                    ease: 'none', duration: 0.06 }, 0.70)
+    tl.to(iconCol,       { x: 0, autoAlpha: 1,                                                        ease: 'none', duration: 0.05 }, 0.72)
+    tl.to(featTextsWrap, { x: 0, autoAlpha: 1,                                                        ease: 'none', duration: 0.05 }, 0.72)
+    tl.to(scrollFeat,    { autoAlpha: 1,                                                              ease: 'none', duration: 0.03 }, 0.74)
+
+    // Feature slides (0.78–0.94): 4 transitions × 0.04 each, start after card settles
+    const FD = 0.02
+    const FS = 0.78
+    const FG = 0.04
+
+    for (let i = 1; i < 5; i++) {
+      const t = FS + (i - 1) * FG
+      tl.to(featImgs[i - 1],  { autoAlpha: 0,        ease: 'none', duration: FD }, t)
+      tl.to(featTexts[i - 1], { autoAlpha: 0, y: -20, ease: 'none', duration: FD }, t)
+      tl.to(featImgs[i],      { autoAlpha: 1,         ease: 'none', duration: FD }, t + 0.01)
+      tl.to(featTexts[i],     { autoAlpha: 1, y: 0,   ease: 'none', duration: FD }, t + 0.01)
+      tl.to(iconDot, { y: i * 60, ease: 'none', duration: FD }, t)
+    }
+
+    // Phase 6 (0.95–1.0): l3Photo expands full-screen, elements exit, L6 overlay appears
+    const P6 = 0.95
+    tl.to(l3Photo,      { right: 0, top: 0, width: vw, height: vh, borderRadius: 0, ease: 'none', duration: 0.06 }, P6)
+    tl.to(iconCol,      { x: -160, autoAlpha: 0,  ease: 'none', duration: 0.05 }, P6)
+    tl.to(featTextsWrap,{ x: 200,  autoAlpha: 0,  ease: 'none', duration: 0.05 }, P6)
+    tl.to(scrollFeat,   { autoAlpha: 0,            ease: 'none', duration: 0.03 }, P6)
+    tl.to(l6,           { autoAlpha: 1,            ease: 'none', duration: 0.04 }, P6 + 0.05)
+    tl.to(rotateHint,   { autoAlpha: 1,            ease: 'none', duration: 0.03 }, P6 + 0.07)
+
+    tl.to({}, { duration: 0.02 })
+  }
+</script>
