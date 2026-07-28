@@ -2,6 +2,7 @@
 import Layout from '../../layouts/Layout.astro'
 import Breadcrumbs from '../../components/ui/Breadcrumbs.astro'
 import SwiperSlider from '../../components/ui/SwiperSlider.astro'
+import MediaCarousel from '../../components/ui/MediaCarousel.astro'
 import { client } from '../../lib/sanity'
 
 export async function getStaticPaths() {
@@ -46,10 +47,18 @@ const media = (raw.media ?? []).map((m: any, i: number) => ({
   id: `media-${i}`,
   type: m.type ?? 'image',
   label: m.label ?? `${m.type === 'video' ? 'Video' : 'Image'} ${i + 1}`,
-  thumbnail: m.thumbnail ? assetUrl(m.thumbnail, 160) : '',
+  thumbnail: m.thumbnail ? assetUrl(m.thumbnail, 1200) : '',
   src: m.type === 'video' ? (m.videoUrl ?? '') : (m.image ? assetUrl(m.image, 1200) : ''),
   duration: m.duration ?? '',
 }))
+
+// Split into two carousels: videos (poster + play link) and images
+const videos = media
+  .filter((m: any) => m.type === 'video')
+  .map((m: any) => ({ src: m.thumbnail, alt: m.label, duration: m.duration, videoUrl: m.src }))
+const images = media
+  .filter((m: any) => m.type === 'image')
+  .map((m: any) => ({ src: m.src, alt: m.label }))
 
 const ap = raw.applicationProduct
 const seriesTitle = ap?.series?.title ?? ''
@@ -71,10 +80,10 @@ const otherCases = otherRaw.map((c: any) => ({
   <Breadcrumbs crumbs={[{ label: 'Cases', href: '/cases' }, { label: raw.title }]} />
 
   <section class="bg-bg-primary pt-page pb-md">
-    <div class="global-padding">
-      <div class="mx-auto max-w-[1200px] flex flex-col gap-14 max-lg:gap-10">
 
-        <!-- Back + Header -->
+    <!-- Back + Header -->
+    <div class="global-padding">
+      <div class="mx-auto max-w-[1200px]">
         <div class="max-w-[998px] mx-auto w-full flex flex-col gap-10 max-lg:gap-8">
           <a href="/cases" class="inline-flex items-center gap-2 text-small-caps text-text-primary group w-fit">
             <svg class="size-[14px] rotate-180 transition-transform duration-200 group-hover:-translate-x-1" viewBox="0 0 14 14" fill="none" aria-hidden="true">
@@ -88,88 +97,30 @@ const otherCases = otherRaw.map((c: any) => ({
               {raw.description && <p class="text-large text-text-primary max-w-[694px]">{raw.description}</p>}
             </div>
             {logoUrl && (
-              <div class="border border-border-other-2 rounded-[6px] shrink-0 w-[187px] h-[106px] max-lg:w-[140px] max-lg:h-20 flex items-center justify-center bg-bg-primary p-6">
+              <div class="border border-border-other-2 rounded-[6px] shrink-0 w-[187px] h-[106px] flex items-center justify-center bg-bg-primary p-6">
                 <img src={logoUrl} alt={raw.title} class="w-full h-full object-contain" />
               </div>
             )}
           </div>
         </div>
+      </div>
+    </div>
 
-        <!-- Media viewer -->
-        {media.length > 0 && (
-          <div class="w-full flex items-center gap-4 max-lg:flex-col max-lg:items-stretch">
+    <!-- Media carousels — full-bleed (videos + images) -->
+    {(videos.length > 0 || images.length > 0) && (
+      <div class="mt-[72px] flex flex-col gap-[72px] max-lg:mt-12 max-lg:gap-12">
+        {videos.length > 0 && <MediaCarousel id="case-videos" kind="video" items={videos} />}
+        {images.length > 0 && <MediaCarousel id="case-images" kind="image" items={images} />}
+      </div>
+    )}
 
-            <!-- Left: thumbnails -->
-            <div class="flex flex-col gap-4 w-[85px] shrink-0 justify-center max-lg:w-full max-lg:flex-row max-lg:overflow-x-auto max-lg:order-3 max-lg:justify-center" id="case-thumbnails">
-              {media.map((item: any, i: number) => (
-                <button
-                  class:list={['case-thumb flex flex-col gap-2 items-start cursor-pointer', i === 0 ? 'is-active' : '']}
-                  data-media-id={item.id}
-                  data-media-type={item.type}
-                  aria-label={item.label}
-                >
-                  <div class:list={['size-10 rounded-[2px] overflow-hidden border-2 transition-colors duration-200', i === 0 ? 'border-blue-500/50' : 'border-border-other-2']}>
-                    {item.thumbnail
-                      ? <img src={item.thumbnail} alt={item.label} class="w-full h-full object-cover" loading="lazy" />
-                      : <div class="w-full h-full bg-bg-secondary" />
-                    }
-                  </div>
-                  <span class="text-tiny-medium text-text-primary whitespace-nowrap">{item.label}</span>
-                </button>
-              ))}
-            </div>
-
-            <!-- Main media -->
-            <div class="relative overflow-hidden rounded-[2px] bg-bg-secondary flex-1 h-[560px] max-lg:h-auto max-lg:aspect-video max-lg:order-2" id="case-main-media">
-              {media.map((item: any, i: number) => (
-                <div
-                  class:list={['case-media-item absolute inset-0 transition-opacity duration-300', i === 0 ? 'opacity-100' : 'opacity-0 pointer-events-none']}
-                  data-media-id={item.id}
-                  data-media-type={item.type}
-                  data-src={item.src}
-                >
-                  {item.type === 'image'
-                    ? <img src={item.src} alt={item.label} class="w-full h-full object-cover" />
-                    : (
-                      <>
-                        <img src={item.thumbnail} alt={item.label} class="w-full h-full object-cover" />
-                        <button class="case-play-btn absolute inset-0 flex items-center justify-center" data-video-url={item.src} aria-label="Play video">
-                          <span class="size-16 bg-bg-primary/90 rounded-full flex items-center justify-center">
-                            <svg class="size-6 text-text-primary translate-x-0.5" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M5 3l14 9-14 9V3z"/></svg>
-                          </span>
-                        </button>
-                        {item.duration && <span class="absolute bottom-5 right-4 text-large-medium text-text-alternate">{item.duration}</span>}
-                      </>
-                    )
-                  }
-                </div>
-              ))}
-            </div>
-
-            <!-- Right: type filter -->
-            <div class="flex flex-col gap-4 items-center w-[85px] shrink-0 justify-center max-lg:flex-row max-lg:w-full max-lg:order-1 max-lg:justify-center" id="case-type-filters">
-              <button class="case-type-btn flex flex-col gap-2 items-center is-active cursor-pointer" data-filter-type="video">
-                <div class="size-10 border-2 border-blue-500/50 rounded-[2px] flex items-center justify-center transition-colors duration-200">
-                  <svg class="size-6 text-text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><rect x="2" y="6" width="14" height="12" rx="1"/><path d="M16 10l6-4v12l-6-4"/></svg>
-                </div>
-                <span class="text-tiny-medium text-text-primary">Video</span>
-              </button>
-              <button class="case-type-btn flex flex-col gap-2 items-center cursor-pointer" data-filter-type="image">
-                <div class="size-10 border border-border-other-2 rounded-[2px] flex items-center justify-center transition-colors duration-200">
-                  <svg class="size-6 text-text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="1"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
-                </div>
-                <span class="text-tiny-medium text-text-primary">Img</span>
-              </button>
-            </div>
-
-          </div>
-        )}
-
-        <!-- Application Products -->
-        {seriesTitle && (
+    <!-- Application Products -->
+    {seriesTitle && (
+      <div class="global-padding mt-[72px] max-lg:mt-12">
+        <div class="mx-auto max-w-[1200px]">
           <div class="max-w-[998px] mx-auto w-full flex flex-col gap-8">
             <h6 class="text-h6 text-text-primary">Application Products</h6>
-            <div class="bg-bg-secondary p-10 flex items-start justify-between gap-10 max-lg:flex-col max-lg:p-8 max-lg:gap-8">
+            <div class="bg-bg-secondary p-10 flex items-start justify-between gap-10 max-lg:flex-col max-lg:px-5 max-lg:pt-9 max-lg:pb-5 max-lg:gap-8">
               <div class="flex flex-col justify-between self-stretch gap-8 max-w-[405px] max-lg:max-w-full max-lg:w-full">
                 <div class="flex flex-col gap-6">
                   <h3 class="text-h3 mob-h4 text-text-primary">{seriesTitle}</h3>
@@ -180,7 +131,7 @@ const otherCases = otherRaw.map((c: any) => ({
                     <ul class="flex flex-col gap-2">
                       {features.map((f: string) => (
                         <li class="flex items-center gap-2">
-                          <img src="/images/global/icon-logo.svg" alt="" class="size-4 shrink-0" aria-hidden="true" />
+                          <span class="size-[6px] rounded-[2px] bg-fg-tertiary shrink-0" aria-hidden="true"></span>
                           <span class="text-regular text-text-primary">{f}</span>
                         </li>
                       ))}
@@ -198,10 +149,10 @@ const otherCases = otherRaw.map((c: any) => ({
               )}
             </div>
           </div>
-        )}
-
+        </div>
       </div>
-    </div>
+    )}
+
   </section>
 
   <!-- Other cases slider -->
@@ -236,61 +187,3 @@ const otherCases = otherRaw.map((c: any) => ({
 
 </Layout>
 
-<style>
-  .case-thumb.is-active .border-border-other-2 { border-color: rgba(0,54,127,0.5); }
-</style>
-
-<script>
-  const thumbs = document.querySelectorAll<HTMLButtonElement>('.case-thumb')
-  const mediaItems = document.querySelectorAll<HTMLElement>('.case-media-item')
-  const typeBtns = document.querySelectorAll<HTMLButtonElement>('.case-type-btn')
-
-  function setFilter(type: string) {
-    typeBtns.forEach(btn => {
-      const active = btn.dataset.filterType === type
-      btn.classList.toggle('is-active', active)
-      const box = btn.querySelector('div')
-      if (box) {
-        box.classList.toggle('border-2', active)
-        box.classList.toggle('border-blue-500/50', active)
-        box.classList.toggle('border', !active)
-        box.classList.toggle('border-border-other-2', !active)
-      }
-    })
-    thumbs.forEach(t => { t.style.display = t.dataset.mediaType === type ? '' : 'none' })
-    const first = Array.from(thumbs).find(t => t.dataset.mediaType === type)
-    if (first) activateMedia(first.dataset.mediaId!)
-  }
-
-  function activateMedia(id: string) {
-    thumbs.forEach(t => {
-      const active = t.dataset.mediaId === id
-      t.classList.toggle('is-active', active)
-      const box = t.querySelector('div')
-      if (box) {
-        box.classList.toggle('border-2', active)
-        box.classList.toggle('border-blue-500/50', active)
-        box.classList.toggle('border', !active)
-        box.classList.toggle('border-border-other-2', !active)
-      }
-    })
-    mediaItems.forEach(m => {
-      const active = m.dataset.mediaId === id
-      m.classList.toggle('opacity-100', active)
-      m.classList.toggle('opacity-0', !active)
-      m.classList.toggle('pointer-events-none', !active)
-    })
-  }
-
-  thumbs.forEach(t => t.addEventListener('click', () => activateMedia(t.dataset.mediaId!)))
-  typeBtns.forEach(b => b.addEventListener('click', () => setFilter(b.dataset.filterType!)))
-
-  document.querySelectorAll<HTMLButtonElement>('.case-play-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-      const url = btn.dataset.videoUrl
-      if (url) window.open(url, '_blank')
-    })
-  })
-
-  setFilter('video')
-</script>

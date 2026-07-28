@@ -1,0 +1,163 @@
+---
+import 'swiper/css'
+
+type MediaItem = {
+  src: string
+  alt: string
+  duration?: string
+  videoUrl?: string
+}
+
+interface Props {
+  id: string
+  kind?: 'video' | 'image'
+  items: MediaItem[]
+}
+
+const { id, kind = 'image', items } = Astro.props
+
+// Start on the middle slide so both side peeks (prev + next) are visible on load
+const initialSlide = Math.floor(items.length / 2)
+---
+
+<div class="media-carousel w-full" data-carousel-id={id} data-initial-slide={initialSlide}>
+
+  <div class={`swiper ${id}`}>
+    <div class="swiper-wrapper">
+      {items.map(item => (
+        <div class="swiper-slide">
+          <div class="relative overflow-hidden rounded-[2px] bg-bg-secondary h-[560px] max-lg:h-auto max-lg:aspect-video w-full">
+            <img src={item.src} alt={item.alt} class="w-full h-full object-cover" loading="lazy" />
+            {kind === 'video' && (
+              <>
+                {item.videoUrl ? (
+                  <a
+                    href={item.videoUrl}
+                    target="_blank"
+                    rel="noopener"
+                    class="absolute bottom-4 left-4 bg-bg-secondary/80 hover:bg-bg-secondary transition-colors p-3 rounded-[2px] flex items-center justify-center"
+                    aria-label="Play video"
+                  >
+                    <svg class="size-4 text-text-primary" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
+                      <path d="M4 2l10 6-10 6V2z"/>
+                    </svg>
+                  </a>
+                ) : (
+                  <button
+                    class="absolute bottom-4 left-4 bg-bg-secondary/80 hover:bg-bg-secondary transition-colors p-3 rounded-[2px] flex items-center justify-center"
+                    aria-label="Play"
+                  >
+                    <svg class="size-4 text-text-primary" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
+                      <path d="M4 2l10 6-10 6V2z"/>
+                    </svg>
+                  </button>
+                )}
+                {item.duration && (
+                  <span class="absolute bottom-5 right-4 text-large-medium text-text-alternate">{item.duration}</span>
+                )}
+              </>
+            )}
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+
+  <!-- Pagination: dots (real item count) + prev/next arrows -->
+  <div class="global-padding">
+    <div class="mx-auto max-w-[1200px] flex items-center justify-center gap-4 mt-14 max-lg:mt-10">
+      <div class={`${id}-dots flex items-center gap-2 px-3 py-2`}>
+        {items.map((_, i) => (
+          <button class="case-dot" data-idx={i} aria-label={`Go to slide ${i + 1}`}></button>
+        ))}
+      </div>
+      <div class="flex items-center gap-4 shrink-0">
+        <button
+          class={`${id}-prev size-8 bg-bg-primary border border-border-other-2 rounded-[2px] flex items-center justify-center hover:border-border-alternative transition-colors duration-200 cursor-pointer`}
+          aria-label="Previous"
+        >
+          <svg class="size-4" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+            <path d="M10 12L6 8l4-4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+        <button
+          class={`${id}-next size-8 bg-bg-primary border border-border-other-2 rounded-[2px] flex items-center justify-center hover:border-border-alternative transition-colors duration-200 cursor-pointer`}
+          aria-label="Next"
+        >
+          <svg class="size-4" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+            <path d="M6 4l4 4-4 4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<style>
+  .media-carousel .swiper {
+    overflow: visible;
+  }
+  .media-carousel :global(.swiper-button-disabled) {
+    opacity: 0.4;
+    pointer-events: none;
+  }
+  .media-carousel .swiper-slide {
+    width: 998px;
+    /* mobile: narrower than viewport so prev/next slides peek in on both sides */
+    max-width: calc(100vw - 72px);
+  }
+  .case-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 2px;
+    background: var(--color-black-1000);
+    opacity: 0.3;
+    transition: opacity 0.2s ease, width 0.2s ease, height 0.2s ease;
+    cursor: pointer;
+  }
+  .case-dot.is-active {
+    opacity: 1;
+    width: 10px;
+    height: 10px;
+  }
+</style>
+
+<script>
+  import Swiper from 'swiper'
+  import { Navigation } from 'swiper/modules'
+
+  document.querySelectorAll<HTMLElement>('.media-carousel').forEach(wrap => {
+    const uid = wrap.dataset.carouselId
+    if (!uid) return
+
+    const initialSlide = parseInt(wrap.dataset.initialSlide || '0')
+    const dots = Array.from(wrap.querySelectorAll<HTMLElement>('.case-dot'))
+
+    const setActive = (idx: number) => {
+      dots.forEach((d, i) => d.classList.toggle('is-active', i === idx))
+    }
+
+    const swiper = new Swiper(`.${uid}`, {
+      modules: [Navigation],
+      slidesPerView: 'auto',
+      centeredSlides: true,
+      spaceBetween: 12,
+      breakpoints: {
+        1024: { spaceBetween: 24 },
+      },
+      initialSlide,
+      grabCursor: true,
+      navigation: {
+        prevEl: `.${uid}-prev`,
+        nextEl: `.${uid}-next`,
+      },
+      on: {
+        afterInit(s) { setActive(s.activeIndex) },
+        slideChange(s) { setActive(s.activeIndex) },
+      },
+    })
+
+    dots.forEach((d, i) => d.addEventListener('click', () => swiper.slideTo(i)))
+  })
+</script>

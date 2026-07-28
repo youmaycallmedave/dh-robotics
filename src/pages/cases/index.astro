@@ -7,11 +7,10 @@ const cases = await client.fetch(`
   *[_type == "caseStudy"] | order(_createdAt desc) {
     title,
     "slug": slug.current,
-    description,
     "logo": logo.asset._ref,
     "thumbnail": media[0].thumbnail.asset._ref,
+    "image": media[type == "image"][0].image.asset._ref,
     "seriesTitle": applicationProduct.series->title,
-    "categoryTitle": applicationProduct.series->category->title,
   }
 `)
 
@@ -19,60 +18,159 @@ function assetUrl(ref: string | undefined, w = 400) {
   if (!ref) return ''
   return `https://cdn.sanity.io/images/0ufm7kaw/production/${ref.replace('image-', '').replace(/-([a-z]+)$/, '.$1')}?w=${w}&auto=format`
 }
+
+const items = cases.map((c: any) => ({
+  title: c.title,
+  slug: c.slug,
+  href: `/cases/${c.slug}`,
+  logo: c.logo ? assetUrl(c.logo, 160) : '',
+  image: assetUrl(c.image ?? c.thumbnail, 1200),
+  series: c.seriesTitle ?? '',
+}))
 ---
 
 <Layout title="Demonstration Cases">
   <Breadcrumbs crumbs={[{ label: 'Cases' }]} />
+
   <section class="bg-bg-primary pt-page pb-lg">
     <div class="global-padding">
-      <div class="mx-auto max-w-[1200px] flex flex-col gap-14">
+      <div class="mx-auto max-w-[1200px]">
 
-        <h1 class="text-h1 mob-h2 text-text-primary">Demonstration Cases</h1>
-
-        <div class="grid grid-cols-3 gap-6 max-lg:grid-cols-2 max-md:grid-cols-1">
-          {cases.map((c: any) => (
-            <a href={`/cases/${c.slug}`} class="group flex flex-col border border-border-other-2 hover:border-border-alternative transition-colors duration-200 overflow-hidden">
-
-              <!-- Thumbnail -->
-              <div class="bg-bg-secondary overflow-hidden shrink-0 aspect-video lg:aspect-auto lg:h-[220px]">
-                {c.thumbnail
-                  ? <img src={assetUrl(c.thumbnail, 600)} alt={c.title} class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" loading="lazy" />
-                  : <div class="w-full h-full bg-bg-secondary" />
-                }
-              </div>
-
-              <!-- Info -->
-              <div class="flex flex-col gap-4 p-6">
-                <div class="flex items-start justify-between gap-4">
-                  <h2 class="text-h5 text-text-primary">{c.title}</h2>
-                  {c.logo && (
-                    <div class="shrink-0 border border-border-other-2 rounded-[4px] w-16 h-9 flex items-center justify-center p-2 bg-bg-primary">
-                      <img src={assetUrl(c.logo, 120)} alt={c.title} class="w-full h-full object-contain" loading="lazy" />
-                    </div>
-                  )}
-                </div>
-
-                {c.description && <p class="text-small text-text-secondary line-clamp-2">{c.description}</p>}
-
-                <div class="flex flex-wrap gap-2 mt-auto pt-2">
-                  {c.categoryTitle && (
-                    <span class="inline-flex items-center px-2 py-1 bg-bg-secondary text-tiny-medium text-text-secondary">{c.categoryTitle}</span>
-                  )}
-                  {c.seriesTitle && (
-                    <span class="inline-flex items-center px-2 py-1 bg-fg-alternative text-tiny-medium text-text-alternate">{c.seriesTitle}</span>
-                  )}
-                </div>
-              </div>
-
-            </a>
-          ))}
+        <!-- Centered header -->
+        <div class="max-w-[694px] mx-auto text-center flex flex-col gap-10 mb-14 max-lg:gap-6 max-lg:mb-10">
+          <h1 class="text-h1 mob-h2 text-text-primary">Demonstration cases</h1>
+          <p class="text-regular text-text-primary">Hundreds of factories are already using DH-Robotics' products. The number of customers continues to grow rapidly...</p>
         </div>
 
-        {cases.length === 0 && (
-          <p class="text-regular text-text-secondary">No cases yet.</p>
+        <!-- Logo nav — horizontal, scrollable (mobile / tablet) -->
+        <div class="xl:hidden overflow-x-auto mb-10 -mx-4 px-4 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+          <div class="flex gap-4 items-start w-max mx-auto">
+            {items.map((item: any, i: number) => (
+              <a
+                href={`#case-${item.slug}`}
+                data-cases-logo={i}
+                class:list={['cases-logo flex flex-col items-center gap-2 shrink-0', i === 0 ? 'is-active' : '']}
+                aria-label={item.title}
+              >
+                <div class="cases-logo-box w-16 h-10 rounded-[2px] flex items-center justify-center p-2 bg-bg-primary">
+                  {item.logo && <img src={item.logo} alt={item.title} class="max-w-full max-h-full object-contain" loading="lazy" />}
+                </div>
+                <span class="cases-dot size-[4px] rounded-full bg-fg-tertiary"></span>
+              </a>
+            ))}
+          </div>
+        </div>
+
+        <!-- Sticky logo sidebar + case cards -->
+        <div class="flex items-start gap-0">
+
+          <!-- Sticky logo sidebar (xl+) -->
+          <div class="hidden xl:block shrink-0 w-[200px] self-stretch">
+            <div class="sticky top-[35vh] flex flex-col gap-4 w-fit ml-auto mr-6">
+              {items.map((item: any, i: number) => (
+                <a
+                  href={`#case-${item.slug}`}
+                  data-cases-logo={i}
+                  class:list={['cases-logo relative flex items-center justify-center', i === 0 ? 'is-active' : '']}
+                  aria-label={item.title}
+                >
+                  <div class="cases-logo-box w-16 h-10 rounded-[2px] flex items-center justify-center p-2 bg-bg-primary">
+                    {item.logo && <img src={item.logo} alt={item.title} class="max-w-full max-h-full object-contain" loading="lazy" />}
+                  </div>
+                  <span class="cases-dot absolute -right-3 top-1/2 -translate-y-1/2 size-[3px] rounded-full bg-fg-tertiary"></span>
+                </a>
+              ))}
+            </div>
+          </div>
+
+          <!-- Case cards -->
+          <div class="flex-1 flex flex-col gap-14 max-lg:gap-9 items-center">
+            {items.map((item: any, i: number) => (
+              <a
+                id={`case-${item.slug}`}
+                href={item.href}
+                data-cases-card={i}
+                class="group relative overflow-hidden rounded-[2px] block w-full max-w-[795px] h-[448px] max-lg:h-[280px] bg-bg-secondary scroll-mt-[120px]"
+              >
+                {item.image && (
+                  <img src={item.image} alt={item.title} class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 lg:group-hover:scale-105" loading="lazy" />
+                )}
+                <div class="absolute inset-0 bg-gradient-to-r from-black/40 to-transparent"></div>
+                <p class="text-h2 mob-h4 text-text-alternate absolute top-8 left-8 max-w-[300px] max-lg:top-6 max-lg:left-6">{item.title}</p>
+                {item.series && (
+                  <div class="absolute bottom-8 left-8 flex flex-col gap-3 max-lg:bottom-6 max-lg:left-6">
+                    <span class="text-tiny text-text-alternate opacity-60">Series:</span>
+                    <span class="border border-white/24 rounded-[4px] px-2 py-2 text-large-medium text-text-alternate w-fit">{item.series}</span>
+                  </div>
+                )}
+                <span class="absolute bottom-8 right-8 size-10 bg-btn-black-default group-hover:bg-btn-black-hover flex items-center justify-center rounded-[2px] transition-colors duration-200 max-lg:bottom-6 max-lg:right-6">
+                  <svg class="size-6 text-text-alternate" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                    <path d="M9 18l6-6-6-6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </span>
+              </a>
+            ))}
+          </div>
+
+          <!-- Right spacer to keep cards centered (xl+) -->
+          <div class="hidden xl:block shrink-0 w-[200px]"></div>
+
+        </div>
+
+        {items.length === 0 && (
+          <p class="text-regular text-text-secondary text-center">No cases yet.</p>
         )}
 
       </div>
     </div>
   </section>
 </Layout>
+
+<style>
+  .cases-logo-box {
+    border: 1px solid var(--color-border-other-2);
+    transition: border-color 0.2s ease, border-width 0.2s ease;
+  }
+  .cases-logo.is-active .cases-logo-box {
+    border: 2px solid var(--color-border-tertiary);
+  }
+  .cases-dot {
+    opacity: 0;
+    transition: opacity 0.2s ease;
+  }
+  .cases-logo.is-active .cases-dot {
+    opacity: 1;
+  }
+</style>
+
+<script>
+  const logos = Array.from(document.querySelectorAll<HTMLElement>('[data-cases-logo]'))
+  const cards = Array.from(document.querySelectorAll<HTMLElement>('[data-cases-card]'))
+
+  function setActive(idx: number) {
+    logos.forEach(logo => {
+      logo.classList.toggle('is-active', parseInt(logo.dataset.casesLogo || '-1') === idx)
+    })
+  }
+
+  function updateActive() {
+    const threshold = window.innerHeight * 0.45
+    let activeIdx = 0
+    cards.forEach((card, i) => {
+      if (card.getBoundingClientRect().top <= threshold) activeIdx = i
+    })
+    setActive(activeIdx)
+  }
+
+  if (logos.length) {
+    updateActive()
+    window.addEventListener('scroll', updateActive, { passive: true })
+    logos.forEach(logo => {
+      logo.addEventListener('click', (e) => {
+        e.preventDefault()
+        const i = parseInt(logo.dataset.casesLogo || '0')
+        cards[i]?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+      })
+    })
+  }
+</script>
