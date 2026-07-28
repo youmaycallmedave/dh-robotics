@@ -1,5 +1,11 @@
 # DH Robotics — Заметки / TODO
 
+## 🚀 Перед релизом (снять dev-заглушки)
+- Убрать пункт **Sitemap** из верхнего меню (Header `navItems`)
+- Убрать `noindex, nofollow` в `layouts/Layout.astro`
+- Поменять `public/robots.txt` (`Disallow: /` → разрешить индексацию)
+- Вернуть страницу **Support → Technology** из draft (сейчас скрыта: Header/Footer/карточка на `/support`)
+
 ## 🔧 Нужно поправить
 
 - на странице загрузок таб внутренний чуть сдвинуть вниз полоску на активному

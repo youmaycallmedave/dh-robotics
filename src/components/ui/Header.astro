@@ -43,21 +43,22 @@ const navItems: NavItem[] = [
     },
   },
   {
-    label: 'Service',
+    label: 'Support',
     dropdown: {
       columns: [
         {
           links: [
-            { label: 'Services',              href: '/services' },
-            { label: 'Technology',            href: '/services/technology' },
-            { label: 'User Control Software', href: '/services/software' },
+            { label: 'Support',               href: '/support' },
+            // HIDDEN (draft): Technology — restore when page is ready
+            // { label: 'Technology',            href: '/support/technology' },
+            { label: 'User Control Software', href: '/support/software' },
           ],
         },
       ],
     },
   },
   {
-    label: 'Resources',
+    label: 'Explore',
     dropdown: {
       columns: [
         {
@@ -65,15 +66,17 @@ const navItems: NavItem[] = [
             { label: 'News',            href: '/news' },
             { label: 'Insights',        href: '/news?category=insights' },
             { label: 'Events',          href: '/events' },
-            { label: 'FAQ',             href: '/resources/faq' },
+            { label: 'FAQ',             href: '/explore/faq' },
             { label: 'Cases',           href: '/cases' },
-            { label: 'Download Center', href: '/resources/downloads' },
+            { label: 'Download Center', href: '/explore/downloads' },
           ],
         },
       ],
     },
   },
   { label: 'About', href: '/about' },
+  // DEV-only quick link
+  { label: 'Sitemap', href: '/sitemap' },
 ]
 ---
 
@@ -141,7 +144,7 @@ const navItems: NavItem[] = [
         </button>
 
         <!-- Contact Us -->
-        <a href="/contact" class="contact-btn relative overflow-hidden inline-flex items-center gap-6 pl-4 pr-2 py-2 rounded-[2px] bg-btn-black-default text-text-alternate text-small-caps text-trim-off whitespace-nowrap max-lg:gap-2 max-lg:pl-3 max-lg:pr-1">
+        <a href="/contact" class="contact-btn relative overflow-hidden inline-flex items-center gap-6 pl-4 pr-2 py-2 rounded-full bg-btn-black-default text-text-alternate text-small-caps text-trim-off whitespace-nowrap max-lg:gap-2 max-lg:pl-3 max-lg:pr-1">
           <span class="contact-label relative z-[1]">CONTACT US</span>
           <svg class="size-6 text-text-alternate relative z-[1]" viewBox="0 0 24 24" fill="none" aria-hidden="true">
             <path d="M9 18l6-6-6-6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
