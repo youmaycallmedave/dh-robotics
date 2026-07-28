@@ -1,7 +1,5 @@
 ---
 import Button from '../ui/Button.astro'
-import FilterTabs from '../ui/FilterTabs.astro'
-import PageHero from '../ui/PageHero.astro'
 import { client } from '../../lib/sanity'
 
 const tabs = [
@@ -31,15 +29,17 @@ const [categories, seriesList, products, downloads] = await Promise.all([
 const dlData = JSON.stringify({ categories, series: seriesList, products, downloads })
 ---
 
-<PageHero
-  title="Download Center"
-  description="With deep technical background, DH-Robotics has developed the robotic and precision motion control technologies for many years."
-  image="/images/download hero.webp"
-  imageAlt="DH-Robotics products"
-  scrollTarget="downloads-content"
-/>
+<section class="bg-bg-primary pt-page pb-14 max-lg:pb-10">
+  <div class="global-padding">
+    <div class="max-w-[694px] mx-auto text-center flex flex-col gap-6 max-lg:gap-5">
+      <h1 class="text-h1 mob-h2 text-text-primary">Download Center</h1>
+      <p class="text-regular text-text-primary">With deep technical background, DH-Robotics has developed the robotic and precision motion control technologies for many years.</p>
+    </div>
+  </div>
+</section>
 
-<section id="downloads-content" class="bg-bg-primary pb-[120px] max-lg:pb-20">
+<!-- div, not section — avoids global section overflow:clip which breaks sticky -->
+<div id="downloads-content" class="bg-bg-primary pb-[120px] max-lg:pb-20">
   <div class="global-padding">
     <div class="mx-auto max-w-[1200px] flex flex-col gap-[120px] max-lg:gap-16 items-center">
 
@@ -82,11 +82,11 @@ const dlData = JSON.stringify({ categories, series: seriesList, products, downlo
 
         <!-- Series -->
         <div class="flex flex-col gap-[2px] flex-1 min-w-0 dl-select-field" id="field-series">
-          <label class="text-small text-text-primary text-trim-off">Series</label>
+          <label class="text-small text-text-primary text-trim-off">Product</label>
           <input type="hidden" id="filter-series" value="" />
           <div class="relative">
-            <div class="input-row border-b flex items-center gap-4 py-4 cursor-pointer select-none dl-select-trigger" data-for="filter-series" data-placeholder="All Series">
-              <span class="dl-select-display flex-1 text-regular text-text-secondary opacity-50">All Series</span>
+            <div class="input-row border-b flex items-center gap-4 py-4 cursor-pointer select-none dl-select-trigger" data-for="filter-series" data-placeholder="All Product Types">
+              <span class="dl-select-display flex-1 text-regular text-text-secondary opacity-50">All Product Types</span>
               <svg class="dl-select-chevron shrink-0 text-text-primary transition-transform duration-200" width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
                 <path d="M6 9L12 15L18 9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
               </svg>
@@ -95,7 +95,7 @@ const dlData = JSON.stringify({ categories, series: seriesList, products, downlo
               <div class="border-2 border-border-quinary">
                 <div class="border border-border-tertiary bg-bg-primary p-3 flex flex-col max-h-[240px] overflow-y-auto">
                   <button type="button" data-value="" class="dl-option text-trim-off flex items-center gap-4 text-left px-2 py-2 text-regular text-text-primary rounded-[4px] hover:bg-fg-other-4 transition-colors w-full cursor-pointer">
-                    <span class="flex-1">All Series</span>
+                    <span class="flex-1">All Product Types</span>
                     <span class="check-badge bg-bg-tertiary p-[2px] rounded-full opacity-0 shrink-0">
                       <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M2 6L5 9L10 3" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
                     </span>
@@ -161,21 +161,29 @@ const dlData = JSON.stringify({ categories, series: seriesList, products, downlo
           </div>
         </div>
 
-        <button id="search-btn" class="bg-btn-black-default hover:bg-btn-black-hover text-text-alternate rounded-[2px] shrink-0 size-10 flex items-center justify-center transition-colors self-end mb-4">
-          <svg class="size-5" viewBox="0 0 20 20" fill="none" aria-hidden="true">
-            <circle cx="9" cy="9" r="6" stroke="currentColor" stroke-width="1.5"/>
-            <path d="M13.5 13.5L17 17" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-          </svg>
-        </button>
-
       </div>
 
-      <!-- Tabs + list -->
-      <div class="w-[999px] max-xl:w-full flex flex-col gap-0" id="downloads-list-wrap">
+      <!-- Category tabs (left) + list (right) -->
+      <div class="w-full flex gap-16 max-lg:flex-col max-lg:gap-8 items-start" id="downloads-list-wrap">
 
-        <FilterTabs id="downloads-tabs" tabs={tabs} />
+        <!-- Vertical category tabs -->
+        <div
+          id="downloads-tabs"
+          class="shrink-0 lg:w-[160px] flex flex-col gap-4 self-start lg:sticky lg:top-[120px] lg:border-l lg:border-border-secondary lg:pl-4 max-lg:w-full max-lg:flex-row max-lg:overflow-x-auto max-lg:border-b max-lg:border-border-other-2 max-lg:pb-3 max-lg:gap-6 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+        >
+          {tabs.map((tab: any, i: number) => (
+            <button
+              type="button"
+              data-tab={tab.id}
+              class:list={['dl-tab text-small-medium text-trim-off text-left whitespace-nowrap shrink-0 transition-colors duration-200 cursor-pointer', i === 0 ? 'is-active' : '']}
+            >{tab.label}</button>
+          ))}
+        </div>
 
-        <div id="downloads-items" class="relative z-[1] mt-[-1px]">
+        <!-- List -->
+        <div class="flex-1 min-w-0 w-full">
+
+        <div id="downloads-items" class="relative z-[1]">
           {downloads.map((item: any) => (
             <div
               class="border-t border-border-other-2 flex items-center justify-between py-8 gap-4 downloads-item"
@@ -189,12 +197,6 @@ const dlData = JSON.stringify({ categories, series: seriesList, products, downlo
                 <p class="text-regular text-text-secondary">
                   {[item.version && `Version ${item.version}`, item.fileFormat && `Format ${item.fileFormat}`, item.date].filter(Boolean).join(' · ')}
                 </p>
-                <div class="flex flex-col gap-1">
-                  {item.tab          && <p class="text-tiny text-text-secondary">Type: {item.tab}</p>}
-                  {item.categoryTitle && <p class="text-tiny text-text-secondary">Cat: {item.categoryTitle}</p>}
-                  {item.seriesTitle   && <p class="text-tiny text-text-secondary">Series: {item.seriesTitle}</p>}
-                  {item.productTitle  && <p class="text-tiny text-text-secondary">Product: {item.productTitle}</p>}
-                </div>
               </div>
               <Button label="Download" href={item.fileUrl ?? '#'} variant="black" class="shrink-0" />
             </div>
@@ -218,14 +220,36 @@ const dlData = JSON.stringify({ categories, series: seriesList, products, downlo
           </div>
         </div>
 
+        </div>
+
       </div>
 
     </div>
   </div>
-</section>
+</div>
 
 <style>
   .dl-option[data-filtered] { display: none; }
+
+  .dl-tab {
+    color: var(--color-text-secondary);
+    position: relative;
+  }
+  .dl-tab:hover { color: var(--color-text-primary); }
+  .dl-tab.is-active { color: var(--color-text-primary); }
+
+  @media (min-width: 1024px) {
+    .dl-tab.is-active::before {
+      content: '';
+      position: absolute;
+      left: -17px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 2px;
+      height: 14px;
+      background: var(--color-fg-alternative);
+    }
+  }
 </style>
 
 <script define:vars={{ dlData }} is:inline>
@@ -414,6 +438,19 @@ const dlData = JSON.stringify({ categories, series: seriesList, products, downlo
   })
 
   searchInput?.addEventListener('input', filterItems)
+
+  // ── Vertical category tabs ───────────────────────────────────
+  const dlTabs = document.getElementById('downloads-tabs')
+  if (dlTabs) {
+    const tabBtns = dlTabs.querySelectorAll('[data-tab]')
+    tabBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        tabBtns.forEach(b => b.classList.remove('is-active'))
+        btn.classList.add('is-active')
+        dlTabs.dispatchEvent(new CustomEvent('tabchange', { detail: { tab: btn.dataset.tab }, bubbles: true }))
+      })
+    })
+  }
 
   document.addEventListener('tabchange', (e) => {
     if (e.target.id !== 'downloads-tabs') return
