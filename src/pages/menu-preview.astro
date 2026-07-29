@@ -1,0 +1,419 @@
+---
+import '../styles/global.css'
+
+type MenuItem = { key: string; title: string; desc: string; img: string; href: string }
+type Mega = { id: string; label: string; items: MenuItem[] }
+
+const megaMenus: Mega[] = [
+  {
+    id: 'applications',
+    label: 'Applications',
+    items: [
+      { key: 'all',        title: 'Applications', desc: 'Explore how DH-Robotics powers automation across industries and tasks.',        img: '/images/applications-hero.webp',       href: '/applications' },
+      { key: 'industries', title: 'Industries',   desc: 'Medical, automotive, electronics, food & beverage and more.',                   img: '/images/applications-medical.webp',    href: '/applications' },
+      { key: 'tasks',      title: 'Tasks',        desc: 'Grabbing, clamping, transport, assembly and other core operations.',            img: '/images/service-technology-hero.webp', href: '/applications' },
+    ],
+  },
+  {
+    id: 'support',
+    label: 'Support',
+    items: [
+      { key: 'downloads',   title: 'Download Center', desc: 'Product datasheets, manuals, and technical documentation.', img: '/images/download hero.webp',           href: '/explore/downloads' },
+      { key: 'software',    title: 'Software',        desc: 'DH-Robotics ServoStudio and other control software.',       img: '/images/service-content-1.webp',       href: '/support/software' },
+      { key: 'support-hub', title: 'Support Hub',     desc: 'Guides, tutorials and answers from our engineering team.',  img: '/images/service-content-2.webp',       href: '#' },
+      { key: 'faq',         title: 'FAQ',             desc: 'Quick answers to common questions about our products.',     img: '/images/service-technology-book.webp', href: '/explore/faq' },
+      { key: 'technology',  title: 'Technology',      desc: 'The precision motion control tech behind our products.',    img: '/images/service-technology-core.webp', href: '/support/technology' },
+    ],
+  },
+  {
+    id: 'explore',
+    label: 'Explore',
+    items: [
+      { key: 'news',   title: 'News',   desc: 'Stay updated with the latest company announcements, product launches, and technological breakthroughs from DH-Robotics.', img: '/images/menu/news.jpg',              href: '/news' },
+      { key: 'events', title: 'Events', desc: 'Meet DH-Robotics at trade shows, conferences and industry events worldwide.',                                             img: '/images/service-software-hero.webp', href: '/events' },
+      { key: 'cases',  title: 'Cases',  desc: 'See how world leaders deploy DH-Robotics solutions on the factory floor.',                                                img: '/images/dh56-hero-bg.jpg',           href: '/cases' },
+    ],
+  },
+]
+
+const languages = [
+  { code: 'zh', label: 'Chinese',  flag: '🇨🇳' },
+  { code: 'en', label: 'English',  flag: '🇺🇸', active: true },
+  { code: 'ja', label: 'Japanese', flag: '🇯🇵' },
+]
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="https://api.fontshare.com/v2/css?f[]=switzer@400,500,600,700&display=swap" />
+    <title>Menu Preview — DH Robotics</title>
+    <meta name="robots" content="noindex, nofollow" />
+  </head>
+  <body>
+
+  <!-- Scrim overlay (behind dropdowns, over page) -->
+  <div id="mp-scrim" class="mp-scrim fixed inset-0 z-30 hidden"></div>
+
+  <div class="relative z-40">
+    <!-- Promo bar -->
+    <div id="promo-bar" class="bg-bg-secondary border-b border-border-other-2">
+      <div class="global-padding">
+        <div class="mx-auto max-w-[1200px] flex items-center justify-center gap-4 py-2 relative">
+          <p class="text-small text-text-secondary text-center">
+            From automotive lines to electronics assembly — see how world leaders deploy our solutions.
+            <a href="/cases" class="text-text-primary underline hover:no-underline ml-1">Explore Case Studies →</a>
+          </p>
+          <button id="promo-close" class="absolute right-0 text-text-secondary hover:text-text-primary transition-colors" aria-label="Dismiss">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M3 3l8 8M11 3l-8 8" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Nav -->
+    <header id="mp-header" class="relative bg-bg-primary border-b border-border-other-2">
+      <div class="global-padding">
+        <div class="mx-auto max-w-[1200px] flex items-center justify-between gap-6 py-3">
+
+          <div class="flex items-center gap-6">
+            <a href="/" class="shrink-0" aria-label="DH-Robotics">
+              <img src="/logotype-dh-robotics.svg" alt="DH-Robotics" class="h-12 w-auto max-lg:h-10" />
+            </a>
+
+            <!-- Language (desktop) -->
+            <div class="relative max-lg:hidden" data-lang-wrap>
+              <button id="lang-btn" class="flex items-center gap-1 px-2 py-1 rounded-[4px] text-small-medium text-text-primary hover:bg-bg-secondary transition-colors uppercase" aria-expanded="false">
+                EN
+                <svg class="lang-chevron size-4 transition-transform duration-200" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </button>
+              <div id="lang-panel" class="absolute top-full left-0 mt-2 w-[200px] bg-bg-primary border border-border-other-2 rounded-[4px] shadow-[0_12px_40px_rgba(10,15,21,0.12)] p-2 hidden z-50">
+                {languages.map(l => (
+                  <button class="w-full flex items-center gap-3 px-2 py-2 rounded-[4px] hover:bg-bg-secondary transition-colors text-left">
+                    <span class="text-large leading-none">{l.flag}</span>
+                    <span class="flex-1 text-regular text-text-primary">{l.label}</span>
+                    {l.active && (
+                      <svg class="size-4 text-text-primary" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8l3.5 3.5L13 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    )}
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          <!-- Center nav (desktop) -->
+          <nav class="flex items-center gap-1 max-lg:hidden">
+            <span class="flex items-center gap-1 px-2 py-1 rounded-[4px] text-small-medium text-text-tertiary whitespace-nowrap" title="Products menu — not finalized">
+              Products
+              <svg class="size-4" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </span>
+
+            {megaMenus.map(menu => (
+              <div class="mp-nav-wrap" data-menu={menu.id}>
+                <button class="mp-nav-btn flex items-center gap-1 px-2 py-1 rounded-[4px] text-small-medium text-text-primary hover:bg-bg-secondary transition-colors whitespace-nowrap" aria-expanded="false">
+                  {menu.label}
+                  <svg class="mp-chevron size-4 transition-transform duration-200" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </button>
+              </div>
+            ))}
+
+            <a href="/about" class="flex items-center px-2 py-1 rounded-[4px] text-small-medium text-text-primary hover:bg-bg-secondary transition-colors whitespace-nowrap">About</a>
+          </nav>
+
+          <div class="flex items-center gap-4 max-lg:gap-3">
+            <a href="/search" class="size-8 flex items-center justify-center text-text-primary hover:text-text-secondary transition-colors" aria-label="Search">
+              <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true"><circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="1.5"/><path d="M13 13l4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+            </a>
+            <a href="/contact" class="inline-flex items-center gap-6 pl-4 pr-2 py-2 rounded-full bg-btn-black-default hover:bg-btn-black-hover text-text-alternate text-small-caps text-trim-off transition-colors whitespace-nowrap max-lg:gap-2 max-lg:pl-3 max-lg:pr-1">
+              <span>Contact us</span>
+              <svg class="size-6" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M9 18l6-6-6-6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </a>
+            <!-- Burger (mobile) -->
+            <button id="mp-burger" class="lg:hidden border border-border-other-2 rounded-[4px] p-3 flex items-center justify-center text-text-primary" aria-label="Menu" aria-expanded="false">
+              <svg id="mp-burger-icon" class="size-4" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M2 4h12M2 8h12M2 12h12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+              <svg id="mp-close-icon" class="size-4 hidden" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 3l10 10M13 3L3 13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+            </button>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Mega dropdown panels — floating cards -->
+      {megaMenus.map(menu => (
+        <div class="mp-panel absolute left-0 right-0 top-full hidden" data-panel={menu.id}>
+          <div class="global-padding">
+            <div class="mx-auto max-w-[1200px]">
+              <div class="mp-card w-[800px] max-w-full bg-bg-primary rounded-[6px] shadow-[0_20px_50px_rgba(10,15,21,0.14)] border border-border-other-2 flex gap-4 p-4">
+
+                <!-- Left list -->
+                <div class="flex-1 min-w-0 flex flex-col gap-5 pl-4 border-l border-border-secondary">
+                  {menu.items.map((item, i) => (
+                    <button
+                      class:list={['mp-item text-tiny-medium text-trim-off text-left whitespace-nowrap transition-colors duration-150 relative', i === 0 ? 'is-active' : '']}
+                      data-item={item.key}
+                    >{item.title}</button>
+                  ))}
+                </div>
+
+                <!-- Right content -->
+                <div class="shrink-0 w-[600px] max-w-full h-[365px] relative overflow-hidden rounded-[4px] bg-bg-secondary">
+                  {menu.items.map((item, i) => (
+                    <a
+                      href={item.href}
+                      class:list={['mp-preview group absolute inset-0 block transition-opacity duration-200', i === 0 ? 'opacity-100' : 'opacity-0 pointer-events-none']}
+                      data-preview={item.key}
+                    >
+                      <img src={item.img} alt={item.title} class="absolute inset-0 w-full h-full object-cover" />
+                      <div class="mp-glow absolute inset-0"></div>
+                      <div class="absolute bottom-4 left-4 w-[240px] flex flex-col gap-4">
+                        <div class="flex flex-col gap-4">
+                          <h3 class="text-h5 text-text-primary">{item.title}</h3>
+                          <p class="text-tiny-medium text-text-primary">{item.desc}</p>
+                        </div>
+                        <span class="self-start inline-flex items-center gap-2 pl-4 pr-2 py-1 rounded-full bg-btn-black-default group-hover:bg-btn-black-hover text-text-alternate text-small-caps text-trim-off transition-colors">
+                          <span>Explore</span><svg class="size-6" viewBox="0 0 24 24" fill="none"><path d="M9 18l6-6-6-6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                        </span>
+                      </div>
+                    </a>
+                  ))}
+                </div>
+
+              </div>
+            </div>
+          </div>
+        </div>
+      ))}
+    </header>
+
+    <!-- Mobile menu -->
+    <div id="mp-mobile" class="lg:hidden fixed inset-x-0 bottom-0 top-0 bg-bg-primary overflow-y-auto hidden">
+      <div class="global-padding pb-16">
+        <div class="flex flex-col">
+
+          <div class="mp-macc border-b border-border-other-2">
+            <button class="mp-macc-head w-full flex items-center justify-between py-6" disabled>
+              <span class="text-h5 text-text-tertiary">Products</span>
+              <svg class="size-6 text-text-tertiary" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
+          </div>
+
+          {megaMenus.map(menu => (
+            <div class="mp-macc border-b border-border-other-2" data-macc>
+              <button class="mp-macc-head w-full flex items-center justify-between py-6">
+                <span class="text-h5 text-text-primary">{menu.label}</span>
+                <svg class="mp-macc-chevron size-6 text-text-primary transition-transform duration-300" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </button>
+              <div class="mp-macc-body grid transition-[grid-template-rows] duration-300 ease-in-out" style="grid-template-rows:0fr">
+                <div class="overflow-hidden">
+                  <div class="pb-6 flex flex-col gap-4">
+                    {menu.items.map(item => (
+                      <a href={item.href} class="flex items-center gap-4 group">
+                        <div class="size-12 shrink-0 rounded-[4px] overflow-hidden bg-bg-secondary">
+                          <img src={item.img} alt="" class="w-full h-full object-cover" loading="lazy" />
+                        </div>
+                        <span class="text-medium text-text-primary group-active:text-text-tertiary">{item.title}</span>
+                      </a>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+          ))}
+
+          <a href="/about" class="py-6 border-b border-border-other-2 text-h5 text-text-primary">About</a>
+
+          <div class="mp-macc border-b border-border-other-2" data-macc>
+            <button class="mp-macc-head w-full flex items-center justify-between py-6">
+              <span class="text-h5 text-text-primary uppercase">EN</span>
+              <svg class="mp-macc-chevron size-6 text-text-primary transition-transform duration-300" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
+            <div class="mp-macc-body grid transition-[grid-template-rows] duration-300 ease-in-out" style="grid-template-rows:0fr">
+              <div class="overflow-hidden">
+                <div class="pb-6 flex flex-col gap-1">
+                  {languages.map(l => (
+                    <button class="flex items-center gap-3 py-2 text-left">
+                      <span class="text-large leading-none">{l.flag}</span>
+                      <span class="flex-1 text-medium text-text-primary">{l.label}</span>
+                      {l.active && <svg class="size-4 text-text-primary" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8l3.5 3.5L13 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Contacts -->
+          <div class="pt-10 flex flex-col gap-8">
+            <div class="flex flex-col gap-1">
+              <span class="text-tiny text-text-secondary">Phone</span>
+              <span class="text-h4 text-text-primary">+86 18814357627</span>
+            </div>
+            <div class="flex flex-col gap-1">
+              <span class="text-tiny text-text-secondary">E-mail</span>
+              <span class="text-h4 text-text-primary">info@dh-robotics.com</span>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Filler -->
+  <section class="bg-bg-primary pt-page pb-lg relative z-10">
+    <div class="global-padding">
+      <div class="mx-auto max-w-[1200px]">
+        <h1 class="text-h1 mob-h2 text-text-primary">Menu preview</h1>
+        <p class="text-regular text-text-secondary mt-6 max-w-[600px]">Dev page for building the header menus (Applications / Support / Explore / Language). Hover the nav items above. Products menu is intentionally left as a placeholder until finalized.</p>
+      </div>
+    </div>
+  </section>
+
+  </body>
+</html>
+
+<style>
+  .mp-scrim { background: rgba(10, 15, 21, 0.28); }
+
+  .mp-item { color: var(--color-text-secondary); }
+  .mp-item:hover, .mp-item.is-active { color: var(--color-text-primary); }
+  .mp-item.is-active::before {
+    content: '';
+    position: absolute;
+    left: -17px; top: 50%; transform: translateY(-50%);
+    width: 2px; height: 9px; background: var(--color-fg-alternative);
+  }
+  /* White glow bottom-left so the dark title/description stay readable over any image */
+  .mp-glow {
+    background: radial-gradient(120% 90% at 8% 92%, rgba(255,255,255,0.96) 0%, rgba(255,255,255,0.82) 22%, rgba(255,255,255,0.35) 45%, rgba(255,255,255,0) 62%);
+  }
+</style>
+
+<script>
+  document.getElementById('promo-close')?.addEventListener('click', () => {
+    document.getElementById('promo-bar')?.remove()
+  })
+
+  const scrim = document.getElementById('mp-scrim')
+
+  // Language dropdown
+  const langBtn = document.getElementById('lang-btn')
+  const langPanel = document.getElementById('lang-panel')
+  const langChevron = langBtn?.querySelector('.lang-chevron')
+  langBtn?.addEventListener('click', (e) => {
+    e.stopPropagation()
+    const open = !langPanel?.classList.contains('hidden')
+    langPanel?.classList.toggle('hidden', open)
+    langChevron?.classList.toggle('rotate-180', !open)
+  })
+
+  // Mega menus
+  const wraps = Array.from(document.querySelectorAll<HTMLElement>('.mp-nav-wrap'))
+  const panels = new Map<string, HTMLElement>()
+  document.querySelectorAll<HTMLElement>('.mp-panel').forEach(p => panels.set(p.dataset.panel!, p))
+  let openId: string | null = null
+  let closeTimer: ReturnType<typeof setTimeout> | null = null
+
+  function showScrim(on: boolean) {
+    scrim?.classList.toggle('hidden', !on)
+  }
+
+  function openMenu(id: string) {
+    if (closeTimer) { clearTimeout(closeTimer); closeTimer = null }
+    if (openId === id) return
+    closeAll(false)
+    openId = id
+    panels.get(id)?.classList.remove('hidden')
+    const wrap = wraps.find(w => w.dataset.menu === id)
+    wrap?.querySelector('.mp-nav-btn')?.setAttribute('aria-expanded', 'true')
+    wrap?.querySelector('.mp-chevron')?.classList.add('rotate-180')
+    showScrim(true)
+  }
+  function closeAll(clear = true) {
+    panels.forEach(p => p.classList.add('hidden'))
+    wraps.forEach(w => {
+      w.querySelector('.mp-nav-btn')?.setAttribute('aria-expanded', 'false')
+      w.querySelector('.mp-chevron')?.classList.remove('rotate-180')
+    })
+    if (clear) { openId = null; showScrim(false) }
+  }
+  function scheduleClose() {
+    if (closeTimer) clearTimeout(closeTimer)
+    closeTimer = setTimeout(() => closeAll(), 150)
+  }
+
+  wraps.forEach(wrap => {
+    const id = wrap.dataset.menu!
+    wrap.addEventListener('mouseenter', () => openMenu(id))
+    wrap.addEventListener('mouseleave', scheduleClose)
+    wrap.querySelector('.mp-nav-btn')?.addEventListener('click', () => openId === id ? closeAll() : openMenu(id))
+  })
+
+  panels.forEach((panel, id) => {
+    panel.addEventListener('mouseenter', () => { if (closeTimer) { clearTimeout(closeTimer); closeTimer = null } openId = id })
+    panel.addEventListener('mouseleave', scheduleClose)
+
+    const items = Array.from(panel.querySelectorAll<HTMLElement>('.mp-item'))
+    const previews = Array.from(panel.querySelectorAll<HTMLElement>('.mp-preview'))
+    items.forEach(item => {
+      const activate = () => {
+        items.forEach(i => i.classList.toggle('is-active', i === item))
+        previews.forEach(p => {
+          const on = p.dataset.preview === item.dataset.item
+          p.classList.toggle('opacity-100', on)
+          p.classList.toggle('opacity-0', !on)
+          p.classList.toggle('pointer-events-none', !on)
+        })
+      }
+      item.addEventListener('mouseenter', activate)
+      item.addEventListener('focus', activate)
+    })
+  })
+
+  scrim?.addEventListener('click', () => closeAll())
+
+  // Mobile menu
+  const burger = document.getElementById('mp-burger')
+  const mpMobile = document.getElementById('mp-mobile')
+  const burgerIcon = document.getElementById('mp-burger-icon')
+  const closeIcon = document.getElementById('mp-close-icon')
+  const mpHeader = document.getElementById('mp-header')
+
+  burger?.addEventListener('click', () => {
+    const isOpen = !mpMobile?.classList.contains('hidden')
+    if (isOpen) {
+      mpMobile?.classList.add('hidden')
+      document.body.style.overflow = ''
+    } else {
+      if (mpMobile && mpHeader) mpMobile.style.top = `${mpHeader.getBoundingClientRect().bottom}px`
+      mpMobile?.classList.remove('hidden')
+      document.body.style.overflow = 'hidden'
+    }
+    burgerIcon?.classList.toggle('hidden', !isOpen)
+    closeIcon?.classList.toggle('hidden', isOpen)
+    burger?.setAttribute('aria-expanded', String(!isOpen))
+  })
+
+  // Mobile accordions
+  document.querySelectorAll<HTMLElement>('#mp-mobile [data-macc]').forEach(acc => {
+    const head = acc.querySelector('.mp-macc-head')
+    const body = acc.querySelector<HTMLElement>('.mp-macc-body')
+    const chevron = acc.querySelector<HTMLElement>('.mp-macc-chevron')
+    head?.addEventListener('click', () => {
+      const open = acc.getAttribute('data-open') === 'true'
+      acc.setAttribute('data-open', String(!open))
+      if (body) body.style.gridTemplateRows = open ? '0fr' : '1fr'
+      if (chevron) chevron.style.transform = open ? '' : 'rotate(180deg)'
+    })
+  })
+
+  document.addEventListener('click', (e) => {
+    if (!(e.target as HTMLElement).closest('[data-lang-wrap]')) {
+      langPanel?.classList.add('hidden')
+      langChevron?.classList.remove('rotate-180')
+    }
+  })
+</script>
