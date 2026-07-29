@@ -6,12 +6,13 @@ interface Crumb {
 
 interface Props {
   crumbs: Crumb[]
+  overlay?: boolean
 }
 
-const { crumbs } = Astro.props
+const { crumbs, overlay = false } = Astro.props
 ---
 
-<nav aria-label="Breadcrumb" class="border-b border-border-other-2">
+<nav aria-label="Breadcrumb" class:list={[!overlay && 'border-b border-border-other-2']}>
   <div class="global-padding py-5">
     <div class="mx-auto max-w-[1200px] flex items-center gap-4">
 

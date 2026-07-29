@@ -1,14 +1,103 @@
 ---
 import Layout from '../../layouts/Layout.astro'
-import Section from '../../components/ui/Section.astro'
+import Breadcrumbs from '../../components/ui/Breadcrumbs.astro'
+import ScrollIndicator from '../../components/ui/ScrollIndicator.astro'
+import SeriesCard from '../../components/ui/SeriesCard.astro'
+import Accordion from '../../components/ui/Accordion.astro'
+import Button from '../../components/ui/Button.astro'
+import { client } from '../../lib/sanity'
+
+const CATEGORY_SLUG = 'electric-grippers'
+
+function assetUrl(ref: string | undefined, w = 800) {
+  if (!ref) return ''
+  return `https://cdn.sanity.io/images/0ufm7kaw/production/${ref.replace('image-', '').replace(/-([a-z]+)$/, '.$1')}?w=${w}&auto=format`
+}
+
+const category = await client.fetch(
+  `*[_type == "productCategory" && slug.current == $slug][0]{ title, "heroImage": heroImage.asset._ref }`,
+  { slug: CATEGORY_SLUG },
+)
+
+const series = await client.fetch(
+  `*[_type == "productSeries" && category->slug.current == $slug] | order(order asc){
+    title, subtitle, "slug": slug.current, features[]{ title }, "img": heroImage.asset._ref
+  }`,
+  { slug: CATEGORY_SLUG },
+)
+
+const faqGroup = await client.fetch(`*[_type == "faqGroup"] | order(order asc)[0]{ items }`)
+
+const catTitle = category?.title ?? 'Products'
+const heroImg = category?.heroImage ? assetUrl(category.heroImage, 1600) : '/images/download hero.webp'
+
+const cards = series.map((s: any) => ({
+  name: s.title,
+  subtitle: s.subtitle ?? '',
+  features: (s.features ?? []).map((f: any) => f.title).filter(Boolean),
+  image: s.img ? assetUrl(s.img, 800) : '',
+  href: '/products/series',
+}))
+
+const faqItems = (faqGroup?.items ?? []).map((i: any) => ({ question: i.question, answer: i.answer }))
 ---
-<Layout title="Products — Category">
-  <Section pt="page" pb="lg">
-    <h1>Products — Category</h1>
-    <ul>
-      <li>1. Hero — title, текст, картинка, кнопка</li>
-      <li>2. Список продуктов серии — картинка, title, текст, характеристики</li>
-      <li>3. FAQ — вопросы по продуктам категории</li>
-    </ul>
-  </Section>
+
+<Layout title={catTitle}>
+
+  <!-- Hero — full-bleed image with overlaid breadcrumbs / title / scroll -->
+  <section class="relative bg-bg-secondary overflow-hidden h-[720px] max-lg:h-[460px]">
+    <img src={heroImg} alt={catTitle} class="absolute inset-0 w-full h-full object-cover" />
+
+    <!-- Bottom fade so title stays readable -->
+    <div class="absolute inset-x-0 bottom-0 h-[180px] bg-gradient-to-t from-bg-primary to-transparent pointer-events-none"></div>
+
+    <!-- Breadcrumbs (top) -->
+    <div class="absolute inset-x-0 top-0 z-[1]">
+      <Breadcrumbs crumbs={[{ label: 'Products', href: '/products' }, { label: catTitle }]} overlay />
+    </div>
+
+    <!-- Title + scroll (bottom) -->
+    <div class="absolute inset-x-0 bottom-0 z-[2] pb-14 max-lg:pb-10">
+      <div class="global-padding">
+        <div class="mx-auto max-w-[1200px] flex items-end justify-between gap-10">
+          <h1 class="text-h1 mob-h2 text-text-primary">{catTitle}</h1>
+          <ScrollIndicator variant="horizontal" href="#category-series" label="Scroll down" showOnMobile={false} class="shrink-0 mb-2" />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Series grid -->
+  <section id="category-series" class="bg-bg-secondary">
+    <div class="global-padding py-10 max-lg:py-8">
+      <div class="mx-auto max-w-[1200px] grid grid-cols-3 gap-4 max-lg:grid-cols-2 max-md:grid-cols-1">
+        {cards.map((c: any) => <SeriesCard name={c.name} subtitle={c.subtitle} features={c.features} image={c.image} href={c.href} />)}
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  {faqItems.length > 0 && (
+    <section class="bg-bg-primary pt-page pb-lg">
+      <div class="global-padding">
+        <div class="mx-auto max-w-[1200px] flex gap-14 max-lg:flex-col max-lg:gap-10">
+
+          <div class="shrink-0 lg:w-[360px] flex flex-col gap-6">
+            <h2 class="text-h2 mob-h3 text-text-primary">FAQs</h2>
+            <p class="text-regular text-text-secondary max-w-[320px]">Find quick answers to common questions about DH-Robotics products, integration, and technical support.</p>
+            <div class="flex flex-col gap-4 mt-2">
+              <span class="text-regular text-text-primary">Still Have Questions?</span>
+              <Button label="Contact support" href="/contact" variant="black" />
+            </div>
+          </div>
+
+          <div class="flex-1 min-w-0">
+            <Accordion items={faqItems} variant="boxed" />
+          </div>
+
+        </div>
+      </div>
+    </section>
+  )}
+
 </Layout>

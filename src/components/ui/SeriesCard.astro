@@ -1,0 +1,49 @@
+---
+interface Props {
+  name: string
+  subtitle?: string
+  features?: string[]
+  image?: string
+  imageAlt?: string
+  href?: string
+}
+
+const { name, subtitle, features = [], image, imageAlt = '', href = '#' } = Astro.props
+---
+
+<a href={href} class="group flex flex-col bg-bg-primary border border-border-other-2 hover:border-border-alternative transition-colors duration-200 overflow-hidden h-full">
+
+  <!-- Product image -->
+  <div class="bg-bg-primary h-[350px] max-lg:h-[260px] shrink-0 overflow-hidden">
+    {image && (
+      <img src={image} alt={imageAlt || name} class="w-full h-full object-cover transition-transform duration-500 lg:group-hover:scale-105" loading="lazy" />
+    )}
+  </div>
+
+  <!-- Content -->
+  <div class="flex flex-col flex-1 gap-6 p-6 max-lg:p-5">
+    <div class="flex flex-col gap-3">
+      <h3 class="text-h6 text-text-primary">{name}</h3>
+      {subtitle && <p class="text-large text-text-secondary">{subtitle}</p>}
+    </div>
+
+    <div class="flex items-end justify-between gap-4 mt-auto">
+      {features.length > 0 && (
+        <ul class="flex flex-col gap-2">
+          {features.map((f) => (
+            <li class="flex items-center gap-2">
+              <span class="size-[6px] rounded-[2px] bg-fg-tertiary shrink-0" aria-hidden="true"></span>
+              <span class="text-regular text-text-primary">{f}</span>
+            </li>
+          ))}
+        </ul>
+      )}
+      <span class="shrink-0 size-10 bg-btn-black-default group-hover:bg-btn-black-hover flex items-center justify-center rounded-[2px] transition-colors duration-200 ml-auto" aria-hidden="true">
+        <svg class="size-6 text-text-alternate" viewBox="0 0 24 24" fill="none">
+          <path d="M9 18l6-6-6-6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </span>
+    </div>
+  </div>
+
+</a>

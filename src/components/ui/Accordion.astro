@@ -1,0 +1,71 @@
+---
+interface Item {
+  question: string
+  answer: string
+}
+
+interface Props {
+  items: Item[]
+  variant?: 'list' | 'boxed'
+  questionClass?: string
+  class?: string
+}
+
+const { items, variant = 'list', questionClass, class: className } = Astro.props
+const isBoxed = variant === 'boxed'
+---
+
+<div class:list={['faq-accordion', isBoxed ? 'flex flex-col gap-4' : '', className]}>
+  {items.map((item) => (
+    <div
+      class:list={[
+        'faq-item relative cursor-pointer overflow-hidden transition-colors duration-200',
+        isBoxed ? 'border border-border-other-2 rounded-[4px]' : 'border-b border-border-other-2',
+      ]}
+      data-open="false"
+    >
+      <div class:list={['faq-header flex items-center justify-between gap-4', isBoxed ? 'p-8 max-lg:p-6' : 'px-4 py-6']}>
+        <p class:list={['faq-question text-text-primary text-trim-off flex-1 min-w-0', questionClass ?? (isBoxed ? 'text-h5 mob-h6' : 'text-h6')]}>{item.question}</p>
+        <span class="faq-icon relative shrink-0 size-6 text-text-primary">
+          <span class="absolute left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2 w-4 h-px bg-current rounded-full"></span>
+          <span class="faq-vline absolute left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2 w-4 h-px bg-current rounded-full rotate-90 transition-[rotate] duration-300 ease-in-out"></span>
+        </span>
+      </div>
+      <div class="faq-body grid transition-[grid-template-rows] duration-300 ease-in-out" style="grid-template-rows: 0fr">
+        <div class="overflow-hidden">
+          <p class:list={['text-regular text-text-primary', isBoxed ? 'px-8 pb-8 max-lg:px-6 max-lg:pb-6' : 'px-4 pb-6']}>{item.answer}</p>
+        </div>
+      </div>
+    </div>
+  ))}
+</div>
+
+<script>
+  function initAccordion() {
+    document.querySelectorAll<HTMLElement>('.faq-item:not([data-faq-init])').forEach(item => {
+      item.dataset.faqInit = '1'
+      const header = item.querySelector('.faq-header')
+      const body = item.querySelector<HTMLElement>('.faq-body')
+      const vline = item.querySelector<HTMLElement>('.faq-vline')
+      if (!header) return
+
+      header.addEventListener('click', () => {
+        const isOpen = item.getAttribute('data-open') === 'true'
+        if (isOpen) {
+          item.setAttribute('data-open', 'false')
+          item.classList.remove('bg-fg-other-4')
+          if (body) body.style.gridTemplateRows = '0fr'
+          if (vline) vline.style.rotate = '90deg'
+        } else {
+          item.setAttribute('data-open', 'true')
+          item.classList.add('bg-fg-other-4')
+          if (body) body.style.gridTemplateRows = '1fr'
+          if (vline) vline.style.rotate = '0deg'
+        }
+      })
+    })
+  }
+
+  initAccordion()
+  document.addEventListener('astro:page-load', initAccordion)
+</script>
