@@ -1,6 +1,17 @@
 ---
 import Layout from '../layouts/Layout.astro'
 import Breadcrumbs from '../components/ui/Breadcrumbs.astro'
+
+const tabs = [
+  { id: 'all',           label: 'All' },
+  { id: 'product',       label: 'Products' },
+  { id: 'industry',      label: 'Industries' },
+  { id: 'action',        label: 'Tasks' },
+  { id: 'event',         label: 'Events' },
+  { id: 'news',          label: 'News' },
+  { id: 'download',      label: 'Download center' },
+  { id: 'caseStudy',     label: 'Cases' },
+]
 ---
 
 <Layout title="Search — DH Robotics">
@@ -11,41 +22,62 @@ import Breadcrumbs from '../components/ui/Breadcrumbs.astro'
     <div class="global-padding">
       <div class="mx-auto max-w-[1200px]">
 
-        <div class="pt-[80px] pb-8 max-lg:pt-14 max-lg:pb-6 border-b border-border-other-2 mb-10 max-lg:mb-8 flex items-center gap-4">
-          <svg width="20" height="20" viewBox="0 0 20 20" fill="none" class="shrink-0 text-text-tertiary" aria-hidden="true">
-            <circle cx="9" cy="9" r="6.5" stroke="currentColor" stroke-width="1.5"/>
-            <path d="M14 14l4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+        <!-- Search bar -->
+        <div class="pt-[72px] pb-6 max-lg:pt-12 border-b border-border-other-2 flex items-center gap-4">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" class="shrink-0 text-text-primary" aria-hidden="true">
+            <circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="1.5"/>
+            <path d="M16 16l5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
           </svg>
           <input
             id="sq-input"
             type="text"
             placeholder="Search…"
             autocomplete="off"
-            class="flex-1 text-h5 mob-h6 py-1 bg-transparent text-text-primary outline-none placeholder:text-text-tertiary"
+            class="flex-1 text-large mob-h6 bg-transparent text-text-primary outline-none placeholder:text-text-tertiary min-w-0"
           />
+          <button id="sq-clear" class="shrink-0 text-text-secondary hover:text-text-primary transition-colors hidden" aria-label="Clear search">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <path d="M3 3l10 10M13 3L3 13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+            </svg>
+          </button>
         </div>
 
-        <div class="flex gap-2 flex-wrap mb-10 max-lg:mb-8">
-          <button class="sq-tab" data-tab="all">All</button>
-          <button class="sq-tab" data-tab="product">Products</button>
-          <button class="sq-tab" data-tab="productSeries">Series</button>
-          <button class="sq-tab" data-tab="industry">Industries</button>
-          <button class="sq-tab" data-tab="action">Applications</button>
-          <button class="sq-tab" data-tab="news">News</button>
+        <!-- Tabs -->
+        <div id="sq-tabs" class="flex gap-8 max-lg:gap-6 overflow-x-auto mt-6 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+          {tabs.map((tab, i) => (
+            <button
+              class:list={['sq-tab shrink-0 flex items-start gap-1 pb-4 text-small-medium text-trim-off whitespace-nowrap transition-colors duration-200 cursor-pointer relative', i === 0 ? 'is-active' : '']}
+              data-tab={tab.id}
+            >
+              <span>{tab.label}</span>
+              <span class="sq-count text-tiny text-text-tertiary"></span>
+            </button>
+          ))}
         </div>
+        <div class="border-b border-border-other-2 -mt-px"></div>
 
-        <div id="sq-loading" class="hidden">
-          <p class="text-regular text-text-secondary">Searching…</p>
-        </div>
+        <p id="sq-total" class="text-small text-text-secondary mt-6 hidden"></p>
 
-        <div id="sq-results"></div>
+        <!-- Results + inquiry -->
+        <div class="flex gap-8 mt-8 max-lg:flex-col items-start">
 
-        <div id="sq-empty" class="hidden py-6">
-          <p class="text-large text-text-secondary">No results for "<span id="sq-query-label"></span>"</p>
-        </div>
+          <div class="flex-1 min-w-0 w-full">
+            <div id="sq-loading" class="hidden py-6"><p class="text-regular text-text-secondary">Searching…</p></div>
+            <div id="sq-results"></div>
+            <div id="sq-empty" class="hidden py-6"><p class="text-large text-text-secondary">Sorry, no matches were found. Try a new search.</p></div>
+            <div id="sq-idle" class="py-6"><p class="text-regular text-text-secondary">Enter a search query above.</p></div>
+          </div>
 
-        <div id="sq-idle">
-          <p class="text-regular text-text-secondary">Enter a search query above</p>
+          <!-- Send an Inquiry -->
+          <aside class="shrink-0 w-[288px] max-lg:w-full bg-bg-secondary p-8 max-lg:p-6 flex flex-col gap-4">
+            <h3 class="text-h5 mob-h6 text-text-primary">Didn't find what you were looking for?</h3>
+            <p class="text-small text-text-secondary">Our engineering and support teams are always ready to help. Contact us directly to get the right datasheets, software plugins, or custom automation advice.</p>
+            <a href="/contact" class="mt-2 self-start inline-flex items-center gap-6 pl-4 pr-2 py-2 rounded-full bg-btn-black-default hover:bg-btn-black-hover text-text-alternate text-small-caps text-trim-off transition-colors duration-200">
+              <span>Send an inquiry</span>
+              <svg class="size-6" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M9 18l6-6-6-6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </a>
+          </aside>
+
         </div>
 
       </div>
@@ -55,58 +87,51 @@ import Breadcrumbs from '../components/ui/Breadcrumbs.astro'
 </Layout>
 
 <style>
-  .sq-tab {
-    padding: 0.375rem 0.875rem;
-    border-radius: 4px;
-    font-size: var(--text-small-medium-size, 0.8125rem);
-    font-weight: 500;
-    color: var(--color-text-secondary);
-    border: 1px solid var(--color-border-other-2);
-    transition: border-color 0.15s, color 0.15s, background-color 0.15s;
-    cursor: pointer;
-    background: transparent;
+  .sq-tab { color: var(--color-text-secondary); }
+  .sq-tab:hover { color: var(--color-text-primary); }
+  .sq-tab.is-active { color: var(--color-text-primary); }
+  .sq-tab.is-active::after {
+    content: '';
+    position: absolute;
+    left: 0; bottom: -1px;
+    width: 100%; height: 2px;
+    background: var(--color-text-primary);
   }
-  .sq-tab:hover {
-    border-color: var(--color-text-primary);
-    color: var(--color-text-primary);
-  }
-  .sq-tab.active {
-    border-color: var(--color-text-primary);
-    color: var(--color-text-primary);
-    background-color: var(--color-bg-secondary);
-  }
+  .sq-hl { color: var(--color-text-quaternary); }
 </style>
 
 <script>
   const PROJECT_ID = import.meta.env.PUBLIC_SANITY_PROJECT_ID ?? '0ufm7kaw'
   const DATASET     = import.meta.env.PUBLIC_SANITY_DATASET ?? 'production'
 
-  const sqInput      = document.getElementById('sq-input') as HTMLInputElement | null
-  const sqResults    = document.getElementById('sq-results')!
-  const sqEmpty      = document.getElementById('sq-empty')!
-  const sqIdle       = document.getElementById('sq-idle')!
-  const sqLoading    = document.getElementById('sq-loading')!
-  const sqQueryLabel = document.getElementById('sq-query-label')!
-  const tabBtns      = Array.from(document.querySelectorAll<HTMLButtonElement>('.sq-tab'))
+  const sqInput   = document.getElementById('sq-input') as HTMLInputElement | null
+  const sqClear   = document.getElementById('sq-clear')!
+  const sqResults = document.getElementById('sq-results')!
+  const sqEmpty   = document.getElementById('sq-empty')!
+  const sqIdle    = document.getElementById('sq-idle')!
+  const sqLoading = document.getElementById('sq-loading')!
+  const sqTotal   = document.getElementById('sq-total')!
+  const tabBtns   = Array.from(document.querySelectorAll<HTMLButtonElement>('.sq-tab'))
+
+  const TAB_TYPES: Record<string, string[] | null> = {
+    all: null,
+    product: ['product', 'productSeries'],
+    industry: ['industry'],
+    action: ['action'],
+    event: ['event'],
+    news: ['news'],
+    download: ['download'],
+    caseStudy: ['caseStudy'],
+  }
 
   let allResults: any[] = []
   let activeTab = 'all'
+  let currentQuery = ''
   let searchDebounce: ReturnType<typeof setTimeout> | null = null
 
   const TYPE_LABELS: Record<string, string> = {
     product: 'Product', productSeries: 'Series', industry: 'Industry',
-    action: 'Application', news: 'News', caseStudy: 'Case', event: 'Event',
-  }
-
-  const ACTION_ICONS: Record<string, string> = {
-    'grabbing':            '/images/icon-task-grabbing.svg',
-    'clamping':            '/images/icon-task-clamping.svg',
-    'counterpoint':        '/images/icon-task-counterpoint.svg',
-    'transport':           '/images/icon-task-transport.svg',
-    'rotation':            '/images/icon-task-rotation.png',
-    'assembly':            '/images/icon-task-assembly.svg',
-    'loading-unloading':   '/images/icon-task-loading.svg',
-    'opening-closing-lid': '/images/icon-task-opening.svg',
+    action: 'Task', news: 'News', caseStudy: 'Case', event: 'Event', download: 'Download',
   }
 
   function getHref(type: string, slug: string) {
@@ -118,8 +143,23 @@ import Breadcrumbs from '../components/ui/Breadcrumbs.astro'
       news:          `/news/${slug}`,
       caseStudy:     `/cases/${slug}`,
       event:         `/events/${slug}`,
+      download:      '#',
     }
     return map[type] ?? '/'
+  }
+
+  function esc(s: string) {
+    return (s ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+  }
+
+  // Highlight the matched query inside a title
+  function hl(text: string) {
+    const t = esc(text)
+    const q = currentQuery.trim()
+    if (!q) return t
+    const i = t.toLowerCase().indexOf(q.toLowerCase())
+    if (i < 0) return t
+    return t.slice(0, i) + '<span class="sq-hl">' + t.slice(i, i + q.length) + '</span>' + t.slice(i + q.length)
   }
 
   function formatDate(iso: string) {
@@ -127,212 +167,235 @@ import Breadcrumbs from '../components/ui/Breadcrumbs.astro'
     return new Date(iso).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })
   }
 
+  const arrowBtn = `<span class="shrink-0 size-10 bg-btn-black-default group-hover:bg-btn-black-hover flex items-center justify-center rounded-[2px] transition-colors duration-200"><svg class="size-6 text-text-alternate" viewBox="0 0 24 24" fill="none"><path d="M9 18l6-6-6-6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>`
+
+  // Products / Series — SeriesCard style
   function cardProduct(r: any) {
     const href = getHref(r._type, r.slug?.current ?? '')
     const img = r.heroImageUrl ?? ''
+    const feats: string[] = (r.features ?? []).filter(Boolean).slice(0, 3)
     return `
-      <a href="${href}" class="group flex flex-col bg-bg-secondary hover:opacity-90 transition-opacity">
-        <div class="h-[220px] overflow-hidden relative bg-bg-secondary flex items-center justify-center p-6">
-          ${img
-            ? `<img src="${img}" alt="${r.title}" loading="lazy" class="max-w-full max-h-full object-contain"/>`
-            : `<span class="text-tiny text-text-tertiary">${r.title}</span>`
-          }
+      <a href="${href}" class="group flex flex-col bg-bg-primary border border-border-other-2 hover:border-border-alternative transition-colors duration-200 overflow-hidden">
+        <div class="bg-bg-primary h-[280px] max-lg:h-[220px] shrink-0 overflow-hidden">
+          ${img ? `<img src="${img}" alt="${esc(r.title)}" loading="lazy" class="w-full h-full object-cover transition-transform duration-500 lg:group-hover:scale-105"/>` : ''}
         </div>
-        <div class="flex flex-col gap-3 p-5 border-t border-border-other-2">
-          <div class="flex items-end justify-between gap-4">
-            <div class="flex flex-col gap-2 min-w-0">
-              <span class="text-h6 text-text-primary tracking-[-0.03125rem]">${r.title ?? ''}</span>
-              ${r.subtitle ? `<span class="text-small text-text-secondary">${r.subtitle}</span>` : ''}
-            </div>
-            <div class="size-10 bg-btn-black-default flex items-center justify-center rounded-[2px] shrink-0 self-end group-hover:opacity-80 transition-opacity">
-              <svg width="6" height="10" viewBox="0 0 6 10" fill="none" aria-hidden="true">
-                <path d="M1 1L5 5L1 9" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-              </svg>
-            </div>
+        <div class="flex flex-col flex-1 gap-5 p-6 max-lg:p-5">
+          <div class="flex flex-col gap-2">
+            <h3 class="text-h6 text-text-primary">${hl(r.title ?? '')}</h3>
+            ${r.subtitle ? `<p class="text-large text-text-secondary">${esc(r.subtitle)}</p>` : ''}
+          </div>
+          <div class="flex items-end justify-between gap-4 mt-auto">
+            ${feats.length ? `<ul class="flex flex-col gap-2">${feats.map(f => `<li class="flex items-center gap-2"><span class="size-[6px] rounded-[2px] bg-fg-tertiary shrink-0"></span><span class="text-regular text-text-primary">${esc(f)}</span></li>`).join('')}</ul>` : '<span></span>'}
+            ${arrowBtn}
           </div>
         </div>
-      </a>
-    `
+      </a>`
   }
 
+  // Industries — image + heading + description + button
   function cardIndustry(r: any) {
     const href = getHref('industry', r.slug?.current ?? '')
-    const img = r.coverImageUrl ?? '/images/applications-medical.webp'
+    const img = r.coverImageUrl ?? r.heroImageUrl ?? '/images/applications-medical.webp'
     return `
-      <a href="${href}" class="group relative aspect-[4/3] overflow-hidden bg-bg-secondary rounded-[4px]">
-        <img src="${img}" alt="${r.title}" loading="lazy" class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"/>
-        <div class="absolute inset-0 bg-gradient-to-t from-[rgba(5,11,19,0.75)] to-transparent"></div>
-        <span class="absolute bottom-5 left-5 text-medium-medium text-text-alternate">${r.title ?? ''}</span>
-      </a>
-    `
+      <a href="${href}" class="group flex flex-col gap-6">
+        <div class="aspect-[389/359] overflow-hidden rounded-[4px] bg-bg-secondary">
+          <img src="${img}" alt="${esc(r.title)}" loading="lazy" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"/>
+        </div>
+        <div class="flex flex-col gap-4">
+          <div class="flex flex-col gap-3">
+            <h3 class="text-h6 text-text-primary">${hl(r.title ?? '')}</h3>
+            ${r.description ? `<p class="text-regular text-text-secondary line-clamp-2">${esc(r.description)}</p>` : ''}
+          </div>
+          <span class="self-start inline-flex items-center gap-6 pl-4 pr-2 py-2 rounded-full bg-btn-black-default group-hover:bg-btn-black-hover text-text-alternate text-small-caps text-trim-off transition-colors duration-200">
+            <span>Learn more</span><svg class="size-6" viewBox="0 0 24 24" fill="none"><path d="M9 18l6-6-6-6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </span>
+        </div>
+      </a>`
   }
 
+  // Tasks
   function cardAction(r: any) {
     const href = getHref('action', r.slug?.current ?? '')
-    const iconUrl = r.iconUrl ?? ACTION_ICONS[r.slug?.current ?? ''] ?? ''
+    const iconUrl = r.iconUrl ?? ''
     return `
-      <a href="${href}" class="group bg-bg-primary border border-border-other-2 p-8 flex flex-col justify-between h-[220px] hover:border-text-primary transition-colors">
+      <a href="${href}" class="group bg-bg-primary border border-border-other-2 p-6 flex flex-col justify-between h-[220px] hover:border-border-alternative transition-colors">
         <div class="flex items-start justify-between gap-2">
-          <span class="text-large-medium text-text-primary uppercase leading-[1.3]">${r.title ?? ''}</span>
-          <div class="shrink-0 size-8 border border-border-other-2 rounded-[4px] flex items-center justify-center text-text-secondary group-hover:border-text-primary group-hover:text-text-primary transition-colors">
-            <svg width="8" height="12" viewBox="0 0 8 12" fill="none" aria-hidden="true">
-              <path d="M2 2L6 6L2 10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
+          <span class="text-large-medium text-text-primary uppercase leading-[1.3]">${hl(r.title ?? '')}</span>
+          <div class="shrink-0 size-8 border border-border-other-2 rounded-[4px] flex items-center justify-center text-text-secondary group-hover:border-border-alternative group-hover:text-text-primary transition-colors">
+            <svg width="8" height="12" viewBox="0 0 8 12" fill="none"><path d="M2 2L6 6L2 10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
           </div>
         </div>
-        ${iconUrl ? `<div class="size-[72px]"><img src="${iconUrl}" alt="" class="size-full object-contain" aria-hidden="true"/></div>` : ''}
-      </a>
-    `
+        ${iconUrl ? `<div class="size-[72px]"><img src="${iconUrl}" alt="" class="size-full object-contain"/></div>` : ''}
+      </a>`
   }
 
+  // News / Events — media card
   function cardNews(r: any) {
     const href = getHref(r._type, r.slug?.current ?? '')
-    const img = r.heroImageUrl ?? ''
+    const img = r.heroImageUrl ?? r.coverImageUrl ?? ''
     const date = formatDate(r.date ?? '')
+    const badge = r._type === 'event' ? 'Event' : (r.category === 'insights' ? 'Insights' : 'News')
     return `
-      <a href="${href}" class="group border border-border-other-2 flex flex-col overflow-hidden hover:opacity-90 transition-opacity">
-        ${img ? `
-          <div class="aspect-video overflow-hidden relative bg-bg-secondary">
-            <img src="${img}" alt="${r.title}" loading="lazy" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"/>
-            ${r.category ? `<span class="absolute top-4 left-4 bg-fg-alternative text-text-alternate text-small-caps px-2 py-1">${r.category === 'insights' ? 'Insights' : 'News'}</span>` : ''}
+      <a href="${href}" class="group border border-border-other-2 flex flex-col overflow-hidden hover:border-border-alternative transition-colors">
+        <div class="p-6 flex flex-col gap-6">
+          <div class="flex items-center justify-between gap-4">
+            <span class="inline-flex items-center px-2 py-2 bg-fg-alternative text-text-alternate text-small-caps leading-none">${badge}</span>
+            ${date ? `<span class="text-small text-text-secondary">${date}</span>` : ''}
           </div>
-        ` : ''}
-        <div class="p-5 flex flex-col gap-3 flex-1">
-          ${date ? `<span class="text-tiny text-text-tertiary">${date}</span>` : ''}
-          <span class="text-medium-medium text-text-primary line-clamp-2">${r.title ?? ''}</span>
+          <p class="text-h6 text-text-primary text-trim-off line-clamp-2">${hl(r.title ?? '')}</p>
         </div>
-      </a>
-    `
+        ${img ? `<div class="aspect-video overflow-hidden bg-bg-secondary"><img src="${img}" alt="${esc(r.title)}" loading="lazy" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"/></div>` : ''}
+      </a>`
+  }
+
+  // Cases — big card
+  function cardCase(r: any) {
+    const href = getHref('caseStudy', r.slug?.current ?? '')
+    const img = r.caseImageUrl ?? ''
+    return `
+      <a href="${href}" class="group relative overflow-hidden rounded-[2px] block w-full h-[448px] max-lg:h-[280px] bg-bg-secondary">
+        ${img ? `<img src="${img}" alt="${esc(r.title)}" loading="lazy" class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 lg:group-hover:scale-105"/>` : ''}
+        <div class="absolute inset-0 bg-gradient-to-r from-black/40 to-transparent"></div>
+        <p class="text-h2 mob-h4 text-text-alternate absolute top-8 left-8 max-w-[300px] max-lg:top-6 max-lg:left-6">${hl(r.title ?? '')}</p>
+        ${r.seriesTitle ? `<div class="absolute bottom-8 left-8 flex flex-col gap-3 max-lg:bottom-6 max-lg:left-6"><span class="text-tiny text-text-alternate opacity-60">Series:</span><span class="border border-white/24 rounded-[4px] px-2 py-2 text-large-medium text-text-alternate w-fit">${esc(r.seriesTitle)}</span></div>` : ''}
+        <span class="absolute bottom-8 right-8 size-10 bg-btn-black-default group-hover:bg-btn-black-hover flex items-center justify-center rounded-[2px] transition-colors duration-200 max-lg:bottom-6 max-lg:right-6"><svg class="size-6 text-text-alternate" viewBox="0 0 24 24" fill="none"><path d="M9 18l6-6-6-6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+      </a>`
+  }
+
+  // Downloads — list row
+  function cardDownload(r: any) {
+    const meta = [r.version && `Version ${r.version}`, r.fileFormat && `Format ${r.fileFormat}`, formatDate(r.date ?? '')].filter(Boolean).join(' · ')
+    return `
+      <div class="border-t border-border-other-2 flex items-center justify-between py-8 gap-4">
+        <div class="flex flex-col gap-4 min-w-0">
+          <p class="text-h6 text-text-primary">${hl(r.title ?? '')}</p>
+          ${meta ? `<p class="text-regular text-text-secondary">${meta}</p>` : ''}
+        </div>
+        <a href="${r.fileUrl ?? '#'}" class="shrink-0 self-start inline-flex items-center gap-6 pl-4 pr-2 py-2 rounded-full bg-btn-black-default hover:bg-btn-black-hover text-text-alternate text-small-caps text-trim-off transition-colors duration-200"><span>Download</span><svg class="size-6" viewBox="0 0 24 24" fill="none"><path d="M9 18l6-6-6-6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+      </div>`
   }
 
   function cardAll(r: any) {
     const href = getHref(r._type, r.slug?.current ?? '')
-    const img = r.heroImageUrl ?? r.coverImageUrl ?? ''
+    const img = r.heroImageUrl ?? r.coverImageUrl ?? r.caseImageUrl ?? ''
     return `
       <a href="${href}" class="flex items-center gap-4 py-4 border-b border-border-other-2 hover:opacity-70 transition-opacity group">
-        ${img
-          ? `<div class="size-12 shrink-0 bg-bg-secondary overflow-hidden rounded-[2px]"><img src="${img}" alt="" loading="lazy" class="w-full h-full object-cover"/></div>`
-          : `<div class="size-12 shrink-0 bg-bg-secondary rounded-[2px]"></div>`
-        }
+        ${img ? `<div class="size-12 shrink-0 bg-bg-secondary overflow-hidden rounded-[2px]"><img src="${img}" alt="" loading="lazy" class="w-full h-full object-cover"/></div>` : `<div class="size-12 shrink-0 bg-bg-secondary rounded-[2px]"></div>`}
         <div class="flex-1 min-w-0">
-          <span class="text-small-medium text-text-primary block">${r.title ?? ''}</span>
+          <span class="text-small-medium text-text-primary block">${hl(r.title ?? '')}</span>
           <span class="text-tiny text-text-tertiary uppercase mt-0.5 block">${TYPE_LABELS[r._type] ?? r._type}</span>
         </div>
-        <svg width="6" height="10" viewBox="0 0 6 10" fill="none" class="shrink-0 text-text-tertiary group-hover:text-text-primary transition-colors" aria-hidden="true">
-          <path d="M1 1l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
-      </a>
-    `
+        <svg width="6" height="10" viewBox="0 0 6 10" fill="none" class="shrink-0 text-text-tertiary group-hover:text-text-primary transition-colors"><path d="M1 1l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>`
   }
 
   const GRID_CLASS: Record<string, string> = {
-    all:           'flex flex-col',
-    product:       'grid grid-cols-4 gap-4 max-lg:grid-cols-2 max-sm:grid-cols-1',
-    productSeries: 'grid grid-cols-4 gap-4 max-lg:grid-cols-2 max-sm:grid-cols-1',
-    industry:      'grid grid-cols-3 gap-4 max-lg:grid-cols-2 max-sm:grid-cols-1',
-    action:        'grid grid-cols-4 gap-4 max-lg:grid-cols-2 max-sm:grid-cols-1',
-    news:          'grid grid-cols-3 gap-4 max-lg:grid-cols-2 max-sm:grid-cols-1',
+    all:      'flex flex-col',
+    product:  'grid grid-cols-2 gap-4 max-sm:grid-cols-1',
+    industry: 'grid grid-cols-2 gap-x-4 gap-y-10 max-sm:grid-cols-1',
+    action:   'grid grid-cols-3 gap-4 max-lg:grid-cols-2 max-sm:grid-cols-1',
+    event:    'grid grid-cols-2 gap-4 max-sm:grid-cols-1',
+    news:     'grid grid-cols-2 gap-4 max-sm:grid-cols-1',
+    download: 'flex flex-col',
+    caseStudy:'flex flex-col gap-4',
   }
 
-  function updateTabCounts() {
+  function renderCard(r: any) {
+    switch (r._type) {
+      case 'product':
+      case 'productSeries': return cardProduct(r)
+      case 'industry':      return cardIndustry(r)
+      case 'action':        return cardAction(r)
+      case 'news':          return cardNews(r)
+      case 'event':         return cardNews(r)
+      case 'caseStudy':     return cardCase(r)
+      case 'download':      return cardDownload(r)
+      default:              return cardAll(r)
+    }
+  }
+
+  function updateTabs() {
     tabBtns.forEach(btn => {
       const tab = btn.dataset.tab ?? 'all'
-      const count = tab === 'all' ? allResults.length : allResults.filter(r => r._type === tab).length
-      const existing = btn.querySelector('.sq-count')
-      if (existing) existing.remove()
-      if (count > 0) {
-        const span = document.createElement('span')
-        span.className = 'sq-count'
-        span.style.cssText = 'margin-left:4px;opacity:0.5;font-weight:400'
-        span.textContent = `${count}`
-        btn.appendChild(span)
-      }
+      const types = TAB_TYPES[tab]
+      const count = types === null ? allResults.length : allResults.filter(r => types.includes(r._type)).length
+      const c = btn.querySelector('.sq-count')
+      if (c) c.textContent = count > 0 ? String(count) : ''
     })
   }
 
   function renderResults() {
-    const query = sqInput?.value.trim() ?? ''
-    const filtered = activeTab === 'all' ? allResults : allResults.filter(r => r._type === activeTab)
+    const types = TAB_TYPES[activeTab]
+    const filtered = types === null ? allResults : allResults.filter(r => types.includes(r._type))
 
     sqEmpty.classList.add('hidden')
     sqIdle.classList.add('hidden')
 
-    if (!filtered.length) {
-      sqResults.className = ''
-      sqResults.innerHTML = ''
-      sqEmpty.classList.remove('hidden')
-      sqQueryLabel.textContent = query
-      return
-    }
+    if (!currentQuery) { sqTotal.classList.add('hidden'); sqResults.innerHTML = ''; sqResults.className = ''; sqIdle.classList.remove('hidden'); return }
+
+    sqTotal.classList.remove('hidden')
+    sqTotal.textContent = `${allResults.length} result${allResults.length === 1 ? '' : 's'} found`
+
+    if (!filtered.length) { sqResults.className = ''; sqResults.innerHTML = ''; sqEmpty.classList.remove('hidden'); return }
 
     sqResults.className = GRID_CLASS[activeTab] ?? 'flex flex-col'
-
-    sqResults.innerHTML = filtered.map(r => {
-      if (activeTab === 'all') return cardAll(r)
-      if (r._type === 'product' || r._type === 'productSeries') return cardProduct(r)
-      if (r._type === 'industry') return cardIndustry(r)
-      if (r._type === 'action') return cardAction(r)
-      if (r._type === 'news' || r._type === 'caseStudy' || r._type === 'event') return cardNews(r)
-      return cardAll(r)
-    }).join('')
+    sqResults.innerHTML = activeTab === 'all' ? filtered.map(cardAll).join('') : filtered.map(renderCard).join('')
   }
 
   async function search(query: string) {
     const safe = query.replace(/["\\]/g, '').trim()
-    if (!safe) {
-      sqResults.className = ''
-      sqResults.innerHTML = ''
-      sqEmpty.classList.add('hidden')
-      sqIdle.classList.remove('hidden')
-      allResults = []
-      updateTabCounts()
-      return
-    }
+    currentQuery = safe
+    if (!safe) { allResults = []; updateTabs(); renderResults(); return }
 
     sqLoading.classList.remove('hidden')
     sqResults.innerHTML = ''
     sqEmpty.classList.add('hidden')
     sqIdle.classList.add('hidden')
 
-    const groq = `*[_type in ["product","productSeries","industry","action","news","caseStudy","event"] && title match "${safe}*"][0...50]{
-      _type, title, slug, subtitle, description, date, category,
+    const groq = `*[_type in ["product","productSeries","industry","action","news","caseStudy","event","download"] && title match "${safe}*"][0...80]{
+      _type, title, slug, subtitle, description, date, category, version, fileFormat, fileUrl,
+      "features": features[].title,
+      "seriesTitle": applicationProduct.series->title,
       "heroImageUrl": heroImage.asset->url,
       "coverImageUrl": image.asset->url,
-      "iconUrl": icon.asset->url
+      "iconUrl": icon.asset->url,
+      "caseImageUrl": media[type == "image"][0].image.asset->url
     }`
     const url = `https://${PROJECT_ID}.api.sanity.io/v2024-01-01/data/query/${DATASET}?query=${encodeURIComponent(groq)}`
     try {
       const res = await fetch(url)
       const { result } = await res.json()
       allResults = result ?? []
-    } catch {
-      allResults = []
-    }
+    } catch { allResults = [] }
 
     sqLoading.classList.add('hidden')
-    updateTabCounts()
+    updateTabs()
     renderResults()
   }
 
   tabBtns.forEach(btn => {
     btn.addEventListener('click', () => {
       activeTab = btn.dataset.tab ?? 'all'
-      tabBtns.forEach(b => b.classList.toggle('active', b === btn))
+      tabBtns.forEach(b => b.classList.toggle('is-active', b === btn))
       renderResults()
     })
   })
 
-  sqInput?.addEventListener('input', () => {
-    const q = sqInput.value.trim()
+  function onInput() {
+    const q = sqInput?.value.trim() ?? ''
+    sqClear.classList.toggle('hidden', !q)
     history.replaceState(null, '', q ? `?q=${encodeURIComponent(q)}` : location.pathname)
     if (searchDebounce) clearTimeout(searchDebounce)
     searchDebounce = setTimeout(() => search(q), 250)
-  })
+  }
+
+  sqInput?.addEventListener('input', onInput)
+  sqClear.addEventListener('click', () => { if (sqInput) { sqInput.value = ''; sqInput.focus() } onInput() })
 
   const initQ = new URLSearchParams(location.search).get('q') ?? ''
-  tabBtns[0]?.classList.add('active')
   if (initQ && sqInput) {
     sqInput.value = initQ
+    sqClear.classList.remove('hidden')
     sqIdle.classList.add('hidden')
     search(initQ)
   }
