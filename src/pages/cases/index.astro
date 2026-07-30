@@ -66,7 +66,7 @@ const items = cases.map((c: any) => ({
 
           <!-- Sticky logo sidebar (xl+) -->
           <div class="hidden xl:block shrink-0 w-[200px] self-stretch">
-            <div class="sticky top-[35vh] flex flex-col gap-4 w-fit ml-auto mr-6">
+            <div class="sticky top-[35vh] flex flex-col gap-2 w-fit">
               {items.map((item: any, i: number) => (
                 <a
                   href={`#case-${item.slug}`}
@@ -84,7 +84,7 @@ const items = cases.map((c: any) => ({
           </div>
 
           <!-- Case cards -->
-          <div class="flex-1 flex flex-col gap-14 max-lg:gap-9 items-center">
+          <div class="flex-1 flex flex-col gap-10 max-lg:gap-9 items-center">
             {items.map((item: any, i: number) => (
               <a
                 id={`case-${item.slug}`}

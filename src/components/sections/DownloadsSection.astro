@@ -41,7 +41,7 @@ const dlData = JSON.stringify({ categories, series: seriesList, products, downlo
 <!-- div, not section — avoids global section overflow:clip which breaks sticky -->
 <div id="downloads-content" class="bg-bg-primary pb-[120px] max-lg:pb-20">
   <div class="global-padding">
-    <div class="mx-auto max-w-[1200px] flex flex-col gap-[120px] max-lg:gap-16 items-center">
+    <div class="mx-auto max-w-[1000px] flex flex-col gap-[120px] max-lg:gap-16 items-center">
 
       <!-- Filters row -->
       <div class="flex gap-4 items-end w-full max-lg:flex-col max-lg:items-stretch max-lg:gap-3">
@@ -164,7 +164,7 @@ const dlData = JSON.stringify({ categories, series: seriesList, products, downlo
       </div>
 
       <!-- Category tabs (left) + list (right) -->
-      <div class="w-full flex gap-16 max-lg:flex-col max-lg:gap-8 items-start" id="downloads-list-wrap">
+      <div class="w-full flex gap-10 max-lg:flex-col max-lg:gap-8 items-start" id="downloads-list-wrap">
 
         <!-- Vertical category tabs -->
         <div

@@ -68,7 +68,7 @@ const faqItems = (faqGroup?.items ?? []).map((i: any) => ({ question: i.question
   </section>
 
   <!-- Series grid -->
-  <section id="category-series" class="bg-bg-secondary">
+  <section id="category-series" class="bg-bg-other">
     <div class="global-padding py-10 max-lg:py-8">
       <div class="mx-auto max-w-[1200px] grid grid-cols-3 gap-4 max-lg:grid-cols-2 max-md:grid-cols-1">
         {cards.map((c: any) => <SeriesCard name={c.name} subtitle={c.subtitle} features={c.features} image={c.image} href={c.href} />)}
