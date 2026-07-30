@@ -6,39 +6,103 @@ interface Item {
 
 interface Props {
   items: Item[]
-  variant?: 'list' | 'boxed'
+  /** list = FAQ page rows · boxed = bordered cards · rows = big borderless rows (Support section) */
+  variant?: 'list' | 'boxed' | 'rows'
   questionClass?: string
+  /** override the divider colour, e.g. on tinted section backgrounds */
+  borderClass?: string
   class?: string
 }
 
-const { items, variant = 'list', questionClass, class: className } = Astro.props
+const { items, variant = 'list', questionClass, borderClass, class: className } = Astro.props
 const isBoxed = variant === 'boxed'
+const isRows = variant === 'rows'
+
+const itemBorder = isBoxed
+  ? `border ${borderClass ?? 'border-border-other-2'} rounded-[4px]`
+  : isRows
+    ? `border-t ${borderClass ?? 'border-border-other-2'} last:border-b`
+    : `border-b ${borderClass ?? 'border-border-other-2'}`
+
+const headerPad = isBoxed ? 'p-8 max-lg:p-6' : isRows ? 'py-10 max-lg:py-6' : 'px-4 py-6'
+const bodyPad = isBoxed ? 'px-8 pb-8 max-lg:px-6 max-lg:pb-6' : isRows ? 'pb-10 pr-12 max-lg:pb-6 max-lg:pr-0' : 'px-4 pb-6'
+const defaultQuestion = isBoxed ? 'text-h5 mob-h6' : isRows ? 'text-h5 mob-h6' : 'text-h6'
 ---
 
 <div class:list={['faq-accordion', isBoxed ? 'flex flex-col gap-4' : '', className]}>
   {items.map((item) => (
     <div
-      class:list={[
-        'faq-item relative cursor-pointer overflow-hidden transition-colors duration-200',
-        isBoxed ? 'border border-border-other-2 rounded-[4px]' : 'border-b border-border-other-2',
-      ]}
+      class:list={['faq-item relative cursor-pointer overflow-hidden transition-colors duration-200', itemBorder]}
       data-open="false"
     >
-      <div class:list={['faq-header flex items-center justify-between gap-4', isBoxed ? 'p-8 max-lg:p-6' : 'px-4 py-6']}>
-        <p class:list={['faq-question text-text-primary text-trim-off flex-1 min-w-0', questionClass ?? (isBoxed ? 'text-h5 mob-h6' : 'text-h6')]}>{item.question}</p>
-        <span class="faq-icon relative shrink-0 size-6 text-text-primary">
-          <span class="absolute left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2 w-4 h-px bg-current rounded-full"></span>
-          <span class="faq-vline absolute left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2 w-4 h-px bg-current rounded-full rotate-90 transition-[rotate] duration-300 ease-in-out"></span>
-        </span>
+      <div class:list={['faq-header flex items-center justify-between gap-4', headerPad]}>
+        <p class:list={['faq-question text-text-primary text-trim-off flex-1 min-w-0', questionClass ?? defaultQuestion]}>{item.question}</p>
+
+        {isRows ? (
+          <span class:list={['faq-chevron shrink-0 size-8 rounded-full border flex items-center justify-center text-text-primary transition-transform duration-300 ease-in-out', borderClass ?? 'border-border-other-2']}>
+            <svg class="size-4" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <path d="M6 4l4 4-4 4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </span>
+        ) : (
+          <span class="faq-icon relative shrink-0 size-6 text-text-primary">
+            <span class="absolute left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2 w-4 h-px bg-current rounded-full"></span>
+            <span class="faq-vline absolute left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2 w-4 h-px bg-current rounded-full rotate-90 transition-[rotate] duration-300 ease-in-out"></span>
+          </span>
+        )}
       </div>
+
       <div class="faq-body grid transition-[grid-template-rows] duration-300 ease-in-out" style="grid-template-rows: 0fr">
         <div class="overflow-hidden">
-          <p class:list={['text-regular text-text-primary', isBoxed ? 'px-8 pb-8 max-lg:px-6 max-lg:pb-6' : 'px-4 pb-6']}>{item.answer}</p>
+          <p class:list={['text-regular text-text-primary', bodyPad]}>{item.answer}</p>
         </div>
       </div>
     </div>
   ))}
 </div>
+
+<style>
+  /* Hover affordance: soft wash + a line that draws in from the left */
+  .faq-item::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--color-fg-other-4);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+    z-index: 0;
+  }
+  /* Hover only on closed items — an open item keeps its own state */
+  .faq-item:not([data-open='true']):hover::before { opacity: 0.55; }
+
+  .faq-item::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 1px;
+    background: var(--color-fg-alternative);
+    transform: scaleX(0);
+    transform-origin: left center;
+    transition: transform 0.45s cubic-bezier(0.4, 0, 0.2, 1);
+    pointer-events: none;
+    z-index: 1;
+  }
+  .faq-item:not([data-open='true']):hover::after { transform: scaleX(1); }
+  /* Open item: the line stays drawn */
+  .faq-item[data-open='true']::after { transform: scaleX(1); }
+
+  /* Keep content above the wash */
+  .faq-header,
+  .faq-body { position: relative; z-index: 1; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .faq-item::before,
+    .faq-item::after { transition: none; }
+  }
+</style>
 
 <script>
   function initAccordion() {
@@ -47,20 +111,25 @@ const isBoxed = variant === 'boxed'
       const header = item.querySelector('.faq-header')
       const body = item.querySelector<HTMLElement>('.faq-body')
       const vline = item.querySelector<HTMLElement>('.faq-vline')
+      const chevron = item.querySelector<HTMLElement>('.faq-chevron')
+      // 'rows' variant sits on a tinted background — don't repaint it on open
+      const tintOnOpen = !chevron
       if (!header) return
 
       header.addEventListener('click', () => {
         const isOpen = item.getAttribute('data-open') === 'true'
         if (isOpen) {
           item.setAttribute('data-open', 'false')
-          item.classList.remove('bg-fg-other-4')
+          if (tintOnOpen) item.classList.remove('bg-fg-other-4')
           if (body) body.style.gridTemplateRows = '0fr'
           if (vline) vline.style.rotate = '90deg'
+          if (chevron) chevron.style.transform = ''
         } else {
           item.setAttribute('data-open', 'true')
-          item.classList.add('bg-fg-other-4')
+          if (tintOnOpen) item.classList.add('bg-fg-other-4')
           if (body) body.style.gridTemplateRows = '1fr'
           if (vline) vline.style.rotate = '0deg'
+          if (chevron) chevron.style.transform = 'rotate(90deg)'
         }
       })
     })

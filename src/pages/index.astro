@@ -1,22 +1,995 @@
 ---
 import Layout from '../layouts/Layout.astro'
-import Section from '../components/ui/Section.astro'
+import Button from '../components/ui/Button.astro'
+import SwiperSlider from '../components/ui/SwiperSlider.astro'
+import Accordion from '../components/ui/Accordion.astro'
+import { client } from '../lib/sanity'
+
+function assetUrl(ref: string | undefined, w = 800) {
+  if (!ref) return ''
+  return `https://cdn.sanity.io/images/0ufm7kaw/production/${ref.replace('image-', '').replace(/-([a-z]+)$/, '.$1')}?w=${w}&auto=format`
+}
+
+// ── Hero slides ──
+const heroSlides = [
+  {
+    tag: 'Dexterous Hands', title: 'Built for the next generation of robotics.',
+    subtitle: 'Intelligent End-of-Arm Tooling & Dexterous Hands', href: '/products',
+    img: '/images/home/hero-hand.png',
+    imgClass: 'absolute right-[-67px] top-[-53.8%] h-[174%] w-auto max-w-none',
+  },
+  {
+    tag: 'Electric Grippers', title: 'Precision gripping for every production line.',
+    subtitle: 'Adaptive, parallel and rotary electric grippers', href: '/products/category',
+    img: '/images/dh56-hero-product.png',
+    imgClass: 'absolute right-[4%] top-1/2 -translate-y-1/2 h-[80%] w-auto max-w-none object-contain',
+  },
+  {
+    tag: 'Smart Actuators', title: 'Motion control engineered for accuracy.',
+    subtitle: 'Servo drives, cylinders and linear coil actuators', href: '/products',
+    img: '/images/service-technology-product1.webp',
+    imgClass: 'absolute right-[4%] top-1/2 -translate-y-1/2 h-[75%] w-auto max-w-none object-contain',
+  },
+  {
+    tag: 'iFM System', title: 'Intelligent flexible motion, ready to deploy.',
+    subtitle: 'Plug & play automation for modern factories', href: '/products',
+    img: '/images/service-technology-product2.webp',
+    imgClass: 'absolute right-[4%] top-1/2 -translate-y-1/2 h-[75%] w-auto max-w-none object-contain',
+  },
+  {
+    tag: 'Hexapods', title: 'Six degrees of freedom, sub-micron precision.',
+    subtitle: 'Precision positioning for research and industry', href: '/products',
+    img: '/images/service-technology-product3.webp',
+    imgClass: 'absolute right-[4%] top-1/2 -translate-y-1/2 h-[75%] w-auto max-w-none object-contain',
+  },
+]
+
+// ── Proven Success cases (slider) ──
+const provenCases = [
+  { client: 'KFC', img: '/images/dh56-action.jpg',
+    desc: 'The AG-160-95 adaptive gripper was applied to pick up and complete the production of ice cream cones. Task difficulty: precise force control, position control, position repeatability, fast movement.' },
+  { client: 'CHANEL', img: '/images/home/industry-medical.jpg',
+    desc: 'PGC series grippers handle delicate cosmetic packaging on a high-speed line, keeping surfaces flawless while sustaining full production tempo.' },
+  { client: 'NISSAN', img: '/images/dh56-feat-1.jpg',
+    desc: 'AG series grippers automate component handling in body assembly, combining envelope adaptive grasping with repeatable positioning.' },
+  { client: 'SAMSUNG', img: '/images/dh56-feat-2.jpg',
+    desc: 'Precise force control lets our grippers place fragile electronic components without a single micro-damage incident.' },
+]
+
+// ── Testimonials (slider) ──
+const testimonials = [
+  {
+    quote: 'Integrating DH-Robotics AG-series grippers into our high-speed electronics assembly lines has been a game-changer.\n\nThanks to the precise force control and envelope adaptive grasping, we managed to seamlessly automate the handling of our most delicate components without a single micro-damage incident. It’s a field-proven, plug-and-play solution that has significantly boosted our production efficiency and OEE.',
+    name: 'Tomas Shelbi', role: 'Senior Automation Engineer, Samsung Electronics', avatar: '/images/home/avatar-tomas.jpg',
+  },
+  {
+    quote: 'We replaced pneumatic tooling across two lines and never looked back.\n\nSetup took an afternoon, the control software is straightforward, and repeatability has stayed within spec through months of continuous shifts. Support from the engineering team was quick and genuinely technical.',
+    name: 'Marta Nowak', role: 'Process Engineer, Automotive Tier-1 Supplier', avatar: '/images/home/avatar-tomas.jpg',
+  },
+  {
+    quote: 'What sold us was the force control on fragile parts.\n\nOur previous solution damaged roughly one in every few hundred components. Since switching to DH-Robotics grippers that number is effectively zero, and cycle time actually improved.',
+    name: 'Kenji Sato', role: 'Head of Manufacturing, Medical Devices', avatar: '/images/home/avatar-tomas.jpg',
+  },
+]
+
+const whyCards = [
+  { title: 'We Create', img: '/images/service-technology-rd.webp', icon: 'plus',
+    desc: 'We don’t just manufacture grippers — we develop industry-leading motion control solutions that redefine precision, intelligence, and reliability for modern factories.',
+    points: ['Precise force control', 'High accurate repeatability', 'Exquisite and compact size'] },
+  { title: 'We Build', img: '/images/service-content-1.webp', icon: 'chip',
+    desc: 'We don’t just manufacture grippers — we develop industry-leading motion control solutions that redefine precision, intelligence, and reliability for modern factories.',
+    points: ['Real-time perception', 'Smart feedback', 'Intelligent detection'] },
+  { title: 'We are on the way to', img: '/images/service-content-2.webp', icon: 'expand',
+    desc: 'We don’t just manufacture grippers — we develop industry-leading motion control solutions that redefine precision, intelligence, and reliability for modern factories.',
+    points: ['Precise force control', 'High accurate repeatability', 'Exquisite and compact size'] },
+]
+
+const equipmentTabs = [
+  'Dexterous Hands', 'Smart Actuators', 'Intelligent Flexible Motion System',
+  'Hexapod', 'Sensor', 'Precision Motorized Stage',
+]
+
+const stats = [
+  { value: 'NO.1',      label: 'China electric actuator sales' },
+  { value: '60+',       label: 'Countries and regions coverage' },
+  { value: '50+',       label: 'Product series, covering multiple industries' },
+  { value: '120%',      label: 'Compound growth rate over the past 5 years' },
+  { value: '300,000+',  label: 'Units shipped in total' },
+  { value: '5,000+',    label: 'intelligent manufacturing customers, industry leader' },
+]
+
+const industryTabs = ['Medical automation', 'Electronics', 'Automotive', 'Automation', 'Machining', 'Robot New Retail', 'Education Research', 'New energy']
+
+// One slide per tab, so the tab row and the carousel stay in sync
+const industries = industryTabs.map(title => ({
+  title,
+  img: '/images/home/industry-medical.jpg',
+  href: title === 'Medical automation' ? '/applications/industry/medical-automation' : '/applications',
+}))
+
+const tasks = [
+  { title: 'Grabbing',            icon: '/images/icon-task-grabbing.svg',   href: '/applications/action/grabbing' },
+  { title: 'Clamping',            icon: '/images/icon-task-clamping.svg',   href: '/applications/action/clamping' },
+  { title: 'Counterpoint',        icon: '/images/icon-task-counterpoint.svg', href: '/applications/action/counterpoint' },
+  { title: 'Transport',           icon: '/images/icon-task-transport.svg',  href: '/applications/action/transport' },
+  { title: 'Rotation',            icon: '/images/icon-task-rotation.png',   href: '/applications/action/rotation' },
+  { title: 'Assembly',            icon: '/images/icon-task-assembly.svg',   href: '/applications/action/assembly' },
+  { title: 'Loading & Unloading', icon: '/images/icon-task-loading.svg',    href: '/applications/action/loading-unloading' },
+  { title: 'Opening & Closing Lid', icon: '/images/icon-task-opening.svg',  href: '/applications/action/opening-closing-lid' },
+]
+
+const supportLinks = [
+  { question: 'Download center',        answer: 'Product datasheets, manuals, 3D models and technical documentation — everything you need to specify and integrate our hardware.' },
+  { question: 'User Control Software',  answer: 'DH-Robotics ServoStudio and control plugins for fast setup, debugging and fine-tuning of grippers and actuators.' },
+  { question: 'Support Hub',            answer: 'Guides, tutorials and direct answers from our engineering team, from first integration to production tuning.' },
+  { question: 'DH-Robotics Technology', answer: 'The self-developed servo control system with precision force control behind every DH-Robotics product.' },
+]
+
+const trustedLogos = [
+  { name: 'Huawei',  src: '/images/logos/huawei.svg',  h: 'h-[83px]' },
+  { name: 'Toyota',  src: '/images/logos/toyota.svg',  h: 'h-[70px]' },
+  { name: 'DJI',     src: '/images/logos/dji.png',     h: 'h-[62px]' },
+  { name: 'Nissan',  src: '/images/logos/nissan.svg',  h: 'h-[100px]' },
+  { name: 'Samsung', src: '/images/logos/samsung.svg', h: 'h-[49px]' },
+  { name: 'Bosch',   src: '/images/logos/bosch.png',   h: 'h-[28px]' },
+  { name: 'KFC',     src: '/images/logos/kfc.svg',     h: 'h-[84px]' },
+  { name: 'Hyundai', src: '/images/logos/hyundai.svg', h: 'h-[19px]' },
+]
+
+// ── CMS: resources (news + events) ──
+let posts: any[] = []
+try {
+  const raw = await client.fetch(`*[_type in ["news","event"]] | order(date desc)[0...8]{
+    _type, title, "slug": slug.current, date, category, "img": heroImage.asset._ref
+  }`)
+  posts = (raw ?? []).map((p: any) => ({
+    title: p.title,
+    href: p._type === 'event' ? `/events/${p.slug}` : `/news/${p.slug}`,
+    date: p.date ? new Date(p.date).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }) : '',
+    tag: p._type === 'event' ? 'Event' : (p.category === 'insights' ? 'Insights' : 'News'),
+    img: p.img ? assetUrl(p.img, 800) : '/images/news-placeholder.webp',
+  }))
+} catch { posts = [] }
 ---
 <Layout title="Home">
-  <Section pt="page" pb="lg">
-    <h1>Home</h1>
-    <ul>
-      <li>1. Hero — слайдер: изображение, title, текст, кнопка</li>
-      <li>2. Equipment — листинг продуктов (из CMS)</li>
-      <li>3. Why — title, текст, 4 карточки с информацией</li>
-      <li>4. Applications — список applications (из CMS)</li>
-      <li>5. Processes — title, текст, список процессов (из CMS)</li>
-      <li>6. Video — интерактивная секция с видео</li>
-      <li>7. Trust — логотипы клиентов/партнёров</li>
-      <li>8. Services — ссылки на страницы Software и Technology</li>
-      <li>9. Numbers — секция с цифрами/статистикой</li>
-      <li>10. Resources — слайдер с новостями, ивентами (вперемешку)</li>
-      <li>11. CTA — призыв к действию</li>
-    </ul>
-  </Section>
+
+  <!-- ═══ 1. Hero (slider) ═══ -->
+  <section class="bg-bg-other">
+
+    <!-- Desktop -->
+    <div class="relative h-[760px] max-lg:hidden">
+      <div class="swiper hero-swiper h-full">
+        <div class="swiper-wrapper">
+          {heroSlides.map(s => (
+            <div class="swiper-slide relative overflow-hidden">
+              <img src={s.img} alt="" aria-hidden="true" class:list={[s.imgClass, 'pointer-events-none select-none']} />
+
+              <div class="absolute inset-x-0 bottom-8">
+                <div class="global-padding">
+                  <div class="mx-auto max-w-[1200px]">
+                    <div class="w-[528px] flex flex-col gap-6">
+                      <div class="flex gap-2 items-center">
+                        <span class="inline-flex items-center gap-2 pl-2 pr-3 py-[6px] rounded-[24px] bg-fg-other-1">
+                          <span class="size-1 rounded-full bg-fg-tertiary"></span>
+                          <span class="text-tiny-medium text-trim-off text-text-tertiary uppercase">S</span>
+                          <span class="w-3 h-px bg-fg-tertiary"></span>
+                          <span class="text-tiny-medium text-trim-off text-text-tertiary uppercase">{s.tag}</span>
+                        </span>
+                        <span class="inline-flex items-center gap-2 pl-2 pr-3 py-[6px] rounded-[24px] bg-fg-other-3">
+                          <span class="size-1 rounded-full bg-fg-quaternary"></span>
+                          <span class="text-tiny-medium text-trim-off text-text-quaternary uppercase">New</span>
+                        </span>
+                      </div>
+                      <h1 class="text-h3 text-text-primary">{s.title}</h1>
+                      <p class="text-large text-text-primary max-w-[318px]">{s.subtitle}</p>
+                      <Button label="Explore" href={s.href} variant="black" />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <!-- Controls (in container, right side) -->
+      <div class="absolute inset-x-0 bottom-8 z-10 pointer-events-none">
+        <div class="global-padding">
+          <div class="mx-auto max-w-[1200px] flex justify-end">
+            <div class="flex items-center gap-8 pointer-events-auto">
+              <div class="hero-dots flex items-center gap-2 px-3 py-2"></div>
+              <div class="flex items-center gap-4">
+                <button class="hero-prev size-10 rounded-full bg-bg-primary flex items-center justify-center transition-opacity cursor-pointer" aria-label="Previous">
+                  <svg class="size-6" viewBox="0 0 24 24" fill="none"><path d="M15 18l-6-6 6-6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </button>
+                <button class="hero-next size-10 rounded-full bg-bg-primary flex items-center justify-center hover:bg-bg-secondary transition-colors cursor-pointer" aria-label="Next">
+                  <svg class="size-6" viewBox="0 0 24 24" fill="none"><path d="M9 18l6-6-6-6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Mobile -->
+    <div class="lg:hidden">
+      <div class="swiper hero-swiper-m">
+        <div class="swiper-wrapper">
+          {heroSlides.map(s => (
+            <div class="swiper-slide">
+              <div class="bg-bg-primary global-padding pt-12 pb-10">
+                <div class="flex flex-col items-center gap-6 text-center">
+                  <div class="flex gap-2 items-center justify-center flex-wrap">
+                    <span class="inline-flex items-center gap-2 pl-2 pr-3 py-[6px] rounded-[24px] bg-fg-other-1">
+                      <span class="size-1 rounded-full bg-fg-tertiary"></span>
+                      <span class="text-tiny-medium text-trim-off text-text-tertiary uppercase">S</span>
+                      <span class="w-3 h-px bg-fg-tertiary"></span>
+                      <span class="text-tiny-medium text-trim-off text-text-tertiary uppercase">{s.tag}</span>
+                    </span>
+                    <span class="inline-flex items-center gap-2 pl-2 pr-3 py-[6px] rounded-[24px] bg-fg-other-3">
+                      <span class="size-1 rounded-full bg-fg-quaternary"></span>
+                      <span class="text-tiny-medium text-trim-off text-text-quaternary uppercase">New</span>
+                    </span>
+                  </div>
+                  <h1 class="text-h3 text-text-primary">{s.title}</h1>
+                  <p class="text-large text-text-primary max-w-[280px]">{s.subtitle}</p>
+                  <div class="flex justify-center">
+                    <Button label="Explore" href={s.href} variant="black" />
+                  </div>
+                </div>
+              </div>
+              <div class="relative h-[376px] overflow-hidden">
+                <img src={s.img} alt="" aria-hidden="true"
+                  class="absolute left-1/2 -translate-x-1/2 top-7 w-[94%] max-w-none object-contain pointer-events-none select-none" />
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div class="relative -mt-16 z-10">
+        <div class="global-padding">
+          <div class="flex items-center justify-between">
+            <div class="hero-dots-m flex items-center gap-2 px-3 py-2"></div>
+            <div class="flex items-center gap-4">
+              <button class="hero-prev-m size-10 rounded-full bg-bg-primary flex items-center justify-center cursor-pointer" aria-label="Previous">
+                <svg class="size-6" viewBox="0 0 24 24" fill="none"><path d="M15 18l-6-6 6-6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </button>
+              <button class="hero-next-m size-10 rounded-full bg-bg-primary flex items-center justify-center cursor-pointer" aria-label="Next">
+                <svg class="size-6" viewBox="0 0 24 24" fill="none"><path d="M9 18l6-6-6-6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </section>
+
+
+  <!-- ═══ 2. Proven Success ═══ -->
+  <section class="bg-bg-primary pt-20 pb-[120px] max-lg:pt-12 max-lg:pb-16">
+    <div class="global-padding">
+      <div class="mx-auto max-w-[1200px]">
+        <p class="text-regular text-text-primary text-center max-w-[500px] mx-auto">
+          Watch our intelligent grippers and motion control solutions in action across global manufacturing lines, delivering real-world efficiency and precision.
+        </p>
+        <h2 class="text-h1 mob-h2 text-text-primary text-center mt-10 max-lg:mt-8">Proven Success</h2>
+
+        <div class="mt-14 max-lg:mt-10 flex items-center gap-10 max-lg:flex-col max-lg:gap-8">
+
+          <!-- Client list doubles as slider navigation -->
+          <div class="shrink-0 w-[160px] flex flex-col gap-8 items-center max-lg:flex-row max-lg:w-full max-lg:justify-center max-lg:gap-6 max-lg:flex-wrap">
+            {provenCases.map((c, i) => (
+              <button class:list={['proven-tab text-h5 mob-h6 text-text-primary transition-opacity duration-300 cursor-pointer', i === 0 ? 'is-active' : '']}>{c.client}</button>
+            ))}
+          </div>
+
+          <!-- Media -->
+          <div class="flex-1 min-w-0 w-full">
+            <div class="swiper proven-swiper rounded-[4px] overflow-hidden bg-bg-secondary">
+              <div class="swiper-wrapper">
+                {provenCases.map(c => (
+                  <div class="swiper-slide">
+                    <div class="aspect-video w-full overflow-hidden">
+                      <img src={c.img} alt={c.client} class="w-full h-full object-cover" loading="lazy" />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          <!-- Description + controls -->
+          <div class="shrink-0 w-[260px] max-lg:w-full flex flex-col gap-8">
+            <div class="swiper proven-text-swiper">
+              <div class="swiper-wrapper">
+                {provenCases.map(c => (
+                  <div class="swiper-slide">
+                    <p class="text-small text-text-secondary">{c.desc}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div class="flex items-center gap-4">
+              <button class="proven-prev size-10 rounded-full border border-border-other-2 flex items-center justify-center transition-colors cursor-pointer hover:border-border-alternative" aria-label="Previous">
+                <svg class="size-6" viewBox="0 0 24 24" fill="none"><path d="M15 18l-6-6 6-6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </button>
+              <button class="proven-next size-10 rounded-full border border-border-other-2 flex items-center justify-center transition-colors cursor-pointer hover:border-border-alternative" aria-label="Next">
+                <svg class="size-6" viewBox="0 0 24 24" fill="none"><path d="M9 18l6-6-6-6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ 3. Trusted by Industry Giants ═══ -->
+  <section class="bg-bg-primary pb-[120px] max-lg:pb-16">
+    <div class="global-padding">
+      <div class="mx-auto max-w-[1200px]">
+        <h3 class="text-h5 mob-h6 text-text-primary text-center">Trusted by Industry Giants</h3>
+      </div>
+    </div>
+
+    <!-- Infinite marquee -->
+    <div class="logo-marquee relative mt-12 max-lg:mt-8 overflow-hidden">
+      <div class="logo-track flex items-center w-max">
+        {[0, 1].map(() => (
+          <div class="flex items-center shrink-0" aria-hidden="false">
+            {trustedLogos.map(logo => (
+              <span class="w-[160px] h-[129px] max-lg:w-[120px] max-lg:h-[96px] shrink-0 flex items-center justify-center px-4">
+                <img src={logo.src} alt={logo.name} class:list={[logo.h, 'w-auto max-w-full object-contain max-lg:h-auto max-lg:max-h-[56px]']} />
+              </span>
+            ))}
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ 4. Why DH-Robotics ═══ -->
+  <section class="bg-bg-other pt-[120px] pb-[72px] max-lg:pt-16 max-lg:pb-10">
+    <div class="global-padding">
+      <div class="mx-auto max-w-[1200px] text-center">
+        <h2 class="text-h2 mob-h3 text-text-primary">Why DH-Robotics</h2>
+        <p class="text-regular text-text-primary max-w-[592px] mx-auto mt-8 max-lg:mt-6">
+          We don’t just manufacture grippers — we develop industry-leading motion control solutions that redefine precision, intelligence, and reliability for modern factories.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="bg-bg-other pb-[120px] max-lg:pb-16">
+    <div class="global-padding">
+      <div class="mx-auto max-w-[1200px] grid grid-cols-3 gap-4 max-lg:grid-cols-1">
+        {whyCards.map(card => (
+          <div class="why-card group relative h-[700px] max-lg:h-[440px] rounded-[4px] overflow-hidden bg-bg-secondary">
+            <img src={card.img} alt={card.title} class="absolute inset-0 w-full h-full object-cover" loading="lazy" />
+
+            <!-- Legibility gradient (fades out once the panel colours in) -->
+            <div class="absolute inset-x-0 bottom-0 h-[220px] bg-gradient-to-t from-fg-alternative/55 to-transparent pointer-events-none transition-opacity duration-500 lg:group-hover:opacity-0 max-lg:opacity-0"></div>
+
+            <!-- Bottom-anchored content: grows upward on hover, background + text colours flip -->
+            <div class="absolute inset-x-0 bottom-0 p-6">
+              <div class="why-bg absolute inset-0 bg-bg-primary opacity-0 transition-opacity duration-500 lg:group-hover:opacity-100 max-lg:opacity-100"></div>
+
+              <div class="relative flex flex-col gap-6">
+                <div class="flex items-center gap-4">
+                  <span class="why-icon size-14 shrink-0 flex items-center justify-center rounded-[4px] transition-colors duration-500 lg:group-hover:bg-bg-secondary max-lg:bg-bg-secondary">
+                    <svg class="why-glyph size-12 lg:group-hover:size-6 max-lg:size-6 text-text-alternate lg:group-hover:text-text-primary max-lg:text-text-primary transition-all duration-500" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                      {card.icon === 'plus' && <><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.5"/><path d="M12 8v8M8 12h8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></>}
+                      {card.icon === 'chip' && <><rect x="6" y="6" width="12" height="12" rx="1.5" stroke="currentColor" stroke-width="1.5"/><path d="M9 3v3M15 3v3M9 18v3M15 18v3M3 9h3M3 15h3M18 9h3M18 15h3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></>}
+                      {card.icon === 'expand' && <path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>}
+                    </svg>
+                  </span>
+                  <span class="text-h5 mob-h6 text-text-alternate lg:group-hover:text-text-primary max-lg:text-text-primary origin-left lg:group-hover:scale-[0.85] max-lg:scale-[0.85] transition-all duration-500">{card.title}</span>
+                </div>
+
+                <!-- Details reveal: grid-rows 0fr -> 1fr lifts the whole block up -->
+                <div class="grid grid-rows-[0fr] lg:group-hover:grid-rows-[1fr] max-lg:grid-rows-[1fr] transition-[grid-template-rows] duration-500 ease-out">
+                  <div class="overflow-hidden">
+                    <div class="flex flex-col gap-6">
+                      <p class="text-small text-text-secondary">{card.desc}</p>
+                      <ul class="flex flex-col gap-3">
+                        {card.points.map(p => (
+                          <li class="text-small text-text-primary">- {p}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        ))}
+              </ul>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ 5. Equipment ═══ -->
+  <section class="bg-bg-primary pt-[120px] pb-14 max-lg:pt-16 max-lg:pb-10">
+    <div class="global-padding">
+      <div class="mx-auto max-w-[1200px] text-center">
+        <h2 class="text-h1 mob-h2 text-text-primary">Equipment</h2>
+        <p class="text-regular text-text-primary max-w-[491px] mx-auto mt-8 max-lg:mt-6">
+          DH-Robotics provides high-performance and reliable electric actuator solutions, enhancing intelligent gripping and precision motion control.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="bg-bg-primary pb-[120px] max-lg:pb-16">
+    <div class="global-padding">
+      <div class="mx-auto max-w-[1200px]">
+
+        <!-- Title + description + centred Explore -->
+        <div class="flex flex-col items-center gap-6 mb-14 max-lg:mb-10">
+          <div class="flex flex-col items-center gap-5 text-center">
+            <h3 class="text-h3 mob-h4 text-text-primary">Dexterous Hand</h3>
+            <p class="text-regular text-text-primary max-w-[237px]">Touch the Future, Unleash Dexterity Without Limits</p>
+          </div>
+          <div class="flex justify-center">
+            <Button label="Explore" href="/products" variant="black" />
+          </div>
+        </div>
+
+        <div class="flex gap-4 max-lg:flex-col">
+          <!-- Big card: 5-finger hand -->
+          <a href="/products/series" class="group relative lg:flex-1 shrink-0 h-[554px] max-lg:h-[300px] rounded-[12px] overflow-hidden bg-bg-other block">
+            <img src="/images/home/hand-5finger.png" alt="5-Finger Dexterous Hand"
+              class="absolute left-[-1.7%] top-[-41.3%] w-[99.5%] h-[152.3%] max-w-none object-cover transition-transform duration-500 group-hover:scale-[1.03] max-lg:top-[-20%] max-lg:h-[130%]" loading="lazy" />
+            <span class="absolute top-6 left-6 text-large-medium text-text-primary max-w-[149px]">5-Finger Dexterous Hand</span>
+            <span class="absolute bottom-4 right-4 size-10 rounded-full bg-btn-black-default group-hover:bg-btn-black-hover flex items-center justify-center transition-colors">
+              <svg class="size-6 text-text-alternate" viewBox="0 0 24 24" fill="none"><path d="M9 18l6-6-6-6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </span>
+          </a>
+
+          <!-- Right column: two stacked cards -->
+          <div class="lg:w-[592px] max-lg:w-full flex flex-col gap-4">
+            <a href="/products/series" class="group relative h-[269px] max-lg:h-[200px] rounded-[12px] overflow-hidden bg-bg-other block">
+              <img src="/images/home/hand-2finger.png" alt="2-Finger Dexterous Hand"
+                class="absolute left-[21.8%] top-[-21.2%] w-[70.1%] aspect-square max-w-none object-contain transition-transform duration-500 group-hover:scale-[1.03]" loading="lazy" />
+              <span class="absolute top-6 left-6 text-large-medium text-text-primary max-w-[149px]">2-Finger Dexterous Hand</span>
+              <span class="absolute bottom-4 right-4 size-10 rounded-full bg-btn-black-default group-hover:bg-btn-black-hover flex items-center justify-center transition-colors">
+                <svg class="size-6 text-text-alternate" viewBox="0 0 24 24" fill="none"><path d="M9 18l6-6-6-6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </span>
+            </a>
+
+            <a href="/products/series" class="group relative h-[269px] max-lg:h-[200px] rounded-[12px] overflow-hidden bg-bg-other block">
+              <img src="/images/home/hand-3finger.png" alt="3-Finger Dexterous Hand"
+                class="absolute right-[21.2%] top-[-62.6%] w-[57.7%] h-[179.7%] max-w-none object-contain transition-transform duration-500 group-hover:scale-[1.03] max-lg:top-[-30%] max-lg:h-[140%]" loading="lazy" />
+              <span class="absolute top-6 left-6 text-large-medium text-text-primary max-w-[149px]">3-Finger Dexterous Hand</span>
+              <span class="absolute bottom-4 right-4 size-10 rounded-full bg-btn-black-default group-hover:bg-btn-black-hover flex items-center justify-center transition-colors">
+                <svg class="size-6 text-text-alternate" viewBox="0 0 24 24" fill="none"><path d="M9 18l6-6-6-6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </span>
+            </a>
+          </div>
+        </div>
+
+        <!-- Numbered tabs with progress lines -->
+        <div class="mt-4 flex flex-col gap-4">
+          <div class="grid grid-cols-6 gap-2 max-lg:grid-cols-2 max-lg:gap-x-4 max-lg:gap-y-3">
+            {equipmentTabs.map((t, i) => (
+              <button class:list={['eq-tab flex items-center gap-1 text-left cursor-pointer', i === 0 ? 'is-active' : '']}>
+                <span class="text-tiny-medium text-trim-off text-text-primary whitespace-nowrap">0{i + 1}.</span>
+                <span class="text-tiny-medium text-trim-off text-text-primary">{t}</span>
+              </button>
+            ))}
+          </div>
+          <div class="grid grid-cols-6 gap-2 max-lg:grid-cols-2 max-lg:gap-x-4">
+            {equipmentTabs.map((_, i) => (
+              <span class:list={['eq-line block h-px w-full overflow-hidden rounded-[2px]', i === 0 ? 'is-active' : '']}></span>
+            ))}
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ 6. Inspired by Science (dark) ═══ -->
+  <section class="bg-bg-alternative py-[120px] max-lg:py-16">
+    <div class="global-padding">
+      <div class="mx-auto max-w-[1200px]">
+        <h2 class="text-h2 mob-h3 text-text-alternate text-center max-w-[794px] mx-auto">Inspired by Science, Built for Industry</h2>
+
+        <div class="flex items-center justify-center gap-10 mt-10 max-lg:mt-8 max-lg:flex-col max-lg:gap-6">
+          <Button label="Contact us" href="/contact" variant="white" />
+          <a href="/about" class="inline-flex items-center gap-2 text-small-caps text-trim-off text-text-alternate hover:opacity-70 transition-opacity">
+            <span>Learn more</span>
+            <svg class="size-4" viewBox="0 0 16 16" fill="none"><path d="M6 4l4 4-4 4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </a>
+        </div>
+
+        <div class="grid grid-cols-6 gap-4 mt-20 max-lg:mt-12 max-lg:grid-cols-2 max-lg:gap-x-4 max-lg:gap-y-10">
+          {stats.map(s => (
+            <div class="flex flex-col gap-4">
+              <span class="text-h4 mob-h5 text-text-alternate">{s.value}</span>
+              <span class="text-small text-text-alternate opacity-70">{s.label}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ 7. Industry Applications ═══ -->
+  <section class="bg-bg-primary pt-[120px] pb-14 max-lg:pt-16 max-lg:pb-10">
+    <div class="global-padding">
+      <div class="mx-auto max-w-[1200px] text-center">
+        <h2 class="text-h2 mob-h3 text-text-primary max-w-[407px] mx-auto">Industry Applications</h2>
+        <p class="text-regular text-text-primary max-w-[407px] mx-auto mt-8 max-lg:mt-6">
+          The global manufacturing industry is gradually entering the era of high-end intelligence.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="bg-bg-primary pb-[120px] max-lg:pb-16 overflow-hidden">
+    <div class="global-padding">
+      <div class="mx-auto max-w-[1200px]">
+        <div id="industry-tabs" class="flex gap-8 max-lg:gap-6 overflow-x-auto pb-3 border-b border-border-other-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+          {industryTabs.map((t, i) => (
+            <button class:list={['ind-tab shrink-0 text-tiny text-trim-off whitespace-nowrap transition-colors duration-200 cursor-pointer relative pb-3 -mb-3', i === 0 ? 'is-active' : '']}>{t}</button>
+          ))}
+        </div>
+      </div>
+    </div>
+
+    <!-- Centred peek carousel: active card 600x337, neighbours peek on both sides -->
+    <div class="industry-carousel relative mt-10 max-lg:mt-8">
+      <div class="swiper industry-swiper">
+        <div class="swiper-wrapper">
+          {industries.map(item => (
+            <div class="swiper-slide">
+              <a href={item.href} class="group relative block h-[337px] max-lg:h-[211px] rounded-[12px] overflow-hidden bg-bg-secondary">
+                <img src={item.img} alt={item.title} class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" loading="lazy" />
+                <span class="absolute top-6 left-6 text-h6 text-text-primary max-w-[140px]">{item.title}</span>
+                <span class="absolute bottom-6 right-6 size-10 rounded-full bg-btn-black-default group-hover:bg-btn-black-hover flex items-center justify-center transition-colors">
+                  <svg class="size-6 text-text-alternate" viewBox="0 0 24 24" fill="none"><path d="M9 18l6-6-6-6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </span>
+              </a>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <!-- Progress + arrows, aligned to the site container -->
+      <div class="global-padding mt-8 max-lg:mt-6">
+        <div class="mx-auto max-w-[1200px] flex items-center gap-10 max-lg:gap-6">
+          <div class="flex-1 h-px bg-border-other-2 relative">
+            <div class="industry-progress absolute left-0 top-0 h-px bg-fg-alternative transition-[width] duration-500"></div>
+          </div>
+          <div class="flex items-center gap-4 shrink-0">
+            <button class="industry-prev size-8 border border-border-other-2 rounded-[4px] flex items-center justify-center hover:border-border-alternative transition-colors cursor-pointer" aria-label="Previous">
+              <svg class="size-4" viewBox="0 0 16 16" fill="none"><path d="M10 12L6 8l4-4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
+            <button class="industry-next size-8 border border-border-other-2 rounded-[4px] flex items-center justify-center hover:border-border-alternative transition-colors cursor-pointer" aria-label="Next">
+              <svg class="size-4" viewBox="0 0 16 16" fill="none"><path d="M6 4l4 4-4 4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!-- ═══ 8. Processes / Tasks ═══ -->
+  <section class="bg-bg-primary pt-[160px] pb-[120px] max-lg:pt-16 max-lg:pb-16">
+    <div class="global-padding">
+      <div class="mx-auto max-w-[1200px]">
+
+        <div class="flex items-start justify-between gap-10 mb-[88px] max-lg:flex-col max-lg:gap-6 max-lg:mb-10">
+          <h2 class="text-h2 mob-h3 text-text-primary w-[437px] max-lg:w-auto">Processes</h2>
+          <p class="text-large text-text-primary max-w-[592px]">
+            Based on the self-developed servo control system with precision force control as the core, DH-Robotics provides customers in Tasks various industries around the world.
+          </p>
+        </div>
+
+        <div class="grid grid-cols-4 gap-4 max-lg:grid-cols-2">
+          {tasks.map(t => (
+            <a href={t.href} class="group bg-bg-primary border border-border-other-2 rounded-[8px] p-8 max-lg:p-6 flex flex-col justify-between h-[272px] max-lg:h-[200px] hover:border-border-alternative transition-colors">
+              <div class="flex items-start justify-between gap-2">
+                <span class="text-large-medium text-text-primary uppercase leading-[1.3]">{t.title}</span>
+                <span class="shrink-0 size-8 rounded-full border border-border-other-2 flex items-center justify-center text-text-secondary group-hover:border-border-alternative group-hover:text-text-primary transition-colors">
+                  <svg class="size-4" viewBox="0 0 16 16" fill="none"><path d="M6 4l4 4-4 4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </span>
+              </div>
+              <img src={t.icon} alt="" class="size-[72px] max-lg:size-14 object-contain" aria-hidden="true" loading="lazy" />
+            </a>
+          ))}
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ 9. Support ═══ -->
+  <section class="bg-fg-other-1 pt-[160px] pb-[160px] max-lg:pt-16 max-lg:pb-16">
+    <div class="global-padding">
+      <div class="mx-auto max-w-[1200px] flex gap-[118px] max-lg:flex-col max-lg:gap-10">
+
+        <div class="shrink-0 w-[389px] max-lg:w-full flex flex-col gap-8 max-lg:gap-6">
+          <h2 class="text-h3 mob-h4 text-text-primary">Support</h2>
+          <p class="text-small text-text-primary">
+            DH-Robotics provides high-performance and reliable electric actuator solutions, enhancing intelligent gripping and precision motion control.
+          </p>
+        </div>
+
+        <Accordion
+          items={supportLinks}
+          variant="rows"
+          borderClass="border-[#b5bfd1]"
+          class="flex-1 min-w-0 lg:max-w-[693px]"
+        />
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ 10. Testimonial ═══ -->
+  <section class="bg-bg-other pt-[222px] pb-[190px] max-lg:pt-16 max-lg:pb-16">
+    <div class="global-padding">
+      <div class="mx-auto max-w-[1200px] flex justify-between gap-10 max-lg:flex-col max-lg:gap-10">
+
+        <!-- Quote + author (slider) -->
+        <div class="lg:w-[600px] shrink-0 min-w-0">
+          <div class="swiper testimonial-swiper">
+            <div class="swiper-wrapper">
+              {testimonials.map(t => (
+                <div class="swiper-slide">
+                  <div class="flex flex-col gap-[68px] max-lg:gap-10">
+                    <p class="text-h5 mob-h6 text-text-primary whitespace-pre-line">{t.quote}</p>
+                    <div class="flex items-center gap-5">
+                      <img src={t.avatar} alt={t.name} class="size-7 rounded-full shrink-0 object-cover" loading="lazy" />
+                      <div class="flex flex-col gap-2 w-[307px] max-lg:w-auto">
+                        <span class="text-small-medium text-trim-off text-text-primary uppercase">{t.name}</span>
+                        <span class="text-small text-text-secondary">{t.role}</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        <!-- Quote mark + slider controls -->
+        <div class="shrink-0 flex flex-col items-end gap-[62px] max-lg:items-start max-lg:gap-8">
+          <img src="/images/home/quote-mark.png" alt="" aria-hidden="true" class="w-[187px] h-auto max-lg:w-[120px]" />
+
+          <div class="flex items-center gap-8 self-start">
+            <div class="testimonial-dots flex items-center gap-2 px-3 py-2"></div>
+            <div class="flex items-center gap-4">
+              <button class="testimonial-prev size-10 rounded-full bg-bg-primary flex items-center justify-center cursor-pointer transition-opacity" aria-label="Previous">
+                <svg class="size-6" viewBox="0 0 24 24" fill="none"><path d="M15 18l-6-6 6-6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </button>
+              <button class="testimonial-next size-10 rounded-full bg-bg-primary flex items-center justify-center cursor-pointer hover:bg-bg-secondary transition-colors" aria-label="Next">
+                <svg class="size-6" viewBox="0 0 24 24" fill="none"><path d="M9 18l6-6-6-6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ 11. Resources ═══ -->
+  {posts.length > 0 && (
+    <section class="bg-bg-primary py-[120px] max-lg:py-16 overflow-hidden">
+      <div class="global-padding">
+        <div class="mx-auto max-w-[1200px]">
+          <h2 class="text-h3 mob-h4 text-text-primary">Resources</h2>
+
+          <div class="flex items-center justify-between gap-6 mt-10 max-lg:mt-8">
+            <div class="flex gap-8 overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+              {['All', 'News', 'Event', 'Insights'].map((t, i) => (
+                <button class:list={['res-tab shrink-0 text-tiny text-trim-off whitespace-nowrap pb-3 relative transition-colors duration-200 cursor-pointer', i === 0 ? 'is-active' : '']}>{t}</button>
+              ))}
+            </div>
+            <a href="/news" class="shrink-0 inline-flex items-center gap-2 text-small-caps text-trim-off text-text-primary hover:text-text-secondary transition-colors max-lg:hidden">
+              <span>View more</span>
+              <svg class="size-4" viewBox="0 0 16 16" fill="none"><path d="M6 4l4 4-4 4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </a>
+          </div>
+          <div class="h-px bg-border-other-2 -mt-px"></div>
+        </div>
+      </div>
+
+      <div class="mt-10 max-lg:mt-8">
+        <SwiperSlider id="resources-slider" slideWidth={389} slideMobileWidth={320} gap={16} viewMoreHref="/news" viewMoreLabel="View more">
+          {posts.map((p: any) => (
+            <div class="swiper-slide">
+              <a href={p.href} class="group border border-border-other-2 rounded-[4px] flex flex-col overflow-hidden h-full hover:border-border-alternative transition-colors">
+                <div class="h-[220px] max-lg:h-[204px] overflow-hidden bg-bg-secondary shrink-0">
+                  <img src={p.img} alt={p.title} class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" loading="lazy" />
+                </div>
+                <div class="p-6 flex flex-col gap-6 max-lg:gap-5">
+                  <div class="flex items-center justify-between gap-4">
+                    <span class="inline-flex items-center px-2 py-2 bg-fg-alternative text-text-alternate text-small-caps text-trim-off leading-none">{p.tag}</span>
+                    <span class="text-small text-text-secondary">{p.date}</span>
+                  </div>
+                  <p class="text-h6 text-text-primary text-trim-off line-clamp-3">{p.title}</p>
+                </div>
+              </a>
+            </div>
+          ))}
+        </SwiperSlider>
+      </div>
+    </section>
+  )}
+
+  <!-- ═══ 12. Get in touch ═══ -->
+  <section class="bg-bg-tertiary py-[120px] max-lg:py-16">
+    <div class="global-padding">
+      <div class="mx-auto max-w-[1200px]">
+
+        <div class="text-center max-w-[390px] mx-auto flex flex-col gap-8 max-lg:gap-6">
+          <h2 class="text-h3 mob-h4 text-text-alternate">Get in touch</h2>
+          <p class="text-regular text-text-alternate opacity-80">Get in touch with our experts and secure an edge in automation.</p>
+        </div>
+
+        <form class="mt-14 max-lg:mt-10 max-w-[593px] mx-auto flex flex-col gap-8">
+          <div class="grid grid-cols-2 gap-x-4 gap-y-8 max-lg:grid-cols-1">
+            {[
+              { label: 'Name*',           ph: 'Enter your name…' },
+              { label: 'Company*',        ph: 'Enter your company…' },
+              { label: 'Email*',          ph: 'Enter your email…' },
+              { label: 'Phone',           ph: 'Enter your phone…' },
+              { label: 'Country/Region*', ph: 'Enter your country/region…' },
+            ].map(f => (
+              <label class="flex flex-col gap-3">
+                <span class="text-small text-text-alternate">{f.label}</span>
+                <input type="text" placeholder={f.ph}
+                  class="bg-transparent border-b border-text-alternate/40 focus:border-text-alternate outline-none py-3 text-regular text-text-alternate placeholder:text-text-alternate/50 transition-colors" />
+              </label>
+            ))}
+            <label class="flex flex-col gap-3">
+              <span class="text-small text-text-alternate">You need*</span>
+              <select class="bg-transparent border-b border-text-alternate/40 focus:border-text-alternate outline-none py-3 text-regular text-text-alternate cursor-pointer transition-colors">
+                <option class="text-text-primary">Inquiry price</option>
+                <option class="text-text-primary">Technical support</option>
+                <option class="text-text-primary">Partnership</option>
+              </select>
+            </label>
+          </div>
+
+          <label class="flex flex-col gap-3">
+            <span class="text-small text-text-alternate">Content</span>
+            <textarea rows="2" placeholder="Enter your message…"
+              class="bg-transparent border-b border-text-alternate/40 focus:border-text-alternate outline-none py-3 text-regular text-text-alternate placeholder:text-text-alternate/50 resize-y transition-colors"></textarea>
+          </label>
+
+          <div class="flex justify-center mt-4">
+            <Button label="Submit" type="submit" variant="white" />
+          </div>
+        </form>
+
+      </div>
+    </div>
+  </section>
+
 </Layout>
+
+<style>
+  /* Infinite logo marquee — track holds two identical sets, so -50% loops seamlessly */
+  .logo-track {
+    animation: logo-scroll 40s linear infinite;
+  }
+  .logo-marquee:hover .logo-track {
+    animation-play-state: paused;
+  }
+  @keyframes logo-scroll {
+    from { transform: translateX(0); }
+    to   { transform: translateX(-50%); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .logo-track { animation: none; }
+  }
+  /* Fade the edges so logos appear/disappear softly */
+  .logo-marquee::before,
+  .logo-marquee::after {
+    content: '';
+    position: absolute;
+    top: 0; bottom: 0;
+    width: 120px;
+    z-index: 1;
+    pointer-events: none;
+  }
+  .logo-marquee::before {
+    left: 0;
+    background: linear-gradient(to right, var(--color-bg-primary), transparent);
+  }
+  .logo-marquee::after {
+    right: 0;
+    background: linear-gradient(to left, var(--color-bg-primary), transparent);
+  }
+
+  /* Proven Success: client names act as slider tabs */
+  .proven-tab { opacity: 0.4; }
+  .proven-tab:hover, .proven-tab.is-active { opacity: 1; }
+
+  /* Equipment tabs: inactive dimmed to 40%, active full (per design) */
+  .eq-tab { opacity: 0.4; transition: opacity 0.2s ease; }
+  .eq-tab:hover, .eq-tab.is-active { opacity: 1; }
+
+  .eq-line { background: rgba(0, 0, 0, 0.16); position: relative; }
+  .eq-line.is-active::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--color-fg-alternative);
+  }
+
+  /* Industry carousel: fixed 600px slides, centred with peeks on both sides */
+  .industry-swiper { overflow: visible; }
+  .industry-swiper .swiper-slide {
+    width: 600px;
+    max-width: calc(100vw - 32px);
+  }
+
+  .ind-tab { color: var(--color-text-secondary); }
+  .ind-tab:hover, .ind-tab.is-active { color: var(--color-text-primary); }
+  .ind-tab.is-active::after {
+    content: ''; position: absolute; left: 0; bottom: -1px;
+    width: 100%; height: 2px; background: var(--color-fg-alternative);
+  }
+
+  .res-tab { color: var(--color-text-secondary); }
+  .res-tab:hover, .res-tab.is-active { color: var(--color-text-primary); }
+  .res-tab.is-active::after {
+    content: ''; position: absolute; left: 0; bottom: 0;
+    width: 100%; height: 2px; background: var(--color-fg-alternative);
+  }
+</style>
+
+<script>
+  import Swiper from 'swiper'
+  import { Navigation } from 'swiper/modules'
+  import 'swiper/css'
+
+  function initTabGroup(selector: string) {
+    const tabs = Array.from(document.querySelectorAll<HTMLElement>(selector))
+    tabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        tabs.forEach(t => t.classList.toggle('is-active', t === tab))
+      })
+    })
+  }
+  // Equipment tabs also drive the progress lines
+  {
+    const tabs = Array.from(document.querySelectorAll<HTMLElement>('.eq-tab'))
+    const lines = Array.from(document.querySelectorAll<HTMLElement>('.eq-line'))
+    tabs.forEach((tab, i) => {
+      tab.addEventListener('click', () => {
+        tabs.forEach((t, j) => t.classList.toggle('is-active', j === i))
+        lines.forEach((l, j) => l.classList.toggle('is-active', j === i))
+      })
+    })
+  }
+  // .ind-tab is driven by the industry carousel (see sync below), not this helper
+  initTabGroup('.res-tab')
+
+  // ── Hero slider ──
+  // Graduated dots: size shrinks with distance from the active slide (per design)
+  const DOT_SIZES = [10, 8, 6, 4, 2]
+
+  function buildDotSlider(swiperSel: string, dotsSel: string, prevSel: string, nextSel: string) {
+    const el = document.querySelector<HTMLElement>(swiperSel)
+    const dotsWrap = document.querySelector<HTMLElement>(dotsSel)
+    if (!el || !dotsWrap) return
+
+    const count = el.querySelectorAll('.swiper-slide').length
+    dotsWrap.innerHTML = ''
+    const dots: HTMLElement[] = []
+    for (let i = 0; i < count; i++) {
+      const d = document.createElement('button')
+      d.className = 'hero-dot rounded-full bg-fg-alternative shrink-0 cursor-pointer transition-all duration-300'
+      d.setAttribute('aria-label', `Go to slide ${i + 1}`)
+      dotsWrap.appendChild(d)
+      dots.push(d)
+    }
+
+    const paint = (active: number) => {
+      dots.forEach((d, i) => {
+        const size = DOT_SIZES[Math.min(Math.abs(i - active), DOT_SIZES.length - 1)]
+        d.style.width = `${size}px`
+        d.style.height = `${size}px`
+        d.style.opacity = i === active ? '1' : '0.3'
+      })
+    }
+
+    const swiper = new Swiper(swiperSel, {
+      modules: [Navigation],
+      slidesPerView: 1,
+      spaceBetween: 0,
+      speed: 600,
+      navigation: { prevEl: prevSel, nextEl: nextSel },
+      on: {
+        afterInit: (s: any) => paint(s.activeIndex),
+        slideChange: (s: any) => paint(s.activeIndex),
+      },
+    })
+
+    dots.forEach((d, i) => d.addEventListener('click', () => swiper.slideTo(i)))
+    paint(swiper.activeIndex)
+  }
+
+  buildDotSlider('.hero-swiper', '.hero-dots', '.hero-prev', '.hero-next')
+  buildDotSlider('.hero-swiper-m', '.hero-dots-m', '.hero-prev-m', '.hero-next-m')
+  buildDotSlider('.testimonial-swiper', '.testimonial-dots', '.testimonial-prev', '.testimonial-next')
+
+  // ── Proven Success: media + text move together, client list acts as tabs ──
+  {
+    const mediaEl = document.querySelector<HTMLElement>('.proven-swiper')
+    const textEl = document.querySelector<HTMLElement>('.proven-text-swiper')
+    const tabs = Array.from(document.querySelectorAll<HTMLElement>('.proven-tab'))
+
+    if (mediaEl && textEl) {
+      const media = new Swiper('.proven-swiper', {
+        modules: [Navigation],
+        slidesPerView: 1,
+        speed: 500,
+        navigation: { prevEl: '.proven-prev', nextEl: '.proven-next' },
+        on: {
+          afterInit: (s: any) => tabs.forEach((t, j) => t.classList.toggle('is-active', j === s.activeIndex)),
+          slideChange: (s: any) => {
+            tabs.forEach((t, j) => t.classList.toggle('is-active', j === s.activeIndex))
+            text.slideTo(s.activeIndex)
+          },
+        },
+      })
+      const text = new Swiper('.proven-text-swiper', {
+        slidesPerView: 1,
+        speed: 500,
+        allowTouchMove: false,
+      })
+      tabs.forEach((tab, i) => tab.addEventListener('click', () => media.slideTo(i)))
+    }
+  }
+
+  // ── Industry Applications: centred peek carousel, synced with the tab row ──
+  {
+    const el = document.querySelector<HTMLElement>('.industry-swiper')
+    const progress = document.querySelector<HTMLElement>('.industry-progress')
+    const tabsWrap = document.getElementById('industry-tabs')
+    const tabs = Array.from(document.querySelectorAll<HTMLElement>('.ind-tab'))
+
+    if (el) {
+      const sync = (s: any) => {
+        const i = s.activeIndex
+        if (progress) progress.style.width = `${((i + 1) / s.slides.length) * 100}%`
+        tabs.forEach((t, j) => t.classList.toggle('is-active', j === i))
+        // keep the active tab visible while the row scrolls horizontally
+        const active = tabs[i]
+        if (active && tabsWrap) {
+          const a = active.getBoundingClientRect()
+          const w = tabsWrap.getBoundingClientRect()
+          if (a.left < w.left || a.right > w.right) {
+            tabsWrap.scrollTo({ left: active.offsetLeft - w.width / 2 + a.width / 2, behavior: 'smooth' })
+          }
+        }
+      }
+
+      const swiper = new Swiper('.industry-swiper', {
+        modules: [Navigation],
+        slidesPerView: 'auto',
+        centeredSlides: true,
+        spaceBetween: 16,
+        grabCursor: true,
+        navigation: { prevEl: '.industry-prev', nextEl: '.industry-next' },
+        on: { afterInit: sync, slideChange: sync },
+      })
+
+      // Clicking a tab drives the carousel
+      tabs.forEach((tab, i) => tab.addEventListener('click', () => swiper.slideTo(i)))
+    }
+  }
+</script>
