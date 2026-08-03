@@ -11,10 +11,14 @@ interface Props {
   questionClass?: string
   /** override the divider colour, e.g. on tinted section backgrounds */
   borderClass?: string
+  /** direction the hover wash grows from */
+  hoverFrom?: 'bottom' | 'top'
+  /** opacity of the hover wash, 0–100 */
+  hoverOpacity?: number
   class?: string
 }
 
-const { items, variant = 'list', questionClass, borderClass, class: className } = Astro.props
+const { items, variant = 'list', questionClass, borderClass, hoverFrom = 'bottom', hoverOpacity = 100, class: className } = Astro.props
 const isBoxed = variant === 'boxed'
 const isRows = variant === 'rows'
 
@@ -29,7 +33,10 @@ const bodyPad = isBoxed ? 'px-8 pb-8 max-lg:px-6 max-lg:pb-6' : isRows ? 'pb-10 
 const defaultQuestion = isBoxed ? 'text-h5 mob-h6' : isRows ? 'text-h5 mob-h6' : 'text-h6'
 ---
 
-<div class:list={['faq-accordion', isBoxed ? 'flex flex-col gap-4' : '', className]}>
+<div
+  class:list={['faq-accordion', hoverFrom === 'top' ? 'hover-from-top' : '', isBoxed ? 'flex flex-col gap-4' : '', className]}
+  style={`--faq-wash: color-mix(in srgb, var(--color-fg-other-4) ${hoverOpacity}%, transparent)`}
+>
   {items.map((item) => (
     <div
       class:list={['faq-item relative cursor-pointer overflow-hidden transition-colors duration-200', itemBorder]}
@@ -62,19 +69,22 @@ const defaultQuestion = isBoxed ? 'text-h5 mob-h6' : isRows ? 'text-h5 mob-h6' :
 </div>
 
 <style>
-  /* Hover affordance: soft wash + a line that draws in from the left */
+  /* Hover affordance: a fill that grows up from the bottom + a line drawn from the left */
   .faq-item::before {
     content: '';
     position: absolute;
     inset: 0;
-    background: var(--color-fg-other-4);
-    opacity: 0;
-    transition: opacity 0.3s ease;
+    background: var(--faq-wash, var(--color-fg-other-4));
+    transform: scaleY(0);
+    transform-origin: bottom center;
+    transition: transform 0.45s cubic-bezier(0.4, 0, 0.2, 1);
     pointer-events: none;
     z-index: 0;
   }
+  .faq-accordion.hover-from-top .faq-item::before { transform-origin: top center; }
+
   /* Hover only on closed items — an open item keeps its own state */
-  .faq-item:not([data-open='true']):hover::before { opacity: 0.55; }
+  .faq-item:not([data-open='true']):hover::before { transform: scaleY(1); }
 
   .faq-item::after {
     content: '';

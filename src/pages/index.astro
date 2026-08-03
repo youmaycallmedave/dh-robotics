@@ -3,6 +3,8 @@ import Layout from '../layouts/Layout.astro'
 import Button from '../components/ui/Button.astro'
 import SwiperSlider from '../components/ui/SwiperSlider.astro'
 import Accordion from '../components/ui/Accordion.astro'
+import { countries } from '../data/countries'
+import 'tom-select/dist/css/tom-select.css'
 import { client } from '../lib/sanity'
 
 function assetUrl(ref: string | undefined, w = 800) {
@@ -536,10 +538,13 @@ try {
   <section class="bg-bg-primary pb-[120px] max-lg:pb-16 overflow-hidden">
     <div class="global-padding">
       <div class="mx-auto max-w-[1200px]">
-        <div id="industry-tabs" class="flex gap-8 max-lg:gap-6 overflow-x-auto pb-3 border-b border-border-other-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-          {industryTabs.map((t, i) => (
-            <button class:list={['ind-tab shrink-0 text-tiny text-trim-off whitespace-nowrap transition-colors duration-200 cursor-pointer relative pb-3 -mb-3', i === 0 ? 'is-active' : '']}>{t}</button>
-          ))}
+        <!-- Scroll container keeps the row swipeable; inner w-max centres it while it fits -->
+        <div id="industry-tabs" class="overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+          <div class="flex gap-8 max-lg:gap-6 w-max mx-auto pb-3 border-b border-border-other-2">
+            {industryTabs.map((t, i) => (
+              <button class:list={['ind-tab shrink-0 text-tiny text-trim-off whitespace-nowrap transition-colors duration-200 cursor-pointer relative pb-3 -mb-3', i === 0 ? 'is-active' : '']}>{t}</button>
+            ))}
+          </div>
         </div>
       </div>
     </div>
@@ -625,6 +630,8 @@ try {
         <Accordion
           items={supportLinks}
           variant="rows"
+          hoverFrom="top"
+          hoverOpacity={30}
           borderClass="border-[#b5bfd1]"
           class="flex-1 min-w-0 lg:max-w-[693px]"
         />
@@ -689,7 +696,7 @@ try {
           <h2 class="text-h3 mob-h4 text-text-primary">Resources</h2>
 
           <div class="flex items-center justify-between gap-6 mt-10 max-lg:mt-8">
-            <div class="flex gap-8 overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+            <div class="flex gap-8 overflow-x-auto border-b border-border-other-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
               {['All', 'News', 'Event', 'Insights'].map((t, i) => (
                 <button class:list={['res-tab shrink-0 text-tiny text-trim-off whitespace-nowrap pb-3 relative transition-colors duration-200 cursor-pointer', i === 0 ? 'is-active' : '']}>{t}</button>
               ))}
@@ -699,20 +706,21 @@ try {
               <svg class="size-4" viewBox="0 0 16 16" fill="none"><path d="M6 4l4 4-4 4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
             </a>
           </div>
-          <div class="h-px bg-border-other-2 -mt-px"></div>
         </div>
       </div>
 
-      <div class="mt-10 max-lg:mt-8">
-        <SwiperSlider id="resources-slider" slideWidth={389} slideMobileWidth={320} gap={16} viewMoreHref="/news" viewMoreLabel="View more">
+      <!-- Starts at the container edge, slides bleed past it to the right -->
+      <div class="global-padding mt-10 max-lg:mt-8">
+        <div class="mx-auto max-w-[1200px]">
+        <SwiperSlider id="resources-slider" slideWidth={389} slideMobileWidth={320} gap={16}>
           {posts.map((p: any) => (
-            <div class="swiper-slide">
-              <a href={p.href} class="group border border-border-other-2 rounded-[4px] flex flex-col overflow-hidden h-full hover:border-border-alternative transition-colors">
-                <div class="h-[220px] max-lg:h-[204px] overflow-hidden bg-bg-secondary shrink-0">
+            <div class="swiper-slide" data-res-tag={p.tag}>
+              <a href={p.href} class="group border border-border-other-2 rounded-[4px] flex flex-col overflow-hidden h-[432px] max-lg:h-[380px] hover:border-border-alternative transition-colors">
+                <div class="h-[220px] max-lg:h-[204px] shrink-0 overflow-hidden bg-bg-secondary">
                   <img src={p.img} alt={p.title} class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" loading="lazy" />
                 </div>
-                <div class="p-6 flex flex-col gap-6 max-lg:gap-5">
-                  <div class="flex items-center justify-between gap-4">
+                <div class="flex-1 min-h-0 p-6 flex flex-col gap-5">
+                  <div class="flex items-center justify-between gap-4 shrink-0">
                     <span class="inline-flex items-center px-2 py-2 bg-fg-alternative text-text-alternate text-small-caps text-trim-off leading-none">{p.tag}</span>
                     <span class="text-small text-text-secondary">{p.date}</span>
                   </div>
@@ -722,6 +730,8 @@ try {
             </div>
           ))}
         </SwiperSlider>
+        <p id="resources-empty" class="hidden text-regular text-text-secondary">Nothing here yet.</p>
+        </div>
       </div>
     </section>
   )}
@@ -739,21 +749,28 @@ try {
         <form class="mt-14 max-lg:mt-10 max-w-[593px] mx-auto flex flex-col gap-8">
           <div class="grid grid-cols-2 gap-x-4 gap-y-8 max-lg:grid-cols-1">
             {[
-              { label: 'Name*',           ph: 'Enter your name…' },
-              { label: 'Company*',        ph: 'Enter your company…' },
-              { label: 'Email*',          ph: 'Enter your email…' },
-              { label: 'Phone',           ph: 'Enter your phone…' },
-              { label: 'Country/Region*', ph: 'Enter your country/region…' },
+              { label: 'Name*',    ph: 'Enter your name…',    name: 'name',    type: 'text' },
+              { label: 'Company*', ph: 'Enter your company…', name: 'company', type: 'text' },
+              { label: 'Email*',   ph: 'Enter your email…',   name: 'email',   type: 'email' },
+              { label: 'Phone',    ph: 'Enter your phone…',   name: 'phone',   type: 'tel' },
             ].map(f => (
               <label class="flex flex-col gap-3">
                 <span class="text-small text-text-alternate">{f.label}</span>
-                <input type="text" placeholder={f.ph}
+                <input type={f.type} name={f.name} placeholder={f.ph}
                   class="bg-transparent border-b border-text-alternate/40 focus:border-text-alternate outline-none py-3 text-regular text-text-alternate placeholder:text-text-alternate/50 transition-colors" />
               </label>
             ))}
+
+            <label class="flex flex-col gap-3">
+              <span class="text-small text-text-alternate">Country/Region*</span>
+              <select id="contact-country" name="country" placeholder="Enter your country/region…" autocomplete="off">
+                {countries.map(c => <option value={c}>{c}</option>)}
+              </select>
+            </label>
+
             <label class="flex flex-col gap-3">
               <span class="text-small text-text-alternate">You need*</span>
-              <select class="bg-transparent border-b border-text-alternate/40 focus:border-text-alternate outline-none py-3 text-regular text-text-alternate cursor-pointer transition-colors">
+              <select name="need" class="bg-transparent border-b border-text-alternate/40 focus:border-text-alternate outline-none py-3 text-regular text-text-alternate cursor-pointer transition-colors">
                 <option class="text-text-primary">Inquiry price</option>
                 <option class="text-text-primary">Technical support</option>
                 <option class="text-text-primary">Partnership</option>
@@ -812,6 +829,83 @@ try {
     background: linear-gradient(to left, var(--color-bg-primary), transparent);
   }
 
+  /* ── Country picker (Tom Select) styled for the dark-blue form ── */
+  #contact-country + .ts-wrapper { --ts-fg: var(--color-text-alternate); }
+
+  :global(.ts-wrapper) {
+    border-bottom: 1px solid color-mix(in srgb, var(--color-text-alternate) 40%, transparent);
+    transition: border-color 0.2s ease;
+  }
+  :global(.ts-wrapper.focus) { border-bottom-color: var(--color-text-alternate); }
+
+  /* base tom-select.css paints .single.input-active and .full white — keep it transparent */
+  :global(.ts-wrapper .ts-control),
+  :global(.ts-wrapper.single.input-active .ts-control),
+  :global(.ts-wrapper.full .ts-control) {
+    background: transparent;
+    border: 0;
+    border-radius: 0;
+    padding: 0.75rem 1.5rem 0.75rem 0;
+    box-shadow: none;
+    color: var(--color-text-alternate);
+    font-size: var(--text-regular-size, 1rem);
+    line-height: 1.25;
+    min-height: calc(1.25em + 1.5rem);
+    cursor: pointer;
+  }
+  :global(.ts-wrapper .ts-control input) {
+    color: var(--color-text-alternate);
+    font-size: inherit;
+    line-height: inherit;
+  }
+  :global(.ts-wrapper .ts-control input::placeholder) {
+    color: color-mix(in srgb, var(--color-text-alternate) 50%, transparent);
+    opacity: 1;
+  }
+  /* Chevron matching the native select next to it */
+  :global(.ts-wrapper.single .ts-control::after) {
+    content: '';
+    position: absolute;
+    right: 4px;
+    top: 50%;
+    width: 0.5rem;
+    height: 0.5rem;
+    margin-top: -0.3125rem;
+    border: 0;
+    border-right: 1.5px solid var(--color-text-alternate);
+    border-bottom: 1.5px solid var(--color-text-alternate);
+    transform: rotate(45deg);
+    transition: transform 0.2s ease;
+    pointer-events: none;
+  }
+  :global(.ts-wrapper.single.dropdown-active .ts-control::after) {
+    margin-top: -0.0625rem;
+    transform: rotate(-135deg);
+  }
+
+  /* Dropdown sits on white so the long list stays readable */
+  :global(.ts-dropdown) {
+    background: var(--color-bg-primary);
+    border: 1px solid var(--color-border-other-2);
+    border-radius: 4px;
+    box-shadow: 0 16px 40px rgba(10, 15, 21, 0.18);
+    margin-top: 4px;
+    overflow: hidden;
+  }
+  :global(.ts-dropdown .ts-dropdown-content) { max-height: 260px; }
+  :global(.ts-dropdown .option) {
+    color: var(--color-text-primary);
+    padding: 0.625rem 0.875rem;
+  }
+  :global(.ts-dropdown .option.active) {
+    background: var(--color-fg-other-4);
+    color: var(--color-text-primary);
+  }
+  :global(.ts-dropdown .no-results) {
+    color: var(--color-text-secondary);
+    padding: 0.625rem 0.875rem;
+  }
+
   /* Proven Success: client names act as slider tabs */
   .proven-tab { opacity: 0.4; }
   .proven-tab:hover, .proven-tab.is-active { opacity: 1; }
@@ -845,7 +939,7 @@ try {
   .res-tab { color: var(--color-text-secondary); }
   .res-tab:hover, .res-tab.is-active { color: var(--color-text-primary); }
   .res-tab.is-active::after {
-    content: ''; position: absolute; left: 0; bottom: 0;
+    content: ''; position: absolute; left: 0; bottom: -1px;
     width: 100%; height: 2px; background: var(--color-fg-alternative);
   }
 </style>
@@ -854,6 +948,32 @@ try {
   import Swiper from 'swiper'
   import { Navigation } from 'swiper/modules'
   import 'swiper/css'
+  import TomSelect from 'tom-select'
+
+  // ── Country picker with search ──
+  {
+    const el = document.getElementById('contact-country')
+    if (el) {
+      const ts = new TomSelect(el, {
+        placeholder: 'Enter your country/region…',
+        maxOptions: null,
+        items: [],
+        sortField: { field: 'text', direction: 'asc' },
+        // match from the start of any word, so "kor" finds "South Korea"
+        score: function (search: string) {
+          const q = search.toLowerCase().trim()
+          return (item: any) => {
+            const t = String(item.text).toLowerCase()
+            if (!q) return 1
+            if (t.startsWith(q)) return 3
+            if (t.split(/[\s-]+/).some(w => w.startsWith(q))) return 2
+            return t.includes(q) ? 1 : 0
+          }
+        },
+      })
+      ts.clear(true)
+    }
+  }
 
   function initTabGroup(selector: string) {
     const tabs = Array.from(document.querySelectorAll<HTMLElement>(selector))
@@ -875,7 +995,36 @@ try {
     })
   }
   // .ind-tab is driven by the industry carousel (see sync below), not this helper
-  initTabGroup('.res-tab')
+  // ── Resources tabs filter the slider ──
+  {
+    const tabs = Array.from(document.querySelectorAll<HTMLElement>('.res-tab'))
+    const wrap = document.querySelector<HTMLElement>('[data-swiper-id="resources-slider"]')
+    const swiperEl = document.querySelector<HTMLElement>('.swiper.resources-slider')
+    const empty = document.getElementById('resources-empty')
+
+    const track = swiperEl?.querySelector<HTMLElement>('.swiper-wrapper')
+
+    if (tabs.length && wrap && track) {
+      const allSlides = Array.from(track.querySelectorAll<HTMLElement>('.swiper-slide'))
+
+      tabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+          tabs.forEach(t => t.classList.toggle('is-active', t === tab))
+
+          const want = (tab.textContent || '').trim()
+          const keep = want === 'All'
+            ? allSlides
+            : allSlides.filter(n => n.dataset.resTag === want)
+
+          track.replaceChildren(...keep)
+
+          empty?.classList.toggle('hidden', keep.length > 0)
+          wrap.closest('.swiper-section')?.classList.toggle('hidden', keep.length === 0)
+          ;(wrap as any).sliderRefresh?.()
+        })
+      })
+    }
+  }
 
   // ── Hero slider ──
   // Graduated dots: size shrinks with distance from the active slide (per design)
@@ -973,7 +1122,9 @@ try {
           const a = active.getBoundingClientRect()
           const w = tabsWrap.getBoundingClientRect()
           if (a.left < w.left || a.right > w.right) {
-            tabsWrap.scrollTo({ left: active.offsetLeft - w.width / 2 + a.width / 2, behavior: 'smooth' })
+            // centre the active tab within the scroll container
+            const delta = a.left - w.left - w.width / 2 + a.width / 2
+            tabsWrap.scrollTo({ left: tabsWrap.scrollLeft + delta, behavior: 'smooth' })
           }
         }
       }

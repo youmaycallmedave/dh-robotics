@@ -131,16 +131,27 @@ const {
       },
     })
 
-    const slides = wrap.querySelectorAll<HTMLElement>('.swiper-slide')
+    // Re-query on every call — slides can be swapped out by filters
     const setWidths = () => {
       const w = window.innerWidth < 768 ? slideMobileWidth : slideWidth
-      slides.forEach(s => { s.style.width = `${w}px` })
+      wrap.querySelectorAll<HTMLElement>('.swiper-slide').forEach(s => { s.style.width = `${w}px` })
     }
+    const resetProgress = () => {
+      if (progressEl) {
+        progressEl.style.width = swiper.slides.length ? `${(1 / swiper.slides.length) * 100}%` : '0%'
+      }
+    }
+
     setWidths()
+    resetProgress()
     window.addEventListener('resize', setWidths)
 
-    if (progressEl && swiper.slides.length) {
-      progressEl.style.width = `${(1 / swiper.slides.length) * 100}%`
+    // Lets a page rebuild the slides (filtering) and put the slider back in sync
+    ;(wrap as any).sliderRefresh = () => {
+      setWidths()
+      swiper.update()
+      swiper.slideTo(0, 0)
+      resetProgress()
     }
   })
 </script>
