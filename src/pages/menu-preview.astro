@@ -148,7 +148,7 @@ const languages = [
               <div class="mp-card w-[800px] max-w-full bg-bg-primary rounded-[6px] shadow-[0_20px_50px_rgba(10,15,21,0.14)] border border-border-other-2 flex gap-4 p-4">
 
                 <!-- Left list -->
-                <div class="flex-1 min-w-0 flex flex-col gap-5 pl-4 border-l border-border-secondary">
+                <div class="flex-1 min-w-0 self-start flex flex-col gap-5 pl-4 border-l border-border-secondary">
                   {menu.items.map((item, i) => (
                     <button
                       class:list={['mp-item text-tiny-medium text-trim-off text-left whitespace-nowrap transition-colors duration-150 relative', i === 0 ? 'is-active' : '']}
@@ -172,8 +172,8 @@ const languages = [
                           <h3 class="text-h5 text-text-primary">{item.title}</h3>
                           <p class="text-tiny-medium text-text-primary">{item.desc}</p>
                         </div>
-                        <span class="self-start inline-flex items-center gap-2 pl-4 pr-2 py-1 rounded-full bg-btn-black-default group-hover:bg-btn-black-hover text-text-alternate text-small-caps text-trim-off transition-colors">
-                          <span>Explore</span><svg class="size-6" viewBox="0 0 24 24" fill="none"><path d="M9 18l6-6-6-6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                        <span class="mp-btn self-start inline-flex items-center gap-2 pl-4 pr-2 py-1 rounded-full bg-btn-black-default text-text-alternate text-small-caps text-trim-off relative overflow-hidden">
+                          <span class="mp-btn-label relative z-[1]">Explore</span><svg class="mp-btn-arrow size-6 relative z-[1] shrink-0" viewBox="0 0 24 24" fill="none"><path d="M9 18l6-6-6-6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
                         </span>
                       </div>
                     </a>
@@ -286,6 +286,33 @@ const languages = [
     left: -17px; top: 50%; transform: translateY(-50%);
     width: 2px; height: 9px; background: var(--color-fg-alternative);
   }
+  /* Same flop as the global Button: fill rises from the bottom, label rides up with it */
+  @media (hover: hover) and (pointer: fine) {
+    .mp-btn::before {
+      content: '';
+      display: block;
+      position: absolute;
+      inset: 0;
+      background-color: var(--color-btn-black-hover);
+      clip-path: inset(100% 0 0 0);
+      transition: clip-path 0.45s cubic-bezier(.21, 1, .34, 1);
+      z-index: 0;
+    }
+    .mp-preview:hover .mp-btn::before { clip-path: inset(0 0 0 0); }
+
+    .mp-btn-label {
+      text-shadow: 0 -2em 0 white;
+      transform: translateY(2em);
+      transition:
+        transform 0.45s cubic-bezier(.21, 1, .34, 1),
+        text-shadow 0.15s cubic-bezier(0.215, 0.61, 0.355, 1);
+    }
+    .mp-preview:hover .mp-btn-label { transform: translateY(0); }
+
+    .mp-btn-arrow { transition: transform 0.45s cubic-bezier(.21, 1, .34, 1); }
+    .mp-preview:hover .mp-btn-arrow { transform: translateX(4px); }
+  }
+
   /* White glow bottom-left so the dark title/description stay readable over any image */
   .mp-glow {
     background: radial-gradient(120% 90% at 8% 92%, rgba(255,255,255,0.96) 0%, rgba(255,255,255,0.82) 22%, rgba(255,255,255,0.35) 45%, rgba(255,255,255,0) 62%);

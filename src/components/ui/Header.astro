@@ -1,149 +1,131 @@
 ---
 type NavColumn = { group?: string; links: { label: string; href: string }[] }
-type NavItem = { label: string; href?: string; dropdown?: { columns: NavColumn[] } }
+type MegaItem = { key: string; title: string; desc: string; img: string; href: string }
+type Mega = { id: string; label: string; items: MegaItem[] }
 
-const navItems: NavItem[] = [
+// Products keeps the plain column dropdown until its mega-menu design is finalized
+const productsColumns: NavColumn[] = [
   {
-    label: 'Products',
-    dropdown: {
-      columns: [
-        {
-          group: 'Automation',
-          links: [
-            { label: 'Electric Grippers',       href: '/products' },
-            { label: 'Rotary Electric Grippers', href: '/products' },
-            { label: 'Servo Drive',              href: '/products' },
-            { label: 'Linear Coil Actuator',     href: '/products' },
-            { label: 'Servo Electric Cylinder',  href: '/products' },
-          ],
-        },
-        {
-          group: 'Robotics',
-          links: [
-            { label: 'Dexterous Hand',                         href: '/products' },
-            { label: 'iFM Intelligent Flexible Motion System', href: '/products' },
-            { label: 'Hexapods',                               href: '/products' },
-          ],
-        },
-      ],
-    },
+    group: 'Automation',
+    links: [
+      { label: 'Electric Grippers',        href: '/products' },
+      { label: 'Rotary Electric Grippers', href: '/products' },
+      { label: 'Servo Drive',              href: '/products' },
+      { label: 'Linear Coil Actuator',     href: '/products' },
+      { label: 'Servo Electric Cylinder',  href: '/products' },
+    ],
   },
   {
+    group: 'Robotics',
+    links: [
+      { label: 'Dexterous Hand',                         href: '/products' },
+      { label: 'iFM Intelligent Flexible Motion System', href: '/products' },
+      { label: 'Hexapods',                               href: '/products' },
+    ],
+  },
+]
+
+const megaMenus: Mega[] = [
+  {
+    id: 'applications',
     label: 'Applications',
-    dropdown: {
-      columns: [
-        {
-          links: [
-            { label: 'Applications', href: '/applications' },
-            { label: 'Industries',   href: '/applications' },
-            { label: 'Tasks',        href: '/applications' },
-          ],
-        },
-      ],
-    },
+    items: [
+      { key: 'all',        title: 'Applications', desc: 'Explore how DH-Robotics powers automation across industries and tasks.', img: '/images/applications-hero.webp',       href: '/applications' },
+      { key: 'industries', title: 'Industries',   desc: 'Medical, automotive, electronics, food & beverage and more.',            img: '/images/applications-medical.webp',    href: '/applications' },
+      { key: 'tasks',      title: 'Tasks',        desc: 'Grabbing, clamping, transport, assembly and other core operations.',     img: '/images/service-technology-hero.webp', href: '/applications' },
+    ],
   },
   {
+    id: 'support',
     label: 'Support',
-    dropdown: {
-      columns: [
-        {
-          links: [
-            { label: 'Support',               href: '/support' },
-            // HIDDEN (draft): Technology — restore when page is ready
-            // { label: 'Technology',            href: '/support/technology' },
-            { label: 'User Control Software', href: '/support/software' },
-          ],
-        },
-      ],
-    },
+    items: [
+      { key: 'support-hub', title: 'Support Hub',     desc: 'Guides, tutorials and answers from our engineering team.',  img: '/images/service-content-2.webp',       href: '/support' },
+      { key: 'downloads',   title: 'Download Center', desc: 'Product datasheets, manuals, and technical documentation.', img: '/images/download hero.webp',           href: '/explore/downloads' },
+      { key: 'software',    title: 'Software',        desc: 'DH-Robotics ServoStudio and other control software.',       img: '/images/service-content-1.webp',       href: '/support/software' },
+      { key: 'faq',         title: 'FAQ',             desc: 'Quick answers to common questions about our products.',     img: '/images/service-technology-book.webp', href: '/explore/faq' },
+      // HIDDEN (draft): Technology — restore when the page is ready
+      // { key: 'technology', title: 'Technology', desc: 'The precision motion control tech behind our products.', img: '/images/service-technology-core.webp', href: '/support/technology' },
+    ],
   },
   {
+    id: 'explore',
     label: 'Explore',
-    dropdown: {
-      columns: [
-        {
-          links: [
-            { label: 'News',            href: '/news' },
-            { label: 'Insights',        href: '/news?category=insights' },
-            { label: 'Events',          href: '/events' },
-            { label: 'FAQ',             href: '/explore/faq' },
-            { label: 'Cases',           href: '/cases' },
-            { label: 'Download Center', href: '/explore/downloads' },
-          ],
-        },
-      ],
-    },
+    items: [
+      { key: 'news',     title: 'News',     desc: 'Stay updated with the latest company announcements, product launches, and technological breakthroughs from DH-Robotics.', img: '/images/menu/news.jpg',              href: '/news' },
+      { key: 'insights', title: 'Insights', desc: 'Deep dives on motion control, gripping and factory automation from our engineers.',                                       img: '/images/service-technology-core.webp', href: '/news?category=insights' },
+      { key: 'events',   title: 'Events',   desc: 'Meet DH-Robotics at trade shows, conferences and industry events worldwide.',                                             img: '/images/service-software-hero.webp', href: '/events' },
+      { key: 'cases',    title: 'Cases',    desc: 'See how world leaders deploy DH-Robotics solutions on the factory floor.',                                                img: '/images/dh56-hero-bg.jpg',           href: '/cases' },
+    ],
   },
-  { label: 'About', href: '/about' },
-  // DEV-only quick link
-  { label: 'Sitemap', href: '/sitemap' },
+]
+
+const languages = [
+  { code: 'zh', label: 'Chinese',  flag: '🇨🇳' },
+  { code: 'en', label: 'English',  flag: '🇺🇸', active: true },
+  { code: 'ja', label: 'Japanese', flag: '🇯🇵' },
 ]
 ---
+
+<!-- Scrim sits under the header but over the page while a mega panel is open -->
+<div id="nav-scrim" class="nav-scrim fixed inset-0 z-40 hidden"></div>
 
 <header id="site-header" class="fixed top-0 left-0 right-0 z-50 bg-bg-primary border-b border-border-other-2 transition-transform duration-300 ease-in-out">
   <div class="global-padding py-3">
     <div class="mx-auto max-w-[1200px] flex items-center justify-between gap-6">
 
-      <!-- Logo -->
-      <a href="/" class="shrink-0" aria-label="DH-Robotics">
-        <img src="/logotype-dh-robotics.svg" alt="DH-Robotics" class="h-14 w-auto max-lg:h-[41px]" />
-      </a>
+      <div class="flex items-center gap-6 shrink-0">
+        <a href="/" class="shrink-0" aria-label="DH-Robotics">
+          <img src="/logotype-dh-robotics.svg" alt="DH-Robotics" class="h-14 w-auto max-lg:h-[41px]" />
+        </a>
 
-      <!-- Right: nav + EN + Contact Us + burger -->
-      <div class="flex items-center gap-6 shrink-0 max-lg:gap-3">
+        <!-- Language (desktop) -->
+        <div class="relative max-lg:hidden" data-lang-wrap>
+          <button id="lang-btn" class="flex items-center gap-1 px-2 py-1 rounded-[4px] text-small-medium text-text-primary hover:bg-bg-secondary transition-colors duration-150 uppercase" aria-expanded="false">
+            EN
+            <svg class="lang-chevron size-4 transition-transform duration-200" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+          <div id="lang-panel" class="absolute top-full left-0 mt-2 w-[200px] bg-bg-primary border border-border-other-2 rounded-[4px] shadow-[0_12px_40px_rgba(10,15,21,0.12)] p-2 hidden z-50">
+            {languages.map(l => (
+              <button class="w-full flex items-center gap-3 px-2 py-2 rounded-[4px] hover:bg-bg-secondary transition-colors duration-150 text-left">
+                <span class="text-large leading-none">{l.flag}</span>
+                <span class="flex-1 text-regular text-text-primary">{l.label}</span>
+                {l.active && (
+                  <svg class="size-4 text-text-primary" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8l3.5 3.5L13 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                )}
+              </button>
+            ))}
+          </div>
+        </div>
+      </div>
 
-        <!-- Desktop nav -->
-        <nav id="desktop-nav" class="flex items-center gap-1 max-lg:hidden">
-          {navItems.map((item, i) => (
-            item.dropdown ? (
-              <div class="nav-dropdown-wrap relative" data-index={i}>
-                <button
-                  class="nav-btn flex items-center gap-1 px-2 py-1 rounded-[4px] text-small-medium text-text-primary hover:bg-bg-secondary transition-colors duration-150 cursor-pointer whitespace-nowrap"
-                  aria-expanded="false"
-                  data-dropdown={i}
-                >
-                  {item.label}
-                  <svg class="nav-chevron size-4 text-text-primary transition-transform duration-200" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-                    <path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                  </svg>
-                </button>
-              </div>
-            ) : (
-              <a
-                href={item.href}
-                class="flex items-center px-2 py-1 rounded-[4px] text-small-medium text-text-primary hover:bg-bg-secondary transition-colors duration-150 whitespace-nowrap"
-              >
-                {item.label}
-              </a>
-            )
-          ))}
-        </nav>
+      <!-- Desktop nav -->
+      <nav class="flex items-center gap-1 max-lg:hidden">
+        <div class="nav-wrap" data-menu="products">
+          <button class="nav-btn flex items-center gap-1 px-2 py-1 rounded-[4px] text-small-medium text-text-primary hover:bg-bg-secondary transition-colors duration-150 cursor-pointer whitespace-nowrap" aria-expanded="false">
+            Products
+            <svg class="nav-chevron size-4 transition-transform duration-200" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+        </div>
 
-        <!-- Search -->
-        <button id="search-btn" class="hidden size-8 flex items-center justify-center text-text-secondary hover:text-text-primary transition-colors max-lg:hidden" aria-label="Search">
-          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-            <circle cx="7" cy="7" r="5" stroke="currentColor" stroke-width="1.5"/>
-            <path d="M11 11l3 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-          </svg>
+        {megaMenus.map(menu => (
+          <div class="nav-wrap" data-menu={menu.id}>
+            <button class="nav-btn flex items-center gap-1 px-2 py-1 rounded-[4px] text-small-medium text-text-primary hover:bg-bg-secondary transition-colors duration-150 cursor-pointer whitespace-nowrap" aria-expanded="false">
+              {menu.label}
+              <svg class="nav-chevron size-4 transition-transform duration-200" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
+          </div>
+        ))}
+
+        <a href="/about" class="flex items-center px-2 py-1 rounded-[4px] text-small-medium text-text-primary hover:bg-bg-secondary transition-colors duration-150 whitespace-nowrap">About</a>
+        <!-- DEV-only quick link -->
+        <a href="/sitemap" class="flex items-center px-2 py-1 rounded-[4px] text-small-medium text-text-primary hover:bg-bg-secondary transition-colors duration-150 whitespace-nowrap">Sitemap</a>
+      </nav>
+
+      <div class="flex items-center gap-4 shrink-0 max-lg:gap-3">
+        <button id="search-btn" class="size-8 flex items-center justify-center text-text-primary hover:text-text-secondary transition-colors cursor-pointer" aria-label="Search">
+          <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true"><circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="1.5"/><path d="M13 13l4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
         </button>
 
-        <!-- Language -->
-        <button class="flex items-center gap-1 px-2 py-1 rounded-[4px] text-small-medium text-text-primary hover:bg-bg-secondary transition-colors duration-150 uppercase max-lg:hidden">
-          EN
-          <svg class="size-4 text-text-primary" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-            <path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-        </button>
-
-        <!-- EN mobile -->
-        <button class="lg:hidden flex items-center gap-[6px] text-small-medium text-text-primary uppercase">
-          EN
-          <svg class="size-4 text-text-primary" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-            <path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-        </button>
-
-        <!-- Contact Us -->
         <a href="/contact" class="contact-btn relative overflow-hidden inline-flex items-center gap-6 pl-4 pr-2 py-2 rounded-full bg-btn-black-default text-text-alternate text-small-caps text-trim-off whitespace-nowrap max-lg:gap-2 max-lg:pl-3 max-lg:pr-1">
           <span class="contact-label relative z-[1]">CONTACT US</span>
           <svg class="size-6 text-text-alternate relative z-[1]" viewBox="0 0 24 24" fill="none" aria-hidden="true">
@@ -151,7 +133,6 @@ const navItems: NavItem[] = [
           </svg>
         </a>
 
-        <!-- Burger (mobile only) -->
         <button id="burger-btn" class="lg:hidden border border-border-other-2 rounded-[4px] p-3 flex items-center justify-center hover:border-border-alternative transition-colors duration-200" aria-label="Menu" aria-expanded="false">
           <svg id="burger-icon" class="size-4 text-text-primary" viewBox="0 0 16 16" fill="none" aria-hidden="true">
             <path d="M2 4h12M2 8h12M2 12h12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
@@ -160,65 +141,141 @@ const navItems: NavItem[] = [
             <path d="M3 3l10 10M13 3L3 13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
           </svg>
         </button>
+      </div>
 
+    </div>
+  </div>
+
+  <!-- Products panel — plain columns -->
+  <div class="nav-panel absolute left-0 right-0 top-full hidden" data-panel="products">
+    <div class="global-padding">
+      <div class="mx-auto max-w-[1200px]">
+        <div class="w-[800px] max-w-full bg-bg-primary rounded-[6px] shadow-[0_20px_50px_rgba(10,15,21,0.14)] border border-border-other-2 flex gap-16 p-8">
+          {productsColumns.map(col => (
+            <div class="flex flex-col gap-2 min-w-[160px]">
+              {col.group && <p class="text-tiny text-text-secondary mb-2">{col.group}</p>}
+              {col.links.map(link => (
+                <a href={link.href} class="text-small-medium text-text-primary hover:text-text-tertiary transition-colors duration-150 py-1 block">{link.label}</a>
+              ))}
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   </div>
 
-  <!-- Dropdown panels (desktop) — pt-3 bridges the gap between button and panel -->
-  {navItems.filter(i => i.dropdown).map((item) => {
-    const i = navItems.indexOf(item)
-    return (
-      <div
-        id={`dropdown-${i}`}
-        class="nav-dropdown-panel absolute left-0 right-0 bg-bg-primary border-b border-border-other-2 hidden z-10"
-      >
-        <!-- invisible bridge so mouse doesn't leave hover zone -->
-        <div class="h-3 absolute -top-3 left-0 right-0"></div>
-        <div class="global-padding py-8">
-          <div class="mx-auto max-w-[1200px] flex gap-16">
-            {item.dropdown!.columns.map(col => (
-              <div class="flex flex-col gap-2 min-w-[160px]">
-                {col.group && <p class="text-tiny text-text-secondary mb-2">{col.group}</p>}
-                {col.links.map(link => (
-                  <a href={link.href} class="text-small-medium text-text-primary hover:text-text-tertiary transition-colors duration-150 py-1 block">{link.label}</a>
-                ))}
-              </div>
-            ))}
+  <!-- Mega panels — floating cards -->
+  {megaMenus.map(menu => (
+    <div class="nav-panel absolute left-0 right-0 top-full hidden" data-panel={menu.id}>
+      <div class="global-padding">
+        <div class="mx-auto max-w-[1200px]">
+          <div class="w-[800px] max-w-full bg-bg-primary rounded-[6px] shadow-[0_20px_50px_rgba(10,15,21,0.14)] border border-border-other-2 flex gap-4 p-4">
+
+            <div class="flex-1 min-w-0 self-start flex flex-col gap-5 pl-4 border-l border-border-secondary">
+              {menu.items.map((item, i) => (
+                <button
+                  class:list={['mega-item text-tiny-medium text-trim-off text-left whitespace-nowrap transition-colors duration-150 relative cursor-pointer', i === 0 ? 'is-active' : '']}
+                  data-item={item.key}
+                >{item.title}</button>
+              ))}
+            </div>
+
+            <div class="shrink-0 w-[600px] max-w-full h-[365px] relative overflow-hidden rounded-[4px] bg-bg-secondary">
+              {menu.items.map((item, i) => (
+                <a
+                  href={item.href}
+                  class:list={['mega-preview absolute inset-0 block transition-opacity duration-200', i === 0 ? 'opacity-100' : 'opacity-0 pointer-events-none']}
+                  data-preview={item.key}
+                >
+                  <img src={item.img} alt={item.title} class="absolute inset-0 w-full h-full object-cover" />
+                  <div class="mega-glow absolute inset-0"></div>
+                  <div class="absolute bottom-4 left-4 w-[240px] flex flex-col gap-4">
+                    <div class="flex flex-col gap-4">
+                      <p class="text-h5 text-text-primary">{item.title}</p>
+                      <p class="text-tiny-medium text-text-primary">{item.desc}</p>
+                    </div>
+                    <span class="mega-btn self-start inline-flex items-center gap-2 pl-4 pr-2 py-1 rounded-full bg-btn-black-default text-text-alternate text-small-caps text-trim-off relative overflow-hidden">
+                      <span class="mega-btn-label relative z-[1]">Explore</span><svg class="mega-btn-arrow size-6 relative z-[1] shrink-0" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M9 18l6-6-6-6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    </span>
+                  </div>
+                </a>
+              ))}
+            </div>
+
           </div>
         </div>
       </div>
-    )
-  })}
+    </div>
+  ))}
 
   <!-- Mobile menu -->
   <div id="mobile-menu" class="hidden lg:hidden border-t border-border-other-2 bg-bg-primary h-[calc(100dvh-65px)] overflow-y-auto">
     <div class="global-padding flex flex-col">
 
-      {navItems.map(item => (
-        item.dropdown ? (
-          <div class="mobile-section border-b border-border-other-2">
-            <button class="mobile-section-btn flex items-center justify-between w-full text-text-primary py-5" aria-expanded="false">
-              <span class="text-h6">{item.label}</span>
-              <svg class="mobile-chevron size-6 text-text-primary transition-transform duration-200 shrink-0" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                <path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-              </svg>
-            </button>
-            <div class="mobile-section-content hidden pt-5 pb-5">
-              {item.dropdown!.columns.map(col => (
-                <div>
-                  {col.group && <p class="text-tiny text-text-secondary mb-3 mt-1">{col.group}</p>}
-                  {col.links.map(link => (
-                    <a href={link.href} class="text-medium text-text-primary hover:text-text-tertiary transition-colors duration-150 py-2 block">{link.label}</a>
-                  ))}
-                </div>
+      <div class="mobile-section border-b border-border-other-2">
+        <button class="mobile-section-btn flex items-center justify-between w-full text-text-primary py-5" aria-expanded="false">
+          <span class="text-h6">Products</span>
+          <svg class="mobile-chevron size-6 text-text-primary transition-transform duration-200 shrink-0" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+        <div class="mobile-section-content hidden pb-5">
+          {productsColumns.map(col => (
+            <div>
+              {col.group && <p class="text-tiny text-text-secondary mb-3 mt-1">{col.group}</p>}
+              {col.links.map(link => (
+                <a href={link.href} class="text-medium text-text-primary py-2 block">{link.label}</a>
+              ))}
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {megaMenus.map(menu => (
+        <div class="mobile-section border-b border-border-other-2">
+          <button class="mobile-section-btn flex items-center justify-between w-full text-text-primary py-5" aria-expanded="false">
+            <span class="text-h6">{menu.label}</span>
+            <svg class="mobile-chevron size-6 text-text-primary transition-transform duration-200 shrink-0" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+          <div class="mobile-section-content hidden pb-5">
+            <div class="flex flex-col gap-4">
+              {menu.items.map(item => (
+                <a href={item.href} class="flex items-center gap-4">
+                  <span class="size-12 shrink-0 rounded-[4px] overflow-hidden bg-bg-secondary block">
+                    <img src={item.img} alt="" class="w-full h-full object-cover" loading="lazy" />
+                  </span>
+                  <span class="text-medium text-text-primary">{item.title}</span>
+                </a>
               ))}
             </div>
           </div>
-        ) : (
-          <a href={item.href} class="text-trim-off text-h6 text-text-primary py-5 block border-b border-border-other-2">{item.label}</a>
-        )
+        </div>
       ))}
+
+      <a href="/about" class="text-trim-off text-h6 text-text-primary py-5 block border-b border-border-other-2">About</a>
+      <a href="/sitemap" class="text-trim-off text-h6 text-text-primary py-5 block border-b border-border-other-2">Sitemap</a>
+
+      <div class="mobile-section border-b border-border-other-2">
+        <button class="mobile-section-btn flex items-center justify-between w-full text-text-primary py-5" aria-expanded="false">
+          <span class="text-h6 uppercase">EN</span>
+          <svg class="mobile-chevron size-6 text-text-primary transition-transform duration-200 shrink-0" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+        <div class="mobile-section-content hidden pb-5">
+          <div class="flex flex-col gap-1">
+            {languages.map(l => (
+              <button class="flex items-center gap-3 py-2 text-left w-full">
+                <span class="text-large leading-none">{l.flag}</span>
+                <span class="flex-1 text-medium text-text-primary">{l.label}</span>
+                {l.active && <svg class="size-4 text-text-primary" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8l3.5 3.5L13 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>}
+              </button>
+            ))}
+          </div>
+        </div>
+      </div>
 
       <!-- Contacts block -->
       <div class="pt-8 pb-10 flex flex-col gap-6">
@@ -296,9 +353,27 @@ const navItems: NavItem[] = [
 </div>
 
 <style>
+  .nav-scrim { background: rgba(10, 15, 21, 0.28); }
+
+  .mega-item { color: var(--color-text-secondary); }
+  .mega-item:hover, .mega-item.is-active { color: var(--color-text-primary); }
+  .mega-item.is-active::before {
+    content: '';
+    position: absolute;
+    left: -17px; top: 50%; transform: translateY(-50%);
+    width: 2px; height: 9px; background: var(--color-fg-alternative);
+  }
+
+  /* White glow bottom-left so the dark title/description stay readable over any image */
+  .mega-glow {
+    background: radial-gradient(120% 90% at 8% 92%, rgba(255,255,255,0.96) 0%, rgba(255,255,255,0.82) 22%, rgba(255,255,255,0.35) 45%, rgba(255,255,255,0) 62%);
+  }
+
   @media (hover: hover) and (pointer: fine) {
-    .contact-btn::before {
+    .contact-btn::before,
+    .mega-btn::before {
       content: '';
+      display: block;
       position: absolute;
       inset: 0;
       background-color: var(--color-btn-black-hover);
@@ -306,75 +381,112 @@ const navItems: NavItem[] = [
       transition: clip-path 0.45s cubic-bezier(.21, 1, .34, 1);
       z-index: 0;
     }
+    .contact-btn:hover::before,
+    .mega-preview:hover .mega-btn::before { clip-path: inset(0 0 0 0); }
 
-    .contact-btn:hover::before {
-      clip-path: inset(0 0 0 0);
-    }
-
-    .contact-label {
+    .contact-label,
+    .mega-btn-label {
       text-shadow: 0 -2em 0 white;
       transform: translateY(2em);
       transition:
         transform 0.45s cubic-bezier(.21, 1, .34, 1),
         text-shadow 0.15s cubic-bezier(0.215, 0.61, 0.355, 1);
     }
+    .contact-btn:hover .contact-label,
+    .mega-preview:hover .mega-btn-label { transform: translateY(0); }
 
-    .contact-btn:hover .contact-label {
-      transform: translateY(0);
-      text-shadow: 0 -2em 0 white;
-    }
+    .mega-btn-arrow { transition: transform 0.45s cubic-bezier(.21, 1, .34, 1); }
+    .mega-preview:hover .mega-btn-arrow { transform: translateX(4px); }
   }
 </style>
 
 <script>
-  // ── Desktop dropdowns (hover) ────────────────────────────────
-  const dropdownWraps = document.querySelectorAll<HTMLElement>('.nav-dropdown-wrap')
+  // ── Desktop dropdowns ────────────────────────────────────────
+  const scrim = document.getElementById('nav-scrim')
+  const wraps = Array.from(document.querySelectorAll<HTMLElement>('.nav-wrap'))
+  const panels = new Map<string, HTMLElement>()
+  document.querySelectorAll<HTMLElement>('.nav-panel').forEach(p => panels.set(p.dataset.panel!, p))
 
-  const closeTimers = new Map<number, ReturnType<typeof setTimeout>>()
-  let openDropdowns = 0
+  let openId: string | null = null
+  let closeTimer: ReturnType<typeof setTimeout> | null = null
 
-  function lockScroll() { document.body.style.overflow = 'hidden' }
-  function unlockScroll() { document.body.style.overflow = '' }
-
-  function openDropdown(idx: number) {
-    const existing = closeTimers.get(idx)
-    const panel = document.getElementById(`dropdown-${idx}`)
-    if (existing) { clearTimeout(existing); closeTimers.delete(idx) }
-    if (panel?.classList.contains('hidden')) {
-      openDropdowns++
-      if (openDropdowns === 1) lockScroll()
-    }
-    const btn = document.querySelector<HTMLButtonElement>(`[data-dropdown="${idx}"]`)
-    panel?.classList.remove('hidden')
-    btn?.setAttribute('aria-expanded', 'true')
-    btn?.querySelector('.nav-chevron')?.classList.add('rotate-180')
+  function openMenu(id: string) {
+    if (closeTimer) { clearTimeout(closeTimer); closeTimer = null }
+    if (openId === id) return
+    closeAll(false)
+    openId = id
+    panels.get(id)?.classList.remove('hidden')
+    const wrap = wraps.find(w => w.dataset.menu === id)
+    wrap?.querySelector('.nav-btn')?.setAttribute('aria-expanded', 'true')
+    wrap?.querySelector('.nav-chevron')?.classList.add('rotate-180')
+    scrim?.classList.remove('hidden')
   }
 
-  function scheduleClose(idx: number) {
-    const timer = setTimeout(() => {
-      const panel = document.getElementById(`dropdown-${idx}`)
-      const btn = document.querySelector<HTMLButtonElement>(`[data-dropdown="${idx}"]`)
-      if (!panel?.classList.contains('hidden')) {
-        openDropdowns = Math.max(0, openDropdowns - 1)
-        if (openDropdowns === 0) unlockScroll()
+  function closeAll(clear = true) {
+    panels.forEach(p => p.classList.add('hidden'))
+    wraps.forEach(w => {
+      w.querySelector('.nav-btn')?.setAttribute('aria-expanded', 'false')
+      w.querySelector('.nav-chevron')?.classList.remove('rotate-180')
+    })
+    if (clear) { openId = null; scrim?.classList.add('hidden') }
+  }
+
+  function scheduleClose() {
+    if (closeTimer) clearTimeout(closeTimer)
+    closeTimer = setTimeout(() => closeAll(), 150)
+  }
+
+  wraps.forEach(wrap => {
+    const id = wrap.dataset.menu!
+    wrap.addEventListener('mouseenter', () => openMenu(id))
+    wrap.addEventListener('mouseleave', scheduleClose)
+    wrap.querySelector('.nav-btn')?.addEventListener('click', () => openId === id ? closeAll() : openMenu(id))
+  })
+
+  panels.forEach((panel, id) => {
+    panel.addEventListener('mouseenter', () => {
+      if (closeTimer) { clearTimeout(closeTimer); closeTimer = null }
+      openId = id
+    })
+    panel.addEventListener('mouseleave', scheduleClose)
+
+    const items = Array.from(panel.querySelectorAll<HTMLElement>('.mega-item'))
+    const previews = Array.from(panel.querySelectorAll<HTMLElement>('.mega-preview'))
+    items.forEach(item => {
+      const activate = () => {
+        items.forEach(i => i.classList.toggle('is-active', i === item))
+        previews.forEach(p => {
+          const on = p.dataset.preview === item.dataset.item
+          p.classList.toggle('opacity-100', on)
+          p.classList.toggle('opacity-0', !on)
+          p.classList.toggle('pointer-events-none', !on)
+        })
       }
-      panel?.classList.add('hidden')
-      btn?.setAttribute('aria-expanded', 'false')
-      btn?.querySelector('.nav-chevron')?.classList.remove('rotate-180')
-      closeTimers.delete(idx)
-    }, 120)
-    closeTimers.set(idx, timer)
-  }
+      item.addEventListener('mouseenter', activate)
+      item.addEventListener('focus', activate)
+    })
+  })
 
-  dropdownWraps.forEach(wrap => {
-    const btn = wrap.querySelector<HTMLButtonElement>('[data-dropdown]')
-    const idx = Number(btn?.dataset.dropdown)
-    const panel = document.getElementById(`dropdown-${idx}`)
+  scrim?.addEventListener('click', () => closeAll())
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeAll() })
 
-    wrap.addEventListener('mouseenter', () => openDropdown(idx))
-    wrap.addEventListener('mouseleave', () => scheduleClose(idx))
-    panel?.addEventListener('mouseenter', () => openDropdown(idx))
-    panel?.addEventListener('mouseleave', () => scheduleClose(idx))
+  // ── Language dropdown ────────────────────────────────────────
+  const langBtn = document.getElementById('lang-btn')
+  const langPanel = document.getElementById('lang-panel')
+  const langChevron = langBtn?.querySelector('.lang-chevron')
+
+  langBtn?.addEventListener('click', e => {
+    e.stopPropagation()
+    const open = !langPanel?.classList.contains('hidden')
+    langPanel?.classList.toggle('hidden', open)
+    langChevron?.classList.toggle('rotate-180', !open)
+  })
+
+  document.addEventListener('click', e => {
+    if (!(e.target as HTMLElement).closest('[data-lang-wrap]')) {
+      langPanel?.classList.add('hidden')
+      langChevron?.classList.remove('rotate-180')
+    }
   })
 
   // ── Mobile menu ──────────────────────────────────────────────
@@ -390,10 +502,9 @@ const navItems: NavItem[] = [
     burgerIcon?.classList.toggle('hidden', menuOpen)
     closeIcon?.classList.toggle('hidden', !menuOpen)
     burgerBtn.setAttribute('aria-expanded', String(menuOpen))
-    menuOpen ? lockScroll() : unlockScroll()
+    document.body.style.overflow = menuOpen ? 'hidden' : ''
   })
 
-  // Mobile accordion sections
   document.querySelectorAll<HTMLButtonElement>('.mobile-section-btn').forEach(btn => {
     btn.addEventListener('click', () => {
       const section = btn.closest('.mobile-section')
@@ -417,7 +528,6 @@ const navItems: NavItem[] = [
   const searchSeeAll     = document.getElementById('search-see-all') as HTMLAnchorElement | null
   const searchSeeAllWrap = document.getElementById('search-see-all-wrap')
   const searchBtnEl      = document.getElementById('search-btn')
-  const searchBtnMob     = document.getElementById('search-btn-mobile')
 
   let searchDebounce: ReturnType<typeof setTimeout> | null = null
 
@@ -440,6 +550,7 @@ const navItems: NavItem[] = [
   }
 
   function openSearch() {
+    closeAll()
     searchOverlay?.classList.remove('hidden')
     searchOverlay?.classList.add('flex')
     document.body.style.overflow = 'hidden'
@@ -497,7 +608,6 @@ const navItems: NavItem[] = [
   }
 
   searchBtnEl?.addEventListener('click', openSearch)
-  searchBtnMob?.addEventListener('click', openSearch)
   searchClose?.addEventListener('click', closeSearch)
 
   document.addEventListener('keydown', e => {
@@ -532,7 +642,8 @@ const navItems: NavItem[] = [
       if (currentY <= headerH) {
         header.style.transform = 'translateY(0)'
       } else if (currentY > lastY) {
-        header.style.transform = `translateY(-100%)`
+        header.style.transform = 'translateY(-100%)'
+        closeAll()
       } else {
         header.style.transform = 'translateY(0)'
       }

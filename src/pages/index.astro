@@ -86,10 +86,27 @@ const whyCards = [
     points: ['Precise force control', 'High accurate repeatability', 'Exquisite and compact size'] },
 ]
 
-const equipmentTabs = [
-  'Dexterous Hands', 'Smart Actuators', 'Intelligent Flexible Motion System',
-  'Hexapod', 'Sensor', 'Precision Motorized Stage',
-]
+// ── CMS: equipment — one tab per product category, its series in the grid ──
+let equipment: any[] = []
+try {
+  const cats = await client.fetch(`*[_type == "productCategory"] | order(order asc){
+    title, description, "slug": slug.current,
+    "series": *[_type == "productSeries" && references(^._id)] | order(order asc){
+      title, subtitle, "slug": slug.current, "img": heroImage.asset._ref
+    }
+  }`)
+  equipment = (cats ?? [])
+    .filter((c: any) => c.series?.length)
+    .map((c: any) => ({
+      title: c.title,
+      description: c.description ?? '',
+      series: c.series.map((s: any) => ({
+        title: s.title,
+        img: s.img ? assetUrl(s.img, 1200) : '',
+        href: '/products/series',
+      })),
+    }))
+} catch { equipment = [] }
 
 const stats = [
   { value: 'NO.1',      label: 'China electric actuator sales' },
@@ -130,10 +147,10 @@ const supportLinks = [
 const trustedLogos = [
   { name: 'Huawei',  src: '/images/logos/huawei.svg',  h: 'h-[83px]' },
   { name: 'Toyota',  src: '/images/logos/toyota.svg',  h: 'h-[70px]' },
-  { name: 'DJI',     src: '/images/logos/dji.png',     h: 'h-[62px]' },
+  { name: 'DJI',     src: '/images/logos/dji.svg',     h: 'h-[62px]' },
   { name: 'Nissan',  src: '/images/logos/nissan.svg',  h: 'h-[100px]' },
   { name: 'Samsung', src: '/images/logos/samsung.svg', h: 'h-[49px]' },
-  { name: 'Bosch',   src: '/images/logos/bosch.png',   h: 'h-[28px]' },
+  { name: 'Bosch',   src: '/images/logos/bosch.svg',   h: 'h-[28px]' },
   { name: 'KFC',     src: '/images/logos/kfc.svg',     h: 'h-[84px]' },
   { name: 'Hyundai', src: '/images/logos/hyundai.svg', h: 'h-[19px]' },
 ]
@@ -271,59 +288,51 @@ try {
 
 
   <!-- ═══ 2. Proven Success ═══ -->
-  <section class="bg-bg-primary pt-20 pb-[120px] max-lg:pt-12 max-lg:pb-16">
+  <section class="proven-stack bg-bg-primary pt-20 pb-[120px] max-lg:pt-12 max-lg:pb-16">
     <div class="global-padding">
       <div class="mx-auto max-w-[1200px]">
-        <p class="text-regular text-text-primary text-center max-w-[500px] mx-auto">
-          Watch our intelligent grippers and motion control solutions in action across global manufacturing lines, delivering real-world efficiency and precision.
-        </p>
-        <h2 class="text-h1 mob-h2 text-text-primary text-center mt-10 max-lg:mt-8">Proven Success</h2>
 
-        <div class="mt-14 max-lg:mt-10 flex items-center gap-10 max-lg:flex-col max-lg:gap-8">
+        <div class="proven-stage relative">
 
-          <!-- Client list doubles as slider navigation -->
-          <div class="shrink-0 w-[160px] flex flex-col gap-8 items-center max-lg:flex-row max-lg:w-full max-lg:justify-center max-lg:gap-6 max-lg:flex-wrap">
+        <!-- Heading pins inside its own track, which ends where the stack does,
+             so heading and cards release together instead of overlapping -->
+        <div class="proven-head-track lg:absolute lg:inset-x-0 lg:top-0" style="bottom: var(--proven-release, 0px)">
+          <div class="proven-head lg:sticky lg:top-[96px] z-10 bg-bg-primary">
+            <p class="text-regular text-text-primary text-center max-w-[500px] mx-auto">
+              Watch our intelligent grippers and motion control solutions in action across global manufacturing lines, delivering real-world efficiency and precision.
+            </p>
+            <h2 class="text-h1 mob-h2 text-text-primary text-center mt-10 max-lg:mt-8">Proven Success</h2>
+          </div>
+        </div>
+
+        <div class="proven-body max-lg:mt-10 flex items-start gap-10 max-lg:flex-col max-lg:gap-8" style="padding-top: var(--proven-head-h, 0px)">
+
+          <!-- Left rail: client names, pinned (desktop) -->
+          <div class="shrink-0 w-[160px] lg:sticky lg:top-[var(--proven-top)] flex flex-col gap-8 items-center max-lg:hidden">
             {provenCases.map((c, i) => (
-              <button class:list={['proven-tab text-h5 mob-h6 text-text-primary transition-opacity duration-300 cursor-pointer', i === 0 ? 'is-active' : '']}>{c.client}</button>
+              <span class:list={['proven-tab text-h5 text-text-primary transition-opacity duration-300', i === 0 ? 'is-active' : '']}>{c.client}</span>
             ))}
           </div>
 
-          <!-- Media -->
-          <div class="flex-1 min-w-0 w-full">
-            <div class="swiper proven-swiper rounded-[4px] overflow-hidden bg-bg-secondary">
-              <div class="swiper-wrapper">
-                {provenCases.map(c => (
-                  <div class="swiper-slide">
-                    <div class="aspect-video w-full overflow-hidden">
-                      <img src={c.img} alt={c.client} class="w-full h-full object-cover" loading="lazy" />
-                    </div>
+          <!-- Cards stack: every card sticks at the same offset, so each covers the last.
+               Description rides along with its own card and cross-fades on the swap. -->
+          <ul class="flex-1 min-w-0 w-full flex flex-col gap-8 list-none p-0 m-0">
+            {provenCases.map((c, i) => (
+              <li class="proven-card lg:sticky lg:top-[var(--proven-top)]" data-proven={i}>
+                <div class="flex items-start gap-10 max-lg:flex-col max-lg:gap-5">
+                  <div class="proven-media flex-1 min-w-0 w-full rounded-[4px] overflow-hidden bg-bg-secondary aspect-[640/483] lg:max-h-[calc(100svh-var(--proven-top)-40px)]">
+                    <img src={c.img} alt={c.client} class="w-full h-full object-cover" loading="lazy" />
                   </div>
-                ))}
-              </div>
-            </div>
-          </div>
-
-          <!-- Description + controls -->
-          <div class="shrink-0 w-[260px] max-lg:w-full flex flex-col gap-8">
-            <div class="swiper proven-text-swiper">
-              <div class="swiper-wrapper">
-                {provenCases.map(c => (
-                  <div class="swiper-slide">
+                  <div class="proven-meta shrink-0 lg:w-[260px] max-lg:w-full flex flex-col gap-3">
+                    <span class="text-h6 text-text-primary lg:hidden">{c.client}</span>
                     <p class="text-small text-text-secondary">{c.desc}</p>
                   </div>
-                ))}
-              </div>
-            </div>
+                </div>
+              </li>
+            ))}
+          </ul>
+        </div>
 
-            <div class="flex items-center gap-4">
-              <button class="proven-prev size-10 rounded-full border border-border-other-2 flex items-center justify-center transition-colors cursor-pointer hover:border-border-alternative" aria-label="Previous">
-                <svg class="size-6" viewBox="0 0 24 24" fill="none"><path d="M15 18l-6-6 6-6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-              </button>
-              <button class="proven-next size-10 rounded-full border border-border-other-2 flex items-center justify-center transition-colors cursor-pointer hover:border-border-alternative" aria-label="Next">
-                <svg class="size-6" viewBox="0 0 24 24" fill="none"><path d="M9 18l6-6-6-6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-              </button>
-            </div>
-          </div>
         </div>
       </div>
     </div>
@@ -343,7 +352,7 @@ try {
         {[0, 1].map(() => (
           <div class="flex items-center shrink-0" aria-hidden="false">
             {trustedLogos.map(logo => (
-              <span class="w-[160px] h-[129px] max-lg:w-[120px] max-lg:h-[96px] shrink-0 flex items-center justify-center px-4">
+              <span class="w-[216px] h-[129px] max-lg:w-[162px] max-lg:h-[96px] shrink-0 flex items-center justify-center px-1">
                 <img src={logo.src} alt={logo.name} class:list={[logo.h, 'w-auto max-w-full object-contain max-lg:h-auto max-lg:max-h-[56px]']} />
               </span>
             ))}
@@ -428,66 +437,71 @@ try {
     </div>
   </section>
 
+  {equipment.length > 0 && (
   <section class="bg-bg-primary pb-[120px] max-lg:pb-16">
     <div class="global-padding">
       <div class="mx-auto max-w-[1200px]">
 
-        <!-- Title + description + centred Explore -->
-        <div class="flex flex-col items-center gap-6 mb-14 max-lg:mb-10">
-          <div class="flex flex-col items-center gap-5 text-center">
-            <h3 class="text-h3 mob-h4 text-text-primary">Dexterous Hand</h3>
-            <p class="text-regular text-text-primary max-w-[237px]">Touch the Future, Unleash Dexterity Without Limits</p>
+        {equipment.map((cat: any, ci: number) => (
+          <div class:list={['eq-panel', ci === 0 ? '' : 'hidden']} data-eq-panel={ci}>
+
+            <!-- Title + description + centred Explore -->
+            <div class="flex flex-col items-center gap-6 mb-14 max-lg:mb-10">
+              <div class="flex flex-col items-center gap-5 text-center">
+                <h3 class="text-h3 mob-h4 text-text-primary">{cat.title}</h3>
+                {cat.description && <p class="text-regular text-text-primary max-w-[320px]">{cat.description}</p>}
+              </div>
+              <div class="flex justify-center">
+                <Button label="Explore" href="/products" variant="black" />
+              </div>
+            </div>
+
+            <div class="flex gap-4 max-lg:flex-col">
+              <!-- Lead series -->
+              <a href={cat.series[0].href} class="group relative lg:flex-1 shrink-0 h-[554px] max-lg:h-[300px] rounded-[12px] overflow-hidden bg-bg-other block">
+                {cat.series[0].img && (
+                  <img src={cat.series[0].img} alt={cat.series[0].title}
+                    class="absolute inset-0 w-full h-full object-contain p-10 max-lg:p-6 transition-transform duration-500 group-hover:scale-[1.03]" loading="lazy" />
+                )}
+                <span class="absolute top-6 left-6 text-large-medium text-text-primary max-w-[149px]">{cat.series[0].title}</span>
+                <span class="absolute bottom-4 right-4 size-10 rounded-full bg-btn-black-default group-hover:bg-btn-black-hover flex items-center justify-center transition-colors">
+                  <svg class="size-6 text-text-alternate" viewBox="0 0 24 24" fill="none"><path d="M9 18l6-6-6-6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </span>
+              </a>
+
+              <!-- Remaining series stack and share the column height -->
+              {cat.series.length > 1 && (
+                <div class="lg:w-[592px] lg:h-[554px] max-lg:w-full flex flex-col gap-4">
+                  {cat.series.slice(1).map((s: any) => (
+                    <a href={s.href} class="group relative lg:flex-1 lg:min-h-0 max-lg:h-[200px] rounded-[12px] overflow-hidden bg-bg-other block">
+                      {s.img && (
+                        <img src={s.img} alt={s.title}
+                          class="absolute inset-0 w-full h-full object-contain p-8 max-lg:p-6 transition-transform duration-500 group-hover:scale-[1.03]" loading="lazy" />
+                      )}
+                      <span class="absolute top-6 left-6 text-large-medium text-text-primary max-w-[149px]">{s.title}</span>
+                      <span class="absolute bottom-4 right-4 size-10 rounded-full bg-btn-black-default group-hover:bg-btn-black-hover flex items-center justify-center transition-colors">
+                        <svg class="size-6 text-text-alternate" viewBox="0 0 24 24" fill="none"><path d="M9 18l6-6-6-6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                      </span>
+                    </a>
+                  ))}
+                </div>
+              )}
+            </div>
           </div>
-          <div class="flex justify-center">
-            <Button label="Explore" href="/products" variant="black" />
-          </div>
-        </div>
+        ))}
 
-        <div class="flex gap-4 max-lg:flex-col">
-          <!-- Big card: 5-finger hand -->
-          <a href="/products/series" class="group relative lg:flex-1 shrink-0 h-[554px] max-lg:h-[300px] rounded-[12px] overflow-hidden bg-bg-other block">
-            <img src="/images/home/hand-5finger.png" alt="5-Finger Dexterous Hand"
-              class="absolute left-[-1.7%] top-[-41.3%] w-[99.5%] h-[152.3%] max-w-none object-cover transition-transform duration-500 group-hover:scale-[1.03] max-lg:top-[-20%] max-lg:h-[130%]" loading="lazy" />
-            <span class="absolute top-6 left-6 text-large-medium text-text-primary max-w-[149px]">5-Finger Dexterous Hand</span>
-            <span class="absolute bottom-4 right-4 size-10 rounded-full bg-btn-black-default group-hover:bg-btn-black-hover flex items-center justify-center transition-colors">
-              <svg class="size-6 text-text-alternate" viewBox="0 0 24 24" fill="none"><path d="M9 18l6-6-6-6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            </span>
-          </a>
-
-          <!-- Right column: two stacked cards -->
-          <div class="lg:w-[592px] max-lg:w-full flex flex-col gap-4">
-            <a href="/products/series" class="group relative h-[269px] max-lg:h-[200px] rounded-[12px] overflow-hidden bg-bg-other block">
-              <img src="/images/home/hand-2finger.png" alt="2-Finger Dexterous Hand"
-                class="absolute left-[21.8%] top-[-21.2%] w-[70.1%] aspect-square max-w-none object-contain transition-transform duration-500 group-hover:scale-[1.03]" loading="lazy" />
-              <span class="absolute top-6 left-6 text-large-medium text-text-primary max-w-[149px]">2-Finger Dexterous Hand</span>
-              <span class="absolute bottom-4 right-4 size-10 rounded-full bg-btn-black-default group-hover:bg-btn-black-hover flex items-center justify-center transition-colors">
-                <svg class="size-6 text-text-alternate" viewBox="0 0 24 24" fill="none"><path d="M9 18l6-6-6-6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-              </span>
-            </a>
-
-            <a href="/products/series" class="group relative h-[269px] max-lg:h-[200px] rounded-[12px] overflow-hidden bg-bg-other block">
-              <img src="/images/home/hand-3finger.png" alt="3-Finger Dexterous Hand"
-                class="absolute right-[21.2%] top-[-62.6%] w-[57.7%] h-[179.7%] max-w-none object-contain transition-transform duration-500 group-hover:scale-[1.03] max-lg:top-[-30%] max-lg:h-[140%]" loading="lazy" />
-              <span class="absolute top-6 left-6 text-large-medium text-text-primary max-w-[149px]">3-Finger Dexterous Hand</span>
-              <span class="absolute bottom-4 right-4 size-10 rounded-full bg-btn-black-default group-hover:bg-btn-black-hover flex items-center justify-center transition-colors">
-                <svg class="size-6 text-text-alternate" viewBox="0 0 24 24" fill="none"><path d="M9 18l6-6-6-6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-              </span>
-            </a>
-          </div>
-        </div>
-
-        <!-- Numbered tabs with progress lines -->
+        <!-- Category tabs with progress lines -->
         <div class="mt-4 flex flex-col gap-4">
-          <div class="grid grid-cols-6 gap-2 max-lg:grid-cols-2 max-lg:gap-x-4 max-lg:gap-y-3">
-            {equipmentTabs.map((t, i) => (
-              <button class:list={['eq-tab flex items-center gap-1 text-left cursor-pointer', i === 0 ? 'is-active' : '']}>
-                <span class="text-tiny-medium text-trim-off text-text-primary whitespace-nowrap">0{i + 1}.</span>
-                <span class="text-tiny-medium text-trim-off text-text-primary">{t}</span>
+          <div class="eq-grid grid gap-2 max-lg:grid-cols-2 max-lg:gap-x-4 max-lg:gap-y-3" style={`grid-template-columns: repeat(${equipment.length}, minmax(0, 1fr))`}>
+            {equipment.map((cat: any, i: number) => (
+              <button class:list={['eq-tab flex items-center gap-1 text-left cursor-pointer', i === 0 ? 'is-active' : '']} data-eq-tab={i}>
+                <span class="text-tiny-medium text-trim-off text-text-primary whitespace-nowrap">{String(i + 1).padStart(2, '0')}.</span>
+                <span class="text-tiny-medium text-trim-off text-text-primary">{cat.title}</span>
               </button>
             ))}
           </div>
-          <div class="grid grid-cols-6 gap-2 max-lg:grid-cols-2 max-lg:gap-x-4">
-            {equipmentTabs.map((_, i) => (
+          <div class="eq-grid grid gap-2 max-lg:grid-cols-2 max-lg:gap-x-4" style={`grid-template-columns: repeat(${equipment.length}, minmax(0, 1fr))`}>
+            {equipment.map((_: any, i: number) => (
               <span class:list={['eq-line block h-px w-full overflow-hidden rounded-[2px]', i === 0 ? 'is-active' : '']}></span>
             ))}
           </div>
@@ -496,6 +510,7 @@ try {
       </div>
     </div>
   </section>
+  )}
 
   <!-- ═══ 6. Inspired by Science (dark) ═══ -->
   <section class="bg-bg-alternative py-[120px] max-lg:py-16">
@@ -511,10 +526,10 @@ try {
           </a>
         </div>
 
-        <div class="grid grid-cols-6 gap-4 mt-20 max-lg:mt-12 max-lg:grid-cols-2 max-lg:gap-x-4 max-lg:gap-y-10">
+        <div id="stats-grid" class="grid grid-cols-6 gap-4 mt-20 max-lg:mt-12 max-lg:grid-cols-2 max-lg:gap-x-4 max-lg:gap-y-10">
           {stats.map(s => (
             <div class="flex flex-col gap-4">
-              <span class="text-h4 mob-h5 text-text-alternate">{s.value}</span>
+              <span class="stat-value text-h4 mob-h5 text-text-alternate" data-count={s.value}>{s.value}</span>
               <span class="text-small text-text-alternate opacity-70">{s.label}</span>
             </div>
           ))}
@@ -800,9 +815,6 @@ try {
   .logo-track {
     animation: logo-scroll 40s linear infinite;
   }
-  .logo-marquee:hover .logo-track {
-    animation-play-state: paused;
-  }
   @keyframes logo-scroll {
     from { transform: translateX(0); }
     to   { transform: translateX(-50%); }
@@ -907,8 +919,20 @@ try {
   }
 
   /* Proven Success: client names act as slider tabs */
+  /* Offset the stacked cards sit at — clears the pinned heading above them */
+  .proven-stack { --proven-top: 340px; }
+  @media (max-width: 1023px) { .proven-stack { --proven-top: 0px; } }
+
   .proven-tab { opacity: 0.4; }
-  .proven-tab:hover, .proven-tab.is-active { opacity: 1; }
+  .proven-tab.is-active { opacity: 1; }
+
+  /* Scroll drives these per frame — keep a short ease so a fast flick still reads smoothly */
+  .proven-media { will-change: transform, filter; transition: transform 0.12s linear, filter 0.12s linear; }
+  .proven-meta { transition: opacity 0.2s linear; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .proven-media { transition: none; filter: none !important; transform: none !important; }
+  }
 
   /* Equipment tabs: inactive dimmed to 40%, active full (per design) */
   .eq-tab { opacity: 0.4; transition: opacity 0.2s ease; }
@@ -983,14 +1007,68 @@ try {
       })
     })
   }
-  // Equipment tabs also drive the progress lines
+  // ── Stats count up once the grid scrolls into view ──
+  {
+    const grid = document.getElementById('stats-grid')
+    const values = Array.from(document.querySelectorAll<HTMLElement>('.stat-value'))
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+
+    if (grid && values.length && !reduced) {
+      // "300,000+" -> prefix "", digits "300,000", suffix "+"
+      const parsed = values.map(el => {
+        const raw = el.dataset.count ?? el.textContent ?? ''
+        const m = raw.match(/[\d][\d,]*(\.\d+)?/)
+        if (!m) return null
+        const digits = m[0]
+        return {
+          el,
+          prefix: raw.slice(0, m.index),
+          suffix: raw.slice(m.index! + digits.length),
+          target: parseFloat(digits.replace(/,/g, '')),
+          decimals: (digits.split('.')[1] ?? '').length,
+          grouped: digits.includes(','),
+        }
+      }).filter(Boolean) as any[]
+
+      const format = (p: any, n: number) => {
+        const v = p.decimals ? n.toFixed(p.decimals) : String(Math.round(n))
+        return p.prefix + (p.grouped ? Number(v).toLocaleString('en-US') : v) + p.suffix
+      }
+
+      parsed.forEach(p => { p.el.textContent = format(p, 0) })
+
+      const DURATION = 1600
+      const run = () => {
+        const start = performance.now()
+        const tick = (now: number) => {
+          const t = Math.min((now - start) / DURATION, 1)
+          const eased = 1 - Math.pow(1 - t, 4)
+          parsed.forEach(p => { p.el.textContent = format(p, p.target * eased) })
+          if (t < 1) requestAnimationFrame(tick)
+          else parsed.forEach(p => { p.el.textContent = p.el.dataset.count! })
+        }
+        requestAnimationFrame(tick)
+      }
+
+      const io = new IntersectionObserver((entries) => {
+        entries.forEach(e => {
+          if (e.isIntersecting) { io.disconnect(); run() }
+        })
+      }, { threshold: 0.35 })
+      io.observe(grid)
+    }
+  }
+
+  // Equipment tabs switch the category panel and drive the progress lines
   {
     const tabs = Array.from(document.querySelectorAll<HTMLElement>('.eq-tab'))
     const lines = Array.from(document.querySelectorAll<HTMLElement>('.eq-line'))
+    const panels = Array.from(document.querySelectorAll<HTMLElement>('.eq-panel'))
     tabs.forEach((tab, i) => {
       tab.addEventListener('click', () => {
         tabs.forEach((t, j) => t.classList.toggle('is-active', j === i))
         lines.forEach((l, j) => l.classList.toggle('is-active', j === i))
+        panels.forEach((p, j) => p.classList.toggle('hidden', j !== i))
       })
     })
   }
@@ -1075,32 +1153,94 @@ try {
   buildDotSlider('.hero-swiper-m', '.hero-dots-m', '.hero-prev-m', '.hero-next-m')
   buildDotSlider('.testimonial-swiper', '.testimonial-dots', '.testimonial-prev', '.testimonial-next')
 
-  // ── Proven Success: media + text move together, client list acts as tabs ──
+  // ── Proven Success: cards stack via CSS sticky; the rails follow the top card ──
   {
-    const mediaEl = document.querySelector<HTMLElement>('.proven-swiper')
-    const textEl = document.querySelector<HTMLElement>('.proven-text-swiper')
+    const cards = Array.from(document.querySelectorAll<HTMLElement>('.proven-card'))
     const tabs = Array.from(document.querySelectorAll<HTMLElement>('.proven-tab'))
+    const media = cards.map(c => c.querySelector<HTMLElement>('.proven-media'))
+    const metas = cards.map(c => c.querySelector<HTMLElement>('.proven-meta'))
 
-    if (mediaEl && textEl) {
-      const media = new Swiper('.proven-swiper', {
-        modules: [Navigation],
-        slidesPerView: 1,
-        speed: 500,
-        navigation: { prevEl: '.proven-prev', nextEl: '.proven-next' },
-        on: {
-          afterInit: (s: any) => tabs.forEach((t, j) => t.classList.toggle('is-active', j === s.activeIndex)),
-          slideChange: (s: any) => {
-            tabs.forEach((t, j) => t.classList.toggle('is-active', j === s.activeIndex))
-            text.slideTo(s.activeIndex)
-          },
-        },
-      })
-      const text = new Swiper('.proven-text-swiper', {
-        slidesPerView: 1,
-        speed: 500,
-        allowTouchMove: false,
-      })
-      tabs.forEach((tab, i) => tab.addEventListener('click', () => media.slideTo(i)))
+    if (cards.length) {
+      let current = -1
+      let ticking = false
+
+      const stage = document.querySelector<HTMLElement>('.proven-stage')
+      const head = document.querySelector<HTMLElement>('.proven-head')
+      const HEAD_TOP = 96
+      const HEAD_GAP = 56
+
+      // The heading is pinned higher than the cards, so its track has to end early —
+      // otherwise it stays put after the stack releases and the photos ride over it.
+      const layout = () => {
+        if (!stage || !head) return
+        if (window.innerWidth < 1024) {
+          stage.style.removeProperty('--proven-head-h')
+          stage.style.removeProperty('--proven-release')
+          return
+        }
+        const headH = head.getBoundingClientRect().height
+        const cardTop = parseFloat(getComputedStyle(cards[0]).top) || 0
+        const cardH = cards[0].getBoundingClientRect().height
+        // The heading is out of flow, so the body has to reserve its height plus the gap
+        stage.style.setProperty('--proven-head-h', `${headH + HEAD_GAP}px`)
+        stage.style.setProperty('--proven-release', `${Math.max(0, (cardTop + cardH) - (HEAD_TOP + headH))}px`)
+      }
+
+      const clamp = (n: number) => Math.min(Math.max(n, 0), 1)
+
+      const reset = () => {
+        media.forEach(m => { if (m) m.style.cssText = '' })
+        metas.forEach(m => { if (m) m.style.cssText = '' })
+      }
+
+      const apply = () => {
+        ticking = false
+        if (window.innerWidth < 1024) { reset(); return }
+
+        // Every card sticks at the same offset, so the last one that reached it is on top
+        const stickTop = parseFloat(getComputedStyle(cards[0]).top)
+        if (Number.isNaN(stickTop)) return
+        const span = cards[0].getBoundingClientRect().height + 32
+
+        let active = 0
+        cards.forEach((card, i) => {
+          const top = card.getBoundingClientRect().top
+          if (top <= stickTop + 2) active = i
+
+          // arrive: 0 while the card is still coming up, 1 once it has landed
+          const arrive = clamp(1 - (top - stickTop) / span)
+          // cover: how far the next card has come over this one
+          const next = cards[i + 1]
+          const cover = next ? clamp(1 - (next.getBoundingClientRect().top - stickTop) / span) : 0
+
+          const m = media[i]
+          if (m) {
+            m.style.transform = `translateY(${-32 * cover}px) scale(${1 - 0.07 * cover})`
+            m.style.filter = cover > 0.01 ? `blur(${8 * cover}px)` : ''
+            m.style.transformOrigin = 'center top'
+          }
+          // Hand off in sequence, not in parallel: the outgoing text is gone before
+          // the incoming one starts, with a brief empty beat in between
+          const out = clamp((0.55 - cover) / 0.4)
+          const into = clamp((arrive - 0.6) / 0.4)
+          const meta = metas[i]
+          if (meta) meta.style.opacity = String(Math.min(out, into))
+        })
+
+        if (active !== current) {
+          current = active
+          tabs.forEach((t, i) => t.classList.toggle('is-active', i === active))
+        }
+      }
+
+      layout()
+      apply()
+      window.addEventListener('scroll', () => {
+        if (ticking) return
+        ticking = true
+        requestAnimationFrame(apply)
+      }, { passive: true })
+      window.addEventListener('resize', () => { layout(); apply() })
     }
   }
 
