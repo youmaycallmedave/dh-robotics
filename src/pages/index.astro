@@ -86,6 +86,17 @@ const whyCards = [
     points: ['Precise force control', 'High accurate repeatability', 'Exquisite and compact size'] },
 ]
 
+// Раскладка карточек Equipment зависит от их количества — как в Figma «Home page - NEW»:
+// 1 → на всю ширину, 2 → две колонки, 3 → бенто, 4 → 2×2, дальше — три колонки.
+// На мобильном всегда одна колонка.
+function eqGridClass(n: number) {
+  if (n === 1) return 'lg:grid-cols-1'
+  if (n === 2) return 'lg:grid-cols-2'
+  if (n === 3) return 'lg:grid-cols-2 lg:grid-rows-2'
+  if (n === 4) return 'lg:grid-cols-2 lg:grid-rows-2'
+  return 'lg:grid-cols-3 lg:grid-rows-2'
+}
+
 // ── CMS: equipment — one tab per product category, its series in the grid ──
 let equipment: any[] = []
 try {
@@ -448,44 +459,35 @@ try {
             <!-- Title + description + centred Explore -->
             <div class="flex flex-col items-center gap-6 mb-14 max-lg:mb-10">
               <div class="flex flex-col items-center gap-5 text-center">
-                <h3 class="text-h3 mob-h4 text-text-primary">{cat.title}</h3>
-                {cat.description && <p class="text-regular text-text-primary max-w-[320px]">{cat.description}</p>}
+                <h3 class="text-h6 text-text-primary">{cat.title}</h3>
+                {cat.description && <p class="text-small text-text-primary max-w-[283px]">{cat.description}</p>}
               </div>
               <div class="flex justify-center">
                 <Button label="Explore" href="/products" variant="black" />
               </div>
             </div>
 
-            <div class="flex gap-4 max-lg:flex-col">
-              <!-- Lead series -->
-              <a href={cat.series[0].href} class="group relative lg:flex-1 shrink-0 h-[554px] max-lg:h-[300px] rounded-medium-small overflow-hidden bg-bg-other block">
-                {cat.series[0].img && (
-                  <img src={cat.series[0].img} alt={cat.series[0].title}
-                    class="absolute inset-0 w-full h-full object-contain p-10 max-lg:p-6 transition-transform duration-500 group-hover:scale-[1.03]" loading="lazy" />
-                )}
-                <span class="absolute top-6 left-6 text-large-medium text-text-primary max-w-[149px]">{cat.series[0].title}</span>
-                <span class="absolute bottom-4 right-4 size-10 rounded-full bg-btn-black-default group-hover:bg-btn-black-hover flex items-center justify-center transition-colors">
-                  <svg class="size-6 text-text-alternate" viewBox="0 0 24 24" fill="none"><path d="M9 18l6-6-6-6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                </span>
-              </a>
-
-              <!-- Remaining series stack and share the column height -->
-              {cat.series.length > 1 && (
-                <div class="lg:w-[592px] lg:h-[554px] max-lg:w-full flex flex-col gap-4">
-                  {cat.series.slice(1).map((s: any) => (
-                    <a href={s.href} class="group relative lg:flex-1 lg:min-h-0 max-lg:h-[200px] rounded-medium-small overflow-hidden bg-bg-other block">
-                      {s.img && (
-                        <img src={s.img} alt={s.title}
-                          class="absolute inset-0 w-full h-full object-contain p-8 max-lg:p-6 transition-transform duration-500 group-hover:scale-[1.03]" loading="lazy" />
-                      )}
-                      <span class="absolute top-6 left-6 text-large-medium text-text-primary max-w-[149px]">{s.title}</span>
-                      <span class="absolute bottom-4 right-4 size-10 rounded-full bg-btn-black-default group-hover:bg-btn-black-hover flex items-center justify-center transition-colors">
-                        <svg class="size-6 text-text-alternate" viewBox="0 0 24 24" fill="none"><path d="M9 18l6-6-6-6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                      </span>
-                    </a>
-                  ))}
-                </div>
-              )}
+            <!-- Карточки заполняют область 1200x555; раскладка зависит от их числа (Figma «* - d») -->
+            <div class:list={['grid gap-4 lg:h-[555px]', eqGridClass(cat.series.length)]}>
+              {cat.series.map((s: any, si: number) => (
+                <a
+                  href={s.href}
+                  class:list={[
+                    'group relative block overflow-hidden rounded-medium-small bg-bg-other max-lg:h-[220px]',
+                    // при трёх карточках первая занимает оба ряда
+                    cat.series.length === 3 && si === 0 ? 'lg:row-span-2' : '',
+                  ]}
+                >
+                  {s.img && (
+                    <img src={s.img} alt={s.title}
+                      class="absolute inset-0 w-full h-full object-contain p-10 max-lg:p-6 transition-transform duration-500 group-hover:scale-[1.03]" loading="lazy" />
+                  )}
+                  <span class="absolute top-6 left-6 text-small-medium text-text-primary text-trim-off max-w-[220px]">{s.title}</span>
+                  <span class="absolute bottom-4 right-4 size-10 rounded-full bg-btn-black-default group-hover:bg-btn-black-hover flex items-center justify-center transition-colors">
+                    <svg class="size-6 text-text-alternate" viewBox="0 0 24 24" fill="none"><path d="M9 18l6-6-6-6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                  </span>
+                </a>
+              ))}
             </div>
           </div>
         ))}
