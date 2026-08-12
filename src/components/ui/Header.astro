@@ -8,7 +8,11 @@ type Mega = { id: string; label: string; items: MegaItem[] }
 // Правая часть панели бывает двух видов:
 //  - hero  — одна большая карточка с заголовком, описанием и кнопкой (All Products)
 //  - сетка — карточки продуктов; раскладка выводится из их количества (см. gridClass)
-type ProductCard = { label: string; href: string; img: string }
+// Два типа карточек из макета:
+//  - без desc — изображение на всю плашку, подпись сверху и круглая кнопка снизу
+//    (Dexterous Hand, Smart Actuators)
+//  - с desc — иконка продукта 80x80, название серии и описание (Electric Grippers)
+type ProductCard = { label: string; href: string; img: string; desc?: string }
 
 type ProductMenuNode = {
   key: string
@@ -71,7 +75,24 @@ const productMenu: ProductMenuItem[] = [
       { label: 'Servo Drives',             href: '/products', img: '/images/menu/servo-drives.png' },
     ],
     children: [
-      { key: 'electric-grippers',        label: 'Electric Grippers',        title: 'Electric Grippers',        desc: 'Precise, programmable gripping for assembly, handling and inspection tasks.', href: '/products', img: '/images/dh56-hero-product.png' },
+      {
+        key: 'electric-grippers',
+        label: 'Electric Grippers',
+        title: 'Electric Grippers',
+        desc: 'Precise, programmable gripping for assembly, handling and inspection tasks.',
+        href: '/products',
+        cards: [
+          { label: 'PGE Series',  desc: 'Industrial Slim-type Electric Parallel Gripper',        href: '/products', img: '/images/menu/gripper-pge.png' },
+          { label: 'PGIE Series', desc: 'Industrial Electric Parallel Gripper',                  href: '/products', img: '/images/menu/gripper-pgie.png' },
+          { label: 'AG Series',   desc: 'Linkage-type Adaptive Electric Gripper',                href: '/products', img: '/images/menu/gripper-ag.png' },
+          { label: 'PGC Series',  desc: 'Collaborative Electric Parallel Gripper',               href: '/products', img: '/images/menu/gripper-pgc.png' },
+          { label: 'PGS Series',  desc: 'Miniature Electro-magnetic Gripper',                    href: '/products', img: '/images/menu/gripper-pgs.png' },
+          { label: 'CG Series',   desc: 'Centric Electric Gripper',                              href: '/products', img: '/images/menu/gripper-cg.png' },
+          { label: 'PGSE Series', desc: 'Centric Electric Gripper',                              href: '/products', img: '/images/menu/gripper-pgse.png' },
+          { label: 'PGEA Series', desc: 'Slim-type Electric Parallel Gripper',                   href: '/products', img: '/images/menu/gripper-pgea.png' },
+          { label: 'PGHL Series', desc: 'Heavy-Load Long-Stroke Electric Parallel Gripper',      href: '/products', img: '/images/menu/gripper-pghl.png' },
+        ],
+      },
       { key: 'servo-electric-cylinders', label: 'Servo Electric Cylinders', title: 'Servo Electric Cylinders', desc: 'Linear actuation with force and position control for demanding applications.',  href: '/products', img: '/images/dh56-feat-1.jpg' },
       { key: 'servo-drives',             label: 'Servo Drives',             title: 'Servo Drives',             desc: 'Compact drives that deliver accurate motion control across the product range.', href: '/products', img: '/images/dh56-feat-2.jpg' },
     ],
@@ -320,24 +341,40 @@ const languages = [
             <div data-product-card={p.key} class:list={[i === 0 ? '' : 'hidden']}>
 
               {p.cards ? (
-                <div class:list={['grid gap-2 h-[295px]', gridClass(p.cards.length)]}>
+                <div class:list={['grid gap-2', gridClass(p.cards.length), p.cards.some(c => c.desc) ? '' : 'h-[295px]']}>
                   {p.cards.map((c, ci) => (
-                    <a
-                      href={c.href}
-                      class:list={[
-                        'group/c relative block overflow-clip rounded-small bg-bg-other',
-                        // при трёх карточках первая занимает оба ряда — бенто из макета
-                        p.cards!.length === 3 && ci === 0 ? 'row-span-2' : '',
-                      ]}
-                    >
-                      <img src={c.img} alt="" aria-hidden="true" class="absolute inset-0 h-full w-full object-cover" />
-                      <span class="absolute left-4 top-4 text-tiny-medium text-text-primary">{c.label}</span>
-                      <span class="absolute bottom-3 right-3 size-6 rounded-full bg-btn-black-default flex items-center justify-center transition-colors duration-200 group-hover/c:bg-btn-black-hover">
-                        <svg width="24" height="24" viewBox="0 0 4.5 9.5" fill="none" aria-hidden="true" class="size-6 p-2 text-text-alternate">
-                          <path d="M0.75 8.75L3.09253 6.366C3.51351 5.93733 3.75 5.35607 3.75 4.75C3.75 4.14393 3.51351 3.56267 3.09253 3.134L0.75 0.75" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                        </svg>
-                      </span>
-                    </a>
+                    c.desc ? (
+                      <!-- Карточка продукта: иконка 80x80, серия, описание -->
+                      <a
+                        href={c.href}
+                        class="group/c flex flex-col gap-4 rounded-small bg-bg-other p-3 overflow-clip transition-colors duration-200 hover:bg-bg-secondary"
+                      >
+                        <span class="h-[79px] w-full relative overflow-clip shrink-0">
+                          <img src={c.img} alt="" aria-hidden="true" class="absolute left-1/2 -translate-x-1/2 top-[-1px] size-20 object-cover" />
+                        </span>
+                        <span class="flex flex-col gap-2 w-full">
+                          <span class="text-small-medium text-text-primary w-full">{c.label}</span>
+                          <span class="text-tiny text-black-800 w-full">{c.desc}</span>
+                        </span>
+                      </a>
+                    ) : (
+                      <a
+                        href={c.href}
+                        class:list={[
+                          'group/c relative block overflow-clip rounded-small bg-bg-other',
+                          // при трёх карточках первая занимает оба ряда — бенто из макета
+                          p.cards!.length === 3 && ci === 0 ? 'row-span-2' : '',
+                        ]}
+                      >
+                        <img src={c.img} alt="" aria-hidden="true" class="absolute inset-0 h-full w-full object-cover" />
+                        <span class="absolute left-4 top-4 text-tiny-medium text-text-primary">{c.label}</span>
+                        <span class="absolute bottom-3 right-3 size-6 rounded-full bg-btn-black-default flex items-center justify-center transition-colors duration-200 group-hover/c:bg-btn-black-hover">
+                          <svg width="24" height="24" viewBox="0 0 4.5 9.5" fill="none" aria-hidden="true" class="size-6 p-2 text-text-alternate">
+                            <path d="M0.75 8.75L3.09253 6.366C3.51351 5.93733 3.75 5.35607 3.75 4.75C3.75 4.14393 3.51351 3.56267 3.09253 3.134L0.75 0.75" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                          </svg>
+                        </span>
+                      </a>
+                    )
                   ))}
                 </div>
               ) : (
