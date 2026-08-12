@@ -638,14 +638,18 @@ const languages = [
               <path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
             </svg>
           </button>
+          <!-- Карточки раздела: изображение 120px, подпись снизу, круглая кнопка (Figma 319x120) -->
           <div class="mobile-section-content hidden pb-5">
-            <div class="flex flex-col gap-4">
+            <div class="flex flex-col gap-1 px-3">
               {menu.items.map(item => (
-                <a href={item.href} class="flex items-center gap-4 h-14">
-                  <span class="size-10 shrink-0 rounded-tiny overflow-hidden bg-bg-secondary block">
-                    <img src={item.img} alt="" class="w-full h-full object-cover" loading="lazy" />
+                <a href={item.href} class="group/mc relative block h-[120px] w-full overflow-hidden rounded-small bg-bg-secondary">
+                  <img src={item.img} alt="" aria-hidden="true" class="absolute inset-0 h-full w-full object-cover" loading="lazy" />
+                  <span class="absolute bottom-3 left-3 text-small-medium text-text-primary text-trim-off">{item.title}</span>
+                  <span class="absolute bottom-3 right-3 size-6 rounded-full bg-btn-black-default flex items-center justify-center">
+                    <svg width="24" height="24" viewBox="0 0 4.5 9.5" fill="none" aria-hidden="true" class="size-6 p-2 text-text-alternate">
+                      <path d="M0.75 8.75L3.09253 6.366C3.51351 5.93733 3.75 5.35607 3.75 4.75C3.75 4.14393 3.51351 3.56267 3.09253 3.134L0.75 0.75" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
                   </span>
-                  <span class="text-regular-medium text-text-primary text-trim-off">{item.title}</span>
                 </a>
               ))}
             </div>
@@ -663,13 +667,18 @@ const languages = [
             <path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
           </svg>
         </button>
+        <!-- Языки: флаг, название, галочка у активного (Figma Language / Mobile) -->
         <div class="mobile-section-content hidden pb-5">
-          <div class="flex flex-col gap-1">
+          <div class="flex flex-col gap-4 px-3">
             {languages.map(l => (
-              <button class="flex items-center gap-3 py-2 text-left w-full">
-                <span class="text-large leading-none">{l.flag}</span>
-                <span class="flex-1 text-medium text-text-primary">{l.label}</span>
-                {l.active && <svg class="size-4 text-text-primary" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8l3.5 3.5L13 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>}
+              <button type="button" class="flex items-center gap-7 py-1 text-left w-full cursor-pointer">
+                <span class="text-[12px] leading-3">{l.flag}</span>
+                <span class="flex-1 text-small-medium text-text-primary text-trim-off">{l.label}</span>
+                {l.active && (
+                  <svg class="size-3 shrink-0 text-text-primary" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                    <path d="M13.5 4.50031L6.5 11.5L3 8.00031" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                )}
               </button>
             ))}
           </div>
