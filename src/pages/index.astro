@@ -334,7 +334,7 @@ try {
                Description rides along with its own card and cross-fades on the swap. -->
           <ul class="flex-1 min-w-0 w-full flex flex-col gap-8 list-none p-0 m-0">
             {provenCases.map((c, i) => (
-              <li class="proven-card lg:sticky lg:top-[var(--proven-top)]" data-proven={i}>
+              <li class="proven-card lg:sticky lg:top-[var(--proven-top)] lg:z-20" data-proven={i}>
                 <div class="flex items-start gap-10 max-lg:flex-col max-lg:gap-5">
                   <div class="proven-media flex-1 min-w-0 w-full rounded-tiny overflow-hidden bg-bg-secondary aspect-[640/483] lg:max-h-[calc(100svh-var(--proven-top)-40px)]">
                     <img src={c.img} alt={c.client} class="w-full h-full object-cover" loading="lazy" />
