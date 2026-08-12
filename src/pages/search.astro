@@ -178,7 +178,7 @@ const tabs = [
     return new Date(iso).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })
   }
 
-  const arrowBtn = `<span class="shrink-0 size-10 bg-btn-black-default group-hover:bg-btn-black-hover flex items-center justify-center rounded-[2px] transition-colors duration-200"><svg class="size-6 text-text-alternate" viewBox="0 0 24 24" fill="none"><path d="M9 18l6-6-6-6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>`
+  const arrowBtn = `<span class="shrink-0 size-10 bg-btn-black-default group-hover:bg-btn-black-hover flex items-center justify-center rounded-micro transition-colors duration-200"><svg class="size-6 text-text-alternate" viewBox="0 0 24 24" fill="none"><path d="M9 18l6-6-6-6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>`
 
   // Products / Series — SeriesCard style
   function cardProduct(r: any) {
@@ -196,7 +196,7 @@ const tabs = [
             ${r.subtitle ? `<p class="text-large text-text-secondary">${esc(r.subtitle)}</p>` : ''}
           </div>
           <div class="flex items-end justify-between gap-4 mt-auto">
-            ${feats.length ? `<ul class="flex flex-col gap-2">${feats.map(f => `<li class="flex items-center gap-2"><span class="size-[6px] rounded-[2px] bg-fg-tertiary shrink-0"></span><span class="text-regular text-text-primary">${esc(f)}</span></li>`).join('')}</ul>` : '<span></span>'}
+            ${feats.length ? `<ul class="flex flex-col gap-2">${feats.map(f => `<li class="flex items-center gap-2"><span class="size-[6px] rounded-micro bg-fg-tertiary shrink-0"></span><span class="text-regular text-text-primary">${esc(f)}</span></li>`).join('')}</ul>` : '<span></span>'}
             ${arrowBtn}
           </div>
         </div>
@@ -294,12 +294,12 @@ const tabs = [
     const href = getHref('caseStudy', r.slug?.current ?? '')
     const img = r.caseImageUrl ?? ''
     return `
-      <a href="${href}" class="group relative overflow-hidden rounded-[2px] block w-full h-[448px] max-lg:h-[280px] bg-bg-secondary">
+      <a href="${href}" class="group relative overflow-hidden rounded-micro block w-full h-[448px] max-lg:h-[280px] bg-bg-secondary">
         ${img ? `<img src="${img}" alt="${esc(r.title)}" loading="lazy" class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 lg:group-hover:scale-105"/>` : ''}
         <div class="absolute inset-0 bg-gradient-to-r from-black/40 to-transparent"></div>
         <p class="text-h2 mob-h4 text-text-alternate absolute top-8 left-8 max-w-[300px] max-lg:top-6 max-lg:left-6">${hl(r.title ?? '')}</p>
         ${r.seriesTitle ? `<div class="absolute bottom-8 left-8 flex flex-col gap-3 max-lg:bottom-6 max-lg:left-6"><span class="text-tiny text-text-alternate opacity-60">Series:</span><span class="border border-white/24 rounded-tiny px-2 py-2 text-large-medium text-text-alternate w-fit">${esc(r.seriesTitle)}</span></div>` : ''}
-        <span class="absolute bottom-8 right-8 size-10 bg-btn-black-default group-hover:bg-btn-black-hover flex items-center justify-center rounded-[2px] transition-colors duration-200 max-lg:bottom-6 max-lg:right-6"><svg class="size-6 text-text-alternate" viewBox="0 0 24 24" fill="none"><path d="M9 18l6-6-6-6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+        <span class="absolute bottom-8 right-8 size-10 bg-btn-black-default group-hover:bg-btn-black-hover flex items-center justify-center rounded-micro transition-colors duration-200 max-lg:bottom-6 max-lg:right-6"><svg class="size-6 text-text-alternate" viewBox="0 0 24 24" fill="none"><path d="M9 18l6-6-6-6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
       </a>`
   }
 
@@ -321,7 +321,7 @@ const tabs = [
     const img = r.heroImageUrl ?? r.coverImageUrl ?? r.caseImageUrl ?? ''
     return `
       <a href="${href}" class="flex items-center gap-4 py-4 border-b border-border-other-2 hover:opacity-70 transition-opacity group">
-        ${img ? `<div class="size-12 shrink-0 bg-bg-secondary overflow-hidden rounded-[2px]"><img src="${img}" alt="" loading="lazy" class="w-full h-full object-cover"/></div>` : `<div class="size-12 shrink-0 bg-bg-secondary rounded-[2px]"></div>`}
+        ${img ? `<div class="size-12 shrink-0 bg-bg-secondary overflow-hidden rounded-micro"><img src="${img}" alt="" loading="lazy" class="w-full h-full object-cover"/></div>` : `<div class="size-12 shrink-0 bg-bg-secondary rounded-micro"></div>`}
         <div class="flex-1 min-w-0">
           <span class="text-small-medium text-text-primary block">${hl(r.title ?? '')}</span>
           <span class="text-tiny text-text-tertiary uppercase mt-0.5 block">${TYPE_LABELS[r._type] ?? r._type}</span>

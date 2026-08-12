@@ -52,7 +52,7 @@ const items = cases.map((c: any) => ({
                 class:list={['cases-logo flex flex-col items-center gap-2 shrink-0', i === 0 ? 'is-active' : '']}
                 aria-label={item.title}
               >
-                <div class="cases-logo-box w-16 h-10 rounded-[2px] flex items-center justify-center p-2 bg-bg-primary">
+                <div class="cases-logo-box w-16 h-10 rounded-micro flex items-center justify-center p-2 bg-bg-primary">
                   {item.logo && <img src={item.logo} alt={item.title} class="max-w-full max-h-full object-contain" loading="lazy" />}
                 </div>
                 <span class="cases-dot size-[4px] rounded-full bg-fg-tertiary"></span>
@@ -74,7 +74,7 @@ const items = cases.map((c: any) => ({
                   class:list={['cases-logo relative flex items-center justify-center', i === 0 ? 'is-active' : '']}
                   aria-label={item.title}
                 >
-                  <div class="cases-logo-box w-16 h-10 rounded-[2px] flex items-center justify-center p-2 bg-bg-primary">
+                  <div class="cases-logo-box w-16 h-10 rounded-micro flex items-center justify-center p-2 bg-bg-primary">
                     {item.logo && <img src={item.logo} alt={item.title} class="max-w-full max-h-full object-contain" loading="lazy" />}
                   </div>
                   <span class="cases-dot absolute -right-3 top-1/2 -translate-y-1/2 size-[3px] rounded-full bg-fg-tertiary"></span>
@@ -90,7 +90,7 @@ const items = cases.map((c: any) => ({
                 id={`case-${item.slug}`}
                 href={item.href}
                 data-cases-card={i}
-                class="group relative overflow-hidden rounded-[2px] block w-full max-w-[795px] h-[448px] max-lg:h-[280px] bg-bg-secondary scroll-mt-[120px]"
+                class="group relative overflow-hidden rounded-micro block w-full max-w-[795px] h-[448px] max-lg:h-[280px] bg-bg-secondary scroll-mt-[120px]"
               >
                 {item.image && (
                   <img src={item.image} alt={item.title} class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 lg:group-hover:scale-105" loading="lazy" />
@@ -103,7 +103,7 @@ const items = cases.map((c: any) => ({
                     <span class="border border-white/24 rounded-tiny px-2 py-2 text-large-medium text-text-alternate w-fit">{item.series}</span>
                   </div>
                 )}
-                <span class="absolute bottom-8 right-8 size-10 bg-btn-black-default group-hover:bg-btn-black-hover flex items-center justify-center rounded-[2px] transition-colors duration-200 max-lg:bottom-6 max-lg:right-6">
+                <span class="absolute bottom-8 right-8 size-10 bg-btn-black-default group-hover:bg-btn-black-hover flex items-center justify-center rounded-micro transition-colors duration-200 max-lg:bottom-6 max-lg:right-6">
                   <svg class="size-6 text-text-alternate" viewBox="0 0 24 24" fill="none" aria-hidden="true">
                     <path d="M9 18l6-6-6-6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
                   </svg>

@@ -308,7 +308,7 @@ const dlData = JSON.stringify({ categories, series: seriesList, products, downlo
         const selected = btn.dataset.value === value
         btn.classList.toggle('bg-fg-other-4', selected)
         btn.classList.toggle('text-text-primary', selected)
-        btn.classList.toggle('rounded-[2px]', selected)
+        btn.classList.toggle('rounded-micro', selected)
         btn.classList.toggle('text-text-secondary', !selected && btn.dataset.value !== '')
         btn.querySelector('.check-badge').style.opacity = selected ? '1' : '0'
       })

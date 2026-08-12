@@ -27,7 +27,7 @@ function getYoutubeId(url: string): string | null {
   )
 
   if (block.type === 'image') return (
-    <div class="bg-bg-secondary rounded-[8px] overflow-hidden w-full h-[440px] max-lg:h-auto max-lg:aspect-video">
+    <div class="bg-bg-secondary rounded-small overflow-hidden w-full h-[440px] max-lg:h-auto max-lg:aspect-video">
       <img src={block.src} alt={block.alt} class="w-full h-full object-cover" loading="lazy" />
     </div>
   )
@@ -36,7 +36,7 @@ function getYoutubeId(url: string): string | null {
     const youtubeId = getYoutubeId(block.alt)
     return (
       <div
-        class="video-embed relative bg-bg-secondary rounded-[8px] overflow-hidden w-full aspect-video group cursor-pointer"
+        class="video-embed relative bg-bg-secondary rounded-small overflow-hidden w-full aspect-video group cursor-pointer"
         data-youtube={youtubeId ?? ''}
         data-url={block.alt}
       >

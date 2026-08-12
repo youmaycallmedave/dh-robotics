@@ -230,12 +230,12 @@ import Button from '../ui/Button.astro'
         display.classList.add('text-text-primary', 'font-medium')
       }
       dropdown?.querySelectorAll('.dropdown-option').forEach(b => {
-        b.classList.remove('bg-fg-other-4', 'text-text-primary', 'rounded-[2px]')
+        b.classList.remove('bg-fg-other-4', 'text-text-primary', 'rounded-micro')
         b.classList.add('text-text-secondary', 'rounded-tiny')
         const badge = b.querySelector('.check-badge') as HTMLElement | null
         if (badge) badge.style.opacity = '0'
       })
-      btn.classList.add('bg-fg-other-4', 'text-text-primary', 'rounded-[2px]')
+      btn.classList.add('bg-fg-other-4', 'text-text-primary', 'rounded-micro')
       btn.classList.remove('text-text-secondary', 'rounded-tiny')
       const selectedBadge = btn.querySelector('.check-badge') as HTMLElement | null
       if (selectedBadge) selectedBadge.style.opacity = '1'

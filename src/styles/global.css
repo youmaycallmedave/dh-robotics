@@ -138,7 +138,9 @@ html { font-size: 1rem; scroll-behavior: smooth; }
   /* ── Radius ───────────────────────────────── */
   /* Figma: radius/zero · tiny · medium-small · medium · round */
   --radius-zero:         0px;
+  --radius-micro:        2px;
   --radius-tiny:         4px;
+  --radius-small:        8px;
   --radius-medium-small: 12px;
   --radius-medium:       16px;
   --radius-round:        9999px;

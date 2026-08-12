@@ -26,7 +26,7 @@ const initialSlide = Math.floor(items.length / 2)
     <div class="swiper-wrapper">
       {items.map(item => (
         <div class="swiper-slide">
-          <div class="relative overflow-hidden rounded-[2px] bg-bg-secondary h-[560px] max-lg:h-auto max-lg:aspect-video w-full">
+          <div class="relative overflow-hidden rounded-micro bg-bg-secondary h-[560px] max-lg:h-auto max-lg:aspect-video w-full">
             <img src={item.src} alt={item.alt} class="w-full h-full object-cover" loading="lazy" />
             {kind === 'video' && (
               <>
@@ -35,7 +35,7 @@ const initialSlide = Math.floor(items.length / 2)
                     href={item.videoUrl}
                     target="_blank"
                     rel="noopener"
-                    class="absolute bottom-4 left-4 bg-bg-secondary/80 hover:bg-bg-secondary transition-colors p-3 rounded-[2px] flex items-center justify-center"
+                    class="absolute bottom-4 left-4 bg-bg-secondary/80 hover:bg-bg-secondary transition-colors p-3 rounded-micro flex items-center justify-center"
                     aria-label="Play video"
                   >
                     <svg class="size-4 text-text-primary" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
@@ -44,7 +44,7 @@ const initialSlide = Math.floor(items.length / 2)
                   </a>
                 ) : (
                   <button
-                    class="absolute bottom-4 left-4 bg-bg-secondary/80 hover:bg-bg-secondary transition-colors p-3 rounded-[2px] flex items-center justify-center"
+                    class="absolute bottom-4 left-4 bg-bg-secondary/80 hover:bg-bg-secondary transition-colors p-3 rounded-micro flex items-center justify-center"
                     aria-label="Play"
                   >
                     <svg class="size-4 text-text-primary" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
@@ -73,7 +73,7 @@ const initialSlide = Math.floor(items.length / 2)
       </div>
       <div class="flex items-center gap-4 shrink-0">
         <button
-          class={`${id}-prev size-8 bg-bg-primary border border-border-other-2 rounded-[2px] flex items-center justify-center hover:border-border-alternative transition-colors duration-200 cursor-pointer`}
+          class={`${id}-prev size-8 bg-bg-primary border border-border-other-2 rounded-micro flex items-center justify-center hover:border-border-alternative transition-colors duration-200 cursor-pointer`}
           aria-label="Previous"
         >
           <svg class="size-4" viewBox="0 0 16 16" fill="none" aria-hidden="true">
@@ -81,7 +81,7 @@ const initialSlide = Math.floor(items.length / 2)
           </svg>
         </button>
         <button
-          class={`${id}-next size-8 bg-bg-primary border border-border-other-2 rounded-[2px] flex items-center justify-center hover:border-border-alternative transition-colors duration-200 cursor-pointer`}
+          class={`${id}-next size-8 bg-bg-primary border border-border-other-2 rounded-micro flex items-center justify-center hover:border-border-alternative transition-colors duration-200 cursor-pointer`}
           aria-label="Next"
         >
           <svg class="size-4" viewBox="0 0 16 16" fill="none" aria-hidden="true">

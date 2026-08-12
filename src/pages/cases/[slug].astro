@@ -131,13 +131,13 @@ const otherCases = otherRaw.map((c: any) => ({
                     <ul class="flex flex-col gap-2">
                       {features.map((f: string) => (
                         <li class="flex items-center gap-2">
-                          <span class="size-[6px] rounded-[2px] bg-fg-tertiary shrink-0" aria-hidden="true"></span>
+                          <span class="size-[6px] rounded-micro bg-fg-tertiary shrink-0" aria-hidden="true"></span>
                           <span class="text-regular text-text-primary">{f}</span>
                         </li>
                       ))}
                     </ul>
                   )}
-                  <a href={seriesHref} class="shrink-0 size-10 bg-btn-black-default hover:bg-btn-black-hover flex items-center justify-center rounded-[2px] transition-colors duration-200 ml-auto" aria-label="View series">
+                  <a href={seriesHref} class="shrink-0 size-10 bg-btn-black-default hover:bg-btn-black-hover flex items-center justify-center rounded-micro transition-colors duration-200 ml-auto" aria-label="View series">
                     <svg class="size-6 text-text-alternate" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M9 18l6-6-6-6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
                   </a>
                 </div>
@@ -163,7 +163,7 @@ const otherCases = otherRaw.map((c: any) => ({
           <SwiperSlider id="cases-other-slider" title="Demonstration cases" description="Hundreds of factories are already using DH-Robotics' products." viewMoreHref="/cases" viewMoreLabel="View more" slideWidth={794} slideMobileWidth={320} gap={16}>
             {otherCases.map((item: any) => (
               <div class="swiper-slide">
-                <a href={item.href} class="relative overflow-hidden rounded-[2px] block h-[448px] max-lg:h-[280px] bg-bg-secondary group">
+                <a href={item.href} class="relative overflow-hidden rounded-micro block h-[448px] max-lg:h-[280px] bg-bg-secondary group">
                   {item.image && <img src={item.image} alt={item.title} class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 lg:group-hover:scale-105" loading="lazy" />}
                   <div class="absolute inset-0 bg-gradient-to-r from-black/40 to-transparent"></div>
                   <p class="text-h2 mob-h4 text-text-alternate absolute top-8 left-8 max-w-[300px]">{item.title}</p>
@@ -173,7 +173,7 @@ const otherCases = otherRaw.map((c: any) => ({
                       <span class="border border-white/24 rounded-tiny px-2 py-2 text-large-medium text-text-alternate">{item.series}</span>
                     </div>
                   )}
-                  <div class="absolute bottom-8 right-8 size-10 bg-btn-black-default hover:bg-btn-black-hover flex items-center justify-center rounded-[2px] transition-colors duration-200">
+                  <div class="absolute bottom-8 right-8 size-10 bg-btn-black-default hover:bg-btn-black-hover flex items-center justify-center rounded-micro transition-colors duration-200">
                     <svg class="size-6 text-text-alternate" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M9 18l6-6-6-6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
                   </div>
                 </a>

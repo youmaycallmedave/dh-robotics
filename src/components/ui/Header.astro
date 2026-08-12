@@ -3,27 +3,86 @@ type NavColumn = { group?: string; links: { label: string; href: string }[] }
 type MegaItem = { key: string; title: string; desc: string; img: string; href: string }
 type Mega = { id: string; label: string; items: MegaItem[] }
 
-// Products keeps the plain column dropdown until its mega-menu design is finalized
-const productsColumns: NavColumn[] = [
+// Products mega-menu — Figma 01.1 Menu → "Product Menu / Desktop" (11667:76739)
+// Левый рельс переключает правую карточку; Smart Actuators раскрывается в подсписок.
+type ProductMenuItem = {
+  key: string
+  label: string
+  title: string
+  desc: string
+  href: string
+  img?: string
+  logoIcon?: boolean
+  children?: { key: string; label: string; title: string; desc: string; href: string; img?: string }[]
+}
+
+const productMenu: ProductMenuItem[] = [
   {
-    group: 'Automation',
-    links: [
-      { label: 'Electric Grippers',        href: '/products' },
-      { label: 'Rotary Electric Grippers', href: '/products' },
-      { label: 'Servo Drive',              href: '/products' },
-      { label: 'Linear Coil Actuator',     href: '/products' },
-      { label: 'Servo Electric Cylinder',  href: '/products' },
+    key: 'all',
+    label: 'All Prodcuts',
+    title: 'All Products',
+    desc: 'High-performance grippers and motion control components engineered for seamless industrial automation.',
+    href: '/products',
+    img: '/images/menu/products-all.png',
+    logoIcon: true,
+  },
+  {
+    key: 'dexterous-hand',
+    label: 'Dexterous Hand',
+    title: 'Dexterous Hand',
+    desc: 'Multi-fingered robotic hands built for the next generation of humanoid and embodied AI systems.',
+    href: '/products',
+    img: '/images/home/hero-hand.png',
+  },
+  {
+    key: 'smart-actuators',
+    label: 'Smart Actuators',
+    title: 'Smart Actuators',
+    desc: 'Electric grippers, cylinders and drives for precise, repeatable motion on the production line.',
+    href: '/products',
+    img: '/images/dh56-hero-product.png',
+    children: [
+      { key: 'electric-grippers',        label: 'Electric Grippers',        title: 'Electric Grippers',        desc: 'Precise, programmable gripping for assembly, handling and inspection tasks.', href: '/products', img: '/images/dh56-hero-product.png' },
+      { key: 'servo-electric-cylinders', label: 'Servo Electric Cylinders', title: 'Servo Electric Cylinders', desc: 'Linear actuation with force and position control for demanding applications.',  href: '/products', img: '/images/dh56-feat-1.jpg' },
+      { key: 'servo-drives',             label: 'Servo Drives',             title: 'Servo Drives',             desc: 'Compact drives that deliver accurate motion control across the product range.', href: '/products', img: '/images/dh56-feat-2.jpg' },
     ],
   },
   {
-    group: 'Robotics',
-    links: [
-      { label: 'Dexterous Hand',                         href: '/products' },
-      { label: 'iFM Intelligent Flexible Motion System', href: '/products' },
-      { label: 'Hexapods',                               href: '/products' },
-    ],
+    key: 'ifm',
+    label: 'Intelligent Flexible Motion System',
+    title: 'Intelligent Flexible Motion System',
+    desc: 'A modular transport platform that moves parts flexibly through the whole production cell.',
+    href: '/products',
+    img: '/images/menu/products-all.png',
+  },
+  {
+    key: 'hexapods',
+    label: 'Hexapods',
+    title: 'Hexapods',
+    desc: 'Six-axis positioning systems for sub-micron alignment and precision manipulation.',
+    href: '/products',
+    img: '/images/service-technology-product1.webp',
+  },
+  {
+    key: 'sensor',
+    label: 'Sensor',
+    title: 'Sensor',
+    desc: 'Force, torque and position sensing that gives every motion system real-time feedback.',
+    href: '/products',
+    img: '/images/service-technology-product2.webp',
+  },
+  {
+    key: 'precision-stage',
+    label: 'Precision Motorized Stage',
+    title: 'Precision Motorized Stage',
+    desc: 'Motorized stages engineered for repeatable, high-accuracy positioning in the lab and the line.',
+    href: '/products',
+    img: '/images/service-technology-product3.webp',
   },
 ]
+
+// Плоский список карточек: верхний уровень + вложенные Smart Actuators
+const productPanels = productMenu.flatMap(i => [i, ...(i.children ?? [])])
 
 const megaMenus: Mega[] = [
   {
@@ -70,6 +129,30 @@ const languages = [
 <div id="nav-scrim" class="nav-scrim fixed inset-0 z-40 hidden"></div>
 
 <header id="site-header" class="fixed top-0 left-0 right-0 z-50 bg-bg-primary border-b border-border-other-2 transition-transform duration-300 ease-in-out">
+
+  <!-- Промо-полоса (Figma 01.1 Menu). Закрытие запоминается в localStorage -->
+  <div id="promo-bar" class="hidden border-b border-border-other-2 bg-bg-other">
+    <div class="global-padding py-2">
+      <div class="mx-auto max-w-[1200px] flex items-center justify-center gap-4">
+        <p class="text-tiny text-text-primary text-center">
+          From automotive lines to electronics assembly — see how world leaders deploy our solutions.
+          <a href="/cases" class="underline underline-offset-2 hover:text-text-tertiary transition-colors duration-150">Explore Case Studies →</a>
+        </p>
+        <button
+          id="promo-close"
+          type="button"
+          aria-label="Dismiss announcement"
+          class="shrink-0 size-6 flex items-center justify-center rounded-tiny text-text-primary hover:bg-bg-secondary transition-colors duration-150 cursor-pointer"
+        >
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M18.75 5.25L5.25 18.75" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M18.75 18.75L5.25 5.25" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
   <div class="global-padding py-3">
     <div class="mx-auto max-w-[1200px] flex items-center justify-between gap-6">
 
@@ -152,17 +235,79 @@ const languages = [
     </div>
   </div>
 
-  <!-- Products panel — plain columns -->
+  <!-- Products panel — Figma 11862:82108 -->
   <div class="nav-panel absolute left-0 right-0 top-full hidden" data-panel="products">
     <div class="global-padding">
-      <div class="mx-auto max-w-[1200px]">
-        <div class="w-[800px] max-w-full bg-bg-primary rounded-[6px] shadow-[0_20px_50px_rgba(10,15,21,0.14)] border border-border-other-2 flex gap-16 p-8">
-          {productsColumns.map(col => (
-            <div class="flex flex-col gap-2 min-w-[160px]">
-              {col.group && <p class="text-tiny text-text-secondary mb-2">{col.group}</p>}
-              {col.links.map(link => (
-                <a href={link.href} class="text-small-medium text-text-primary hover:text-text-tertiary transition-colors duration-150 py-1 block">{link.label}</a>
-              ))}
+      <div class="mx-auto w-[800px] max-w-full bg-bg-primary rounded-medium-small shadow-[0_20px_50px_rgba(10,15,21,0.14)] flex gap-4 items-start pl-3 pr-5 py-5" id="products-menu">
+
+        <!-- Левый рельс -->
+        <div class="w-[179px] shrink-0 relative">
+          <div class="flex flex-col gap-2 items-start border-l border-border-secondary pl-4">
+            {productMenu.map((item, i) => (
+              <>
+                <button
+                  type="button"
+                  data-product-tab={item.key}
+                  data-active={i === 0 ? 'true' : 'false'}
+                  aria-expanded={item.children ? 'false' : undefined}
+                  class="product-tab flex gap-4 items-center w-full text-left cursor-pointer"
+                >
+                  <span class="size-6 shrink-0 rounded-micro bg-black-150 overflow-clip flex items-center justify-center">
+                    {item.logoIcon && (
+                      <img src="/logotype-dh-robotics.svg" alt="" aria-hidden="true" class="w-[15px] h-auto" />
+                    )}
+                  </span>
+                  <span class="product-tab-label flex-1 min-w-0 text-[13px] leading-[14px] tracking-[-0.26px] font-secondary font-medium text-trim-off">{item.label}</span>
+                  {item.children && (
+                    <svg width="8" height="4" viewBox="0 0 4.5 9.5" fill="none" aria-hidden="true" class="product-tab-caret shrink-0 w-2 h-1 rotate-90 transition-transform duration-200">
+                      <path d="M0.75 8.75L3.09253 6.366C3.51351 5.93733 3.75 5.35607 3.75 4.75C3.75 4.14393 3.51351 3.56267 3.09253 3.134L0.75 0.75" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                  )}
+                </button>
+
+                {item.children && (
+                  <div data-product-sub={item.key} class="hidden flex-col gap-2 items-start w-full pl-10">
+                    {item.children.map(child => (
+                      <button
+                        type="button"
+                        data-product-tab={child.key}
+                        data-active="false"
+                        class="product-tab flex gap-4 items-center w-full text-left cursor-pointer"
+                      >
+                        <span class="product-tab-label flex-1 min-w-0 text-[13px] leading-[14px] tracking-[-0.26px] font-secondary font-medium text-trim-off">{child.label}</span>
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </>
+            ))}
+          </div>
+          <!-- Индикатор активного пункта: 1×24 на линии рельса -->
+          <span id="product-tab-indicator" class="absolute left-0 top-0 w-px h-6 bg-fg-alternative transition-transform duration-200 ease-out" aria-hidden="true"></span>
+        </div>
+
+        <!-- Правая карточка -->
+        <div class="flex-1 min-w-0 h-[365px] relative overflow-clip rounded-small bg-bg-secondary">
+          {productPanels.map((p, i) => (
+            <div data-product-card={p.key} class:list={['absolute inset-0', i === 0 ? '' : 'hidden']}>
+              {p.img && (
+                <img src={p.img} alt="" aria-hidden="true" class="absolute left-[-10px] top-0 h-[365px] w-[600px] max-w-none object-cover" />
+              )}
+              <div class="absolute bottom-4 left-4 w-[212px] flex flex-col gap-4 items-start justify-center">
+                <div class="flex flex-col gap-4 items-start w-full">
+                  <p class="text-large-medium text-text-primary w-full">{p.title}</p>
+                  <p class="text-tiny text-text-secondary w-full">{p.desc}</p>
+                </div>
+                <a
+                  href={p.href}
+                  class="inline-flex items-center justify-center gap-6 pl-4 pr-2 py-1 rounded-full bg-btn-black-default text-text-alternate text-small-caps text-trim-off whitespace-nowrap transition-colors duration-200 hover:bg-btn-black-hover"
+                >
+                  <span>explore</span>
+                  <svg width="24" height="24" viewBox="0 0 4.5 9.5" fill="none" aria-hidden="true" class="size-6 p-1.5 shrink-0">
+                    <path d="M0.75 8.75L3.09253 6.366C3.51351 5.93733 3.75 5.35607 3.75 4.75C3.75 4.14393 3.51351 3.56267 3.09253 3.134L0.75 0.75" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </a>
+              </div>
             </div>
           ))}
         </div>
@@ -226,13 +371,13 @@ const languages = [
           </svg>
         </button>
         <div class="mobile-section-content hidden pb-5">
-          {productsColumns.map(col => (
-            <div>
-              {col.group && <p class="text-tiny text-text-secondary mb-3 mt-1">{col.group}</p>}
-              {col.links.map(link => (
-                <a href={link.href} class="text-medium text-text-primary py-2 block">{link.label}</a>
+          {productMenu.map(item => (
+            <>
+              <a href={item.href} class="text-medium text-text-primary py-2 block">{item.title}</a>
+              {item.children?.map(child => (
+                <a href={child.href} class="text-medium text-text-secondary py-2 pl-4 block">{child.label}</a>
               ))}
-            </div>
+            </>
           ))}
         </div>
       </div>
@@ -296,13 +441,13 @@ const languages = [
         <div class="flex flex-col gap-3">
           <p class="text-tiny text-text-secondary">Social media</p>
           <div class="flex items-center gap-2">
-            <a href="https://www.linkedin.com/company/dh-robotics" target="_blank" rel="noopener noreferrer" class="border border-border-other-2 rounded-[8px] p-3 flex items-center justify-center hover:border-border-alternative transition-colors duration-200" aria-label="LinkedIn">
+            <a href="https://www.linkedin.com/company/dh-robotics" target="_blank" rel="noopener noreferrer" class="border border-border-other-2 rounded-small p-3 flex items-center justify-center hover:border-border-alternative transition-colors duration-200" aria-label="LinkedIn">
               <svg class="size-6 text-text-primary" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
             </a>
-            <a href="https://www.youtube.com/@dh-robotics" target="_blank" rel="noopener noreferrer" class="border border-border-other-2 rounded-[8px] p-3 flex items-center justify-center hover:border-border-alternative transition-colors duration-200" aria-label="YouTube">
+            <a href="https://www.youtube.com/@dh-robotics" target="_blank" rel="noopener noreferrer" class="border border-border-other-2 rounded-small p-3 flex items-center justify-center hover:border-border-alternative transition-colors duration-200" aria-label="YouTube">
               <svg class="size-6 text-text-primary" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.95-1.96C18.88 4 12 4 12 4s-6.88 0-8.59.46A2.78 2.78 0 0 0 1.46 6.42 29 29 0 0 0 1 12a29 29 0 0 0 .46 5.58 2.78 2.78 0 0 0 1.95 1.96C5.12 20 12 20 12 20s6.88 0 8.59-.46a2.78 2.78 0 0 0 1.96-1.96A29 29 0 0 0 23 12a29 29 0 0 0-.46-5.58zM9.75 15.02V8.98L15.5 12l-5.75 3.02z"/></svg>
             </a>
-            <a href="https://www.facebook.com/dhrobotics" target="_blank" rel="noopener noreferrer" class="border border-border-other-2 rounded-[8px] p-3 flex items-center justify-center hover:border-border-alternative transition-colors duration-200" aria-label="Facebook">
+            <a href="https://www.facebook.com/dhrobotics" target="_blank" rel="noopener noreferrer" class="border border-border-other-2 rounded-small p-3 flex items-center justify-center hover:border-border-alternative transition-colors duration-200" aria-label="Facebook">
               <svg class="size-6 text-text-primary" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
             </a>
           </div>
@@ -314,8 +459,9 @@ const languages = [
 
 </header>
 
-<!-- Spacer so content doesn't go under fixed header -->
-<div class="h-[80px] max-lg:h-[65px]"></div>
+<!-- Spacer so content doesn't go under fixed header. Высота синхронизируется с шапкой
+     скриптом ниже — она меняется, когда показана/закрыта промо-полоса. -->
+<div id="header-spacer" class="h-[73px] max-lg:h-[65px]"></div>
 
 <!-- Search overlay -->
 <div id="search-overlay" class="fixed inset-0 z-[200] bg-bg-primary flex-col hidden">
@@ -658,4 +804,102 @@ const languages = [
       ticking = false
     })
   }, { passive: true })
+</script>
+
+<style>
+  /* Products mega-menu — состояния пунктов левого рельса */
+  .product-tab-label { color: var(--color-text-secondary); transition: color 0.15s ease; }
+  .product-tab:hover .product-tab-label { color: var(--color-text-primary); }
+  .product-tab[data-active='true'] .product-tab-label { color: var(--color-text-primary); }
+  .product-tab[aria-expanded='true'] .product-tab-caret { transform: rotate(-90deg); }
+</style>
+
+<script>
+  const productsMenu = document.getElementById('products-menu')
+
+  if (productsMenu) {
+    const tabs = Array.from(productsMenu.querySelectorAll<HTMLElement>('.product-tab'))
+    const cards = Array.from(productsMenu.querySelectorAll<HTMLElement>('[data-product-card]'))
+    const indicator = document.getElementById('product-tab-indicator')!
+    const rail = productsMenu.querySelector<HTMLElement>('.w-\\[179px\\]')!
+
+    function showCard(key: string) {
+      cards.forEach(c => c.classList.toggle('hidden', c.dataset.productCard !== key))
+    }
+
+    function moveIndicator(tab: HTMLElement) {
+      // 1×24 полоска выравнивается по центру активного пункта
+      const top = tab.offsetTop + (tab.offsetHeight - 24) / 2
+      indicator.style.transform = `translateY(${Math.max(0, top)}px)`
+    }
+
+    function activate(tab: HTMLElement) {
+      tabs.forEach(t => { t.dataset.active = String(t === tab) })
+      showCard(tab.dataset.productTab!)
+      moveIndicator(tab)
+    }
+
+    tabs.forEach(tab => {
+      const sub = productsMenu.querySelector<HTMLElement>(`[data-product-sub="${tab.dataset.productTab}"]`)
+
+      tab.addEventListener('click', () => {
+        if (sub) {
+          const open = tab.getAttribute('aria-expanded') === 'true'
+          tab.setAttribute('aria-expanded', String(!open))
+          sub.classList.toggle('hidden', open)
+          sub.classList.toggle('flex', !open)
+        }
+        activate(tab)
+      })
+
+      tab.addEventListener('mouseenter', () => activate(tab))
+    })
+
+    // Панель скрыта до открытия, поэтому позицию индикатора считаем в момент показа:
+    // у display:none размеры нулевые и стартовый расчёт дал бы 0.
+    const syncIndicator = () => {
+      const active = tabs.find(t => t.dataset.active === 'true') ?? tabs[0]
+      if (active && active.offsetHeight) moveIndicator(active)
+    }
+
+    productsMenu.addEventListener('mouseenter', syncIndicator)
+
+    const panel = productsMenu.closest<HTMLElement>('.nav-panel')
+    if (panel) {
+      new MutationObserver(() => {
+        if (!panel.classList.contains('hidden')) syncIndicator()
+      }).observe(panel, { attributes: true, attributeFilter: ['class'] })
+    }
+  }
+</script>
+
+<script>
+  // Промо-полоса: показываем, если пользователь её не закрывал
+  const promo = document.getElementById('promo-bar')
+  const promoClose = document.getElementById('promo-close')
+  const PROMO_KEY = 'dh-promo-dismissed'
+
+  if (promo) {
+    if (localStorage.getItem(PROMO_KEY) !== '1') promo.classList.remove('hidden')
+
+    promoClose?.addEventListener('click', () => {
+      promo.classList.add('hidden')
+      localStorage.setItem(PROMO_KEY, '1')
+      // высота шапки изменилась — пересчитываем спейсер под fixed-хедером
+      window.dispatchEvent(new Event('resize'))
+    })
+  }
+</script>
+
+<script>
+  // Спейсер повторяет фактическую высоту фиксированной шапки
+  const hdr = document.getElementById('site-header')
+  const spacer = document.getElementById('header-spacer')
+
+  if (hdr && spacer) {
+    const sync = () => { spacer.style.height = `${hdr.offsetHeight}px` }
+    sync()
+    window.addEventListener('resize', sync)
+    new ResizeObserver(sync).observe(hdr)
+  }
 </script>
