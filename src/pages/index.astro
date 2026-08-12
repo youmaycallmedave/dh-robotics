@@ -48,13 +48,13 @@ const heroSlides = [
 
 // ── Proven Success cases (slider) ──
 const provenCases = [
-  { client: 'KFC', img: '/images/dh56-action.jpg',
+  { client: 'KFC', logo: '/images/logos/kfc.svg', img: '/images/dh56-action.jpg',
     desc: 'The AG-160-95 adaptive gripper was applied to pick up and complete the production of ice cream cones. Task difficulty: precise force control, position control, position repeatability, fast movement.' },
-  { client: 'CHANEL', img: '/images/home/industry-medical.jpg',
+  { client: 'CHANEL', logo: '/images/logos/chanel.svg', img: '/images/home/industry-medical.jpg',
     desc: 'PGC series grippers handle delicate cosmetic packaging on a high-speed line, keeping surfaces flawless while sustaining full production tempo.' },
-  { client: 'NISSAN', img: '/images/dh56-feat-1.jpg',
+  { client: 'NISSAN', logo: '/images/logos/nissan.svg', img: '/images/dh56-feat-1.jpg',
     desc: 'AG series grippers automate component handling in body assembly, combining envelope adaptive grasping with repeatable positioning.' },
-  { client: 'SAMSUNG', img: '/images/dh56-feat-2.jpg',
+  { client: 'SAMSUNG', logo: '/images/logos/samsung.svg', img: '/images/dh56-feat-2.jpg',
     desc: 'Precise force control lets our grippers place fragile electronic components without a single micro-damage incident.' },
 ]
 
@@ -319,9 +319,11 @@ try {
         <div class="proven-body max-lg:mt-10 flex items-start gap-10 max-lg:flex-col max-lg:gap-8" style="padding-top: var(--proven-head-h, 0px)">
 
           <!-- Left rail: client names, pinned (desktop) -->
-          <div class="shrink-0 w-[160px] lg:sticky lg:top-[var(--proven-top)] flex flex-col gap-8 items-center max-lg:hidden">
+          <div class="shrink-0 w-[160px] lg:sticky lg:top-[var(--proven-top)] flex flex-col gap-10 items-center max-lg:hidden">
             {provenCases.map((c, i) => (
-              <span class:list={['proven-tab text-h5 text-text-primary transition-opacity duration-300', i === 0 ? 'is-active' : '']}>{c.client}</span>
+              <span class:list={['proven-tab flex h-[86px] w-full items-center justify-center transition-opacity duration-300', i === 0 ? 'is-active' : '']}>
+                <img src={c.logo} alt={c.client} class="max-h-full max-w-full object-contain" loading="lazy" />
+              </span>
             ))}
           </div>
 
