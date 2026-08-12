@@ -319,12 +319,15 @@ try {
         <div class="proven-body max-lg:mt-10 flex items-start gap-10 max-lg:flex-col max-lg:gap-8" style="padding-top: var(--proven-head-h, 0px)">
 
           <!-- Left rail: client names, pinned (desktop) -->
-          <div class="shrink-0 w-[160px] lg:sticky lg:top-[var(--proven-top)] flex flex-col gap-10 items-center max-lg:hidden">
-            {provenCases.map((c, i) => (
-              <span class:list={['proven-tab flex h-[86px] w-full items-center justify-center transition-opacity duration-300', i === 0 ? 'is-active' : '']}>
-                <img src={c.logo} alt={c.client} class="max-h-full max-w-full object-contain" loading="lazy" />
-              </span>
-            ))}
+          <!-- Окно 160x129: видно один логотип, стопка едет вверх на активный (Figma Component 31) -->
+          <div class="shrink-0 w-[160px] h-[86px] overflow-hidden lg:sticky lg:top-[var(--proven-logo-top,var(--proven-top))] max-lg:hidden">
+            <div id="proven-logos" class="flex flex-col gap-10 items-center transition-transform duration-500 ease-out">
+              {provenCases.map((c, i) => (
+                <span class:list={['proven-tab flex h-[86px] w-full shrink-0 items-center justify-center transition-opacity duration-300', i === 0 ? 'is-active' : '']}>
+                  <img src={c.logo} alt={c.client} class="max-h-full max-w-full object-contain" loading="lazy" />
+                </span>
+              ))}
+            </div>
           </div>
 
           <!-- Cards stack: every card sticks at the same offset, so each covers the last.
@@ -1161,6 +1164,7 @@ try {
   {
     const cards = Array.from(document.querySelectorAll<HTMLElement>('.proven-card'))
     const tabs = Array.from(document.querySelectorAll<HTMLElement>('.proven-tab'))
+    const logoStack = document.getElementById('proven-logos')
     const media = cards.map(c => c.querySelector<HTMLElement>('.proven-media'))
     const metas = cards.map(c => c.querySelector<HTMLElement>('.proven-meta'))
 
@@ -1172,6 +1176,7 @@ try {
       const head = document.querySelector<HTMLElement>('.proven-head')
       const HEAD_TOP = 96
       const HEAD_GAP = 56
+      const HEAD_OVERLAP = 40  // насколько фото наезжает на заголовок
 
       // The heading is pinned higher than the cards, so its track has to end early —
       // otherwise it stays put after the stack releases and the photos ride over it.
@@ -1180,11 +1185,23 @@ try {
         if (window.innerWidth < 1024) {
           stage.style.removeProperty('--proven-head-h')
           stage.style.removeProperty('--proven-release')
+          stage.style.removeProperty('--proven-top')
+          stage.style.removeProperty('--proven-logo-top')
           return
         }
         const headH = head.getBoundingClientRect().height
-        const cardTop = parseFloat(getComputedStyle(cards[0]).top) || 0
+
+        // Карточка приходит выше низа заголовка — в макете фото слегка заходит на него
+        const top = Math.max(0, HEAD_TOP + headH - HEAD_OVERLAP)
+        stage.style.setProperty('--proven-top', `${top}px`)
+
+        const cardTop = top
         const cardH = cards[0].getBoundingClientRect().height
+
+        // Логотип стоит по вертикальному центру фото, а не по его верхней кромке
+        const mediaH = media[0]?.getBoundingClientRect().height ?? cardH
+        stage.style.setProperty('--proven-logo-top', `${Math.max(0, top + mediaH / 2 - 43)}px`)
+
         // The heading is out of flow, so the body has to reserve its height plus the gap
         stage.style.setProperty('--proven-head-h', `${headH + HEAD_GAP}px`)
         stage.style.setProperty('--proven-release', `${Math.max(0, (cardTop + cardH) - (HEAD_TOP + headH))}px`)
@@ -1234,6 +1251,11 @@ try {
         if (active !== current) {
           current = active
           tabs.forEach((t, i) => t.classList.toggle('is-active', i === active))
+          // Шаг стопки = высота слота + gap; в окно попадает только активный логотип
+          if (logoStack && tabs[1]) {
+            const pitch = tabs[1].offsetTop - tabs[0].offsetTop
+            logoStack.style.transform = `translateY(${-active * pitch}px)`
+          }
         }
       }
 
