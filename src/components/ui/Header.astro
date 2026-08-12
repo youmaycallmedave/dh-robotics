@@ -5,15 +5,35 @@ type Mega = { id: string; label: string; items: MegaItem[] }
 
 // Products mega-menu — Figma 01.1 Menu → "Product Menu / Desktop" (11667:76739)
 // Левый рельс переключает правую карточку; Smart Actuators раскрывается в подсписок.
-type ProductMenuItem = {
+// Правая часть панели бывает двух видов:
+//  - hero  — одна большая карточка с заголовком, описанием и кнопкой (All Products)
+//  - сетка — карточки продуктов; раскладка выводится из их количества (см. gridClass)
+type ProductCard = { label: string; href: string; img: string }
+
+type ProductMenuNode = {
   key: string
   label: string
   title: string
   desc: string
   href: string
   img?: string
+  cards?: ProductCard[]
+}
+
+type ProductMenuItem = ProductMenuNode & {
   logoIcon?: boolean
-  children?: { key: string; label: string; title: string; desc: string; href: string; img?: string }[]
+  children?: ProductMenuNode[]
+}
+
+// 1 → одна колонка, 2 → две, 3 → бенто (слева высокая, справа две в столбик),
+// 4 → 2×2, дальше → четыре колонки. Проверено по Figma: Dexterous Hand (3),
+// Smart Actuators (4), Electric Grippers (12).
+function gridClass(n: number) {
+  if (n === 1) return 'grid-cols-1'
+  if (n === 2) return 'grid-cols-2'
+  if (n === 3) return 'grid-cols-2 grid-rows-2'
+  if (n === 4) return 'grid-cols-2'
+  return 'grid-cols-4'
 }
 
 const productMenu: ProductMenuItem[] = [
@@ -32,7 +52,11 @@ const productMenu: ProductMenuItem[] = [
     title: 'Dexterous Hand',
     desc: 'Multi-fingered robotic hands built for the next generation of humanoid and embodied AI systems.',
     href: '/products',
-    img: '/images/home/hero-hand.png',
+    cards: [
+      { label: '3-Finger Dexterous Hand', href: '/products', img: '/images/menu/hand-3finger.png' },
+      { label: '2-Finger Dexterous Hand', href: '/products', img: '/images/menu/hand-2finger.png' },
+      { label: '5-Finger Dexterous Hand', href: '/products', img: '/images/menu/hand-5finger.png' },
+    ],
   },
   {
     key: 'smart-actuators',
@@ -40,7 +64,12 @@ const productMenu: ProductMenuItem[] = [
     title: 'Smart Actuators',
     desc: 'Electric grippers, cylinders and drives for precise, repeatable motion on the production line.',
     href: '/products',
-    img: '/images/dh56-hero-product.png',
+    cards: [
+      { label: 'Electric Grippers',        href: '/products', img: '/images/menu/electric-grippers.png' },
+      { label: 'Servo Electric Cylinders', href: '/products', img: '/images/menu/servo-electric-cylinders.png' },
+      { label: 'Voice Coil Actuators',     href: '/products', img: '/images/menu/voice-coil-actuators.png' },
+      { label: 'Servo Drives',             href: '/products', img: '/images/menu/servo-drives.png' },
+    ],
     children: [
       { key: 'electric-grippers',        label: 'Electric Grippers',        title: 'Electric Grippers',        desc: 'Precise, programmable gripping for assembly, handling and inspection tasks.', href: '/products', img: '/images/dh56-hero-product.png' },
       { key: 'servo-electric-cylinders', label: 'Servo Electric Cylinders', title: 'Servo Electric Cylinders', desc: 'Linear actuation with force and position control for demanding applications.',  href: '/products', img: '/images/dh56-feat-1.jpg' },
@@ -285,28 +314,54 @@ const languages = [
           <span id="product-tab-indicator" class="absolute left-0 top-0 w-px h-6 bg-fg-alternative transition-transform duration-200 ease-out" aria-hidden="true"></span>
         </div>
 
-        <!-- Правая карточка -->
-        <div class="flex-1 min-w-0 h-[365px] relative overflow-clip rounded-small bg-bg-secondary">
+        <!-- Правая часть: hero-карточка или сетка продуктов -->
+        <div class="flex-1 min-w-0 relative">
           {productPanels.map((p, i) => (
-            <div data-product-card={p.key} class:list={['absolute inset-0', i === 0 ? '' : 'hidden']}>
-              {p.img && (
-                <img src={p.img} alt="" aria-hidden="true" class="absolute left-[-10px] top-0 h-[365px] w-[600px] max-w-none object-cover" />
-              )}
-              <div class="absolute bottom-4 left-4 w-[212px] flex flex-col gap-4 items-start justify-center">
-                <div class="flex flex-col gap-4 items-start w-full">
-                  <p class="text-large-medium text-text-primary w-full">{p.title}</p>
-                  <p class="text-tiny text-text-secondary w-full">{p.desc}</p>
+            <div data-product-card={p.key} class:list={[i === 0 ? '' : 'hidden']}>
+
+              {p.cards ? (
+                <div class:list={['grid gap-2 h-[295px]', gridClass(p.cards.length)]}>
+                  {p.cards.map((c, ci) => (
+                    <a
+                      href={c.href}
+                      class:list={[
+                        'group/c relative block overflow-clip rounded-small bg-bg-other',
+                        // при трёх карточках первая занимает оба ряда — бенто из макета
+                        p.cards!.length === 3 && ci === 0 ? 'row-span-2' : '',
+                      ]}
+                    >
+                      <img src={c.img} alt="" aria-hidden="true" class="absolute inset-0 h-full w-full object-cover" />
+                      <span class="absolute left-4 top-4 text-tiny-medium text-text-primary">{c.label}</span>
+                      <span class="absolute bottom-3 right-3 size-6 rounded-full bg-btn-black-default flex items-center justify-center transition-colors duration-200 group-hover/c:bg-btn-black-hover">
+                        <svg width="24" height="24" viewBox="0 0 4.5 9.5" fill="none" aria-hidden="true" class="size-6 p-2 text-text-alternate">
+                          <path d="M0.75 8.75L3.09253 6.366C3.51351 5.93733 3.75 5.35607 3.75 4.75C3.75 4.14393 3.51351 3.56267 3.09253 3.134L0.75 0.75" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                      </span>
+                    </a>
+                  ))}
                 </div>
-                <a
-                  href={p.href}
-                  class="inline-flex items-center justify-center gap-6 pl-4 pr-2 py-1 rounded-full bg-btn-black-default text-text-alternate text-small-caps text-trim-off whitespace-nowrap transition-colors duration-200 hover:bg-btn-black-hover"
-                >
-                  <span>explore</span>
-                  <svg width="24" height="24" viewBox="0 0 4.5 9.5" fill="none" aria-hidden="true" class="size-6 p-1.5 shrink-0">
-                    <path d="M0.75 8.75L3.09253 6.366C3.51351 5.93733 3.75 5.35607 3.75 4.75C3.75 4.14393 3.51351 3.56267 3.09253 3.134L0.75 0.75" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                  </svg>
-                </a>
-              </div>
+              ) : (
+                <div class="h-[365px] relative overflow-clip rounded-small bg-bg-secondary">
+                  {p.img && (
+                    <img src={p.img} alt="" aria-hidden="true" class="absolute left-[-10px] top-0 h-[365px] w-[600px] max-w-none object-cover" />
+                  )}
+                  <div class="absolute bottom-4 left-4 w-[212px] flex flex-col gap-4 items-start justify-center">
+                    <div class="flex flex-col gap-4 items-start w-full">
+                      <p class="text-large-medium text-text-primary w-full">{p.title}</p>
+                      <p class="text-tiny text-text-secondary w-full">{p.desc}</p>
+                    </div>
+                    <a
+                      href={p.href}
+                      class="inline-flex items-center justify-center gap-6 pl-4 pr-2 py-1 rounded-full bg-btn-black-default text-text-alternate text-small-caps text-trim-off whitespace-nowrap transition-colors duration-200 hover:bg-btn-black-hover"
+                    >
+                      <span>explore</span>
+                      <svg width="24" height="24" viewBox="0 0 4.5 9.5" fill="none" aria-hidden="true" class="size-6 p-1.5 shrink-0">
+                        <path d="M0.75 8.75L3.09253 6.366C3.51351 5.93733 3.75 5.35607 3.75 4.75C3.75 4.14393 3.51351 3.56267 3.09253 3.134L0.75 0.75" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                      </svg>
+                    </a>
+                  </div>
+                </div>
+              )}
             </div>
           ))}
         </div>
