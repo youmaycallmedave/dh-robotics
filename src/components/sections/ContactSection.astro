@@ -143,7 +143,7 @@ import Button from '../ui/Button.astro'
                     { value: 'other', label: 'Other' },
                   ].map(opt => (
                     <button type="button" data-value={opt.value}
-                      class="dropdown-option text-trim-off flex items-center gap-4 text-left px-2 py-2 max-md:py-1.5 text-regular text-text-secondary rounded-[4px] hover:bg-fg-other-4 hover:text-text-primary transition-colors w-full cursor-pointer">
+                      class="dropdown-option text-trim-off flex items-center gap-4 text-left px-2 py-2 max-md:py-1.5 text-regular text-text-secondary rounded-tiny hover:bg-fg-other-4 hover:text-text-primary transition-colors w-full cursor-pointer">
                       <span class="flex-1">{opt.label}</span>
                       <span class="check-badge bg-bg-tertiary p-[2px] rounded-full opacity-0 shrink-0">
                         <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
@@ -231,12 +231,12 @@ import Button from '../ui/Button.astro'
       }
       dropdown?.querySelectorAll('.dropdown-option').forEach(b => {
         b.classList.remove('bg-fg-other-4', 'text-text-primary', 'rounded-[2px]')
-        b.classList.add('text-text-secondary', 'rounded-[4px]')
+        b.classList.add('text-text-secondary', 'rounded-tiny')
         const badge = b.querySelector('.check-badge') as HTMLElement | null
         if (badge) badge.style.opacity = '0'
       })
       btn.classList.add('bg-fg-other-4', 'text-text-primary', 'rounded-[2px]')
-      btn.classList.remove('text-text-secondary', 'rounded-[4px]')
+      btn.classList.remove('text-text-secondary', 'rounded-tiny')
       const selectedBadge = btn.querySelector('.check-badge') as HTMLElement | null
       if (selectedBadge) selectedBadge.style.opacity = '1'
       checkFormValidity()

@@ -54,7 +54,7 @@ const defaultOption = defaultValue !== undefined
               data-dropdown-option
               data-value={opt.value}
               class:list={[
-                "flex items-center gap-4 text-left px-2 py-2 text-regular rounded-[4px] hover:bg-fg-other-4 hover:text-text-primary transition-colors w-full cursor-pointer",
+                "flex items-center gap-4 text-left px-2 py-2 text-regular rounded-tiny hover:bg-fg-other-4 hover:text-text-primary transition-colors w-full cursor-pointer",
                 opt.value === (defaultOption?.value ?? null) ? "bg-fg-other-4 text-text-primary" : "text-text-secondary",
               ]}
               role="option"

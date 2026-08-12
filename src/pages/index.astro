@@ -320,7 +320,7 @@ try {
             {provenCases.map((c, i) => (
               <li class="proven-card lg:sticky lg:top-[var(--proven-top)]" data-proven={i}>
                 <div class="flex items-start gap-10 max-lg:flex-col max-lg:gap-5">
-                  <div class="proven-media flex-1 min-w-0 w-full rounded-[4px] overflow-hidden bg-bg-secondary aspect-[640/483] lg:max-h-[calc(100svh-var(--proven-top)-40px)]">
+                  <div class="proven-media flex-1 min-w-0 w-full rounded-tiny overflow-hidden bg-bg-secondary aspect-[640/483] lg:max-h-[calc(100svh-var(--proven-top)-40px)]">
                     <img src={c.img} alt={c.client} class="w-full h-full object-cover" loading="lazy" />
                   </div>
                   <div class="proven-meta shrink-0 lg:w-[260px] max-lg:w-full flex flex-col gap-3">
@@ -378,7 +378,7 @@ try {
     <div class="global-padding">
       <div class="mx-auto max-w-[1200px] grid grid-cols-3 gap-4 max-lg:grid-cols-1">
         {whyCards.map(card => (
-          <div class="why-card group relative h-[700px] max-lg:h-[440px] rounded-[4px] overflow-hidden bg-bg-secondary">
+          <div class="why-card group relative h-[700px] max-lg:h-[440px] rounded-tiny overflow-hidden bg-bg-secondary">
             <img src={card.img} alt={card.title} class="absolute inset-0 w-full h-full object-cover" loading="lazy" />
 
             <!-- Legibility gradient (fades out once the panel colours in) -->
@@ -390,7 +390,7 @@ try {
 
               <div class="relative flex flex-col gap-6">
                 <div class="flex items-center gap-4">
-                  <span class="why-icon size-14 shrink-0 flex items-center justify-center rounded-[4px] transition-colors duration-500 lg:group-hover:bg-bg-secondary max-lg:bg-bg-secondary">
+                  <span class="why-icon size-14 shrink-0 flex items-center justify-center rounded-tiny transition-colors duration-500 lg:group-hover:bg-bg-secondary max-lg:bg-bg-secondary">
                     <svg class="why-glyph size-12 lg:group-hover:size-6 max-lg:size-6 text-text-alternate lg:group-hover:text-text-primary max-lg:text-text-primary transition-all duration-500" viewBox="0 0 24 24" fill="none" aria-hidden="true">
                       {card.icon === 'plus' && <><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.5"/><path d="M12 8v8M8 12h8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></>}
                       {card.icon === 'chip' && <><rect x="6" y="6" width="12" height="12" rx="1.5" stroke="currentColor" stroke-width="1.5"/><path d="M9 3v3M15 3v3M9 18v3M15 18v3M3 9h3M3 15h3M18 9h3M18 15h3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></>}
@@ -458,7 +458,7 @@ try {
 
             <div class="flex gap-4 max-lg:flex-col">
               <!-- Lead series -->
-              <a href={cat.series[0].href} class="group relative lg:flex-1 shrink-0 h-[554px] max-lg:h-[300px] rounded-[12px] overflow-hidden bg-bg-other block">
+              <a href={cat.series[0].href} class="group relative lg:flex-1 shrink-0 h-[554px] max-lg:h-[300px] rounded-medium-small overflow-hidden bg-bg-other block">
                 {cat.series[0].img && (
                   <img src={cat.series[0].img} alt={cat.series[0].title}
                     class="absolute inset-0 w-full h-full object-contain p-10 max-lg:p-6 transition-transform duration-500 group-hover:scale-[1.03]" loading="lazy" />
@@ -473,7 +473,7 @@ try {
               {cat.series.length > 1 && (
                 <div class="lg:w-[592px] lg:h-[554px] max-lg:w-full flex flex-col gap-4">
                   {cat.series.slice(1).map((s: any) => (
-                    <a href={s.href} class="group relative lg:flex-1 lg:min-h-0 max-lg:h-[200px] rounded-[12px] overflow-hidden bg-bg-other block">
+                    <a href={s.href} class="group relative lg:flex-1 lg:min-h-0 max-lg:h-[200px] rounded-medium-small overflow-hidden bg-bg-other block">
                       {s.img && (
                         <img src={s.img} alt={s.title}
                           class="absolute inset-0 w-full h-full object-contain p-8 max-lg:p-6 transition-transform duration-500 group-hover:scale-[1.03]" loading="lazy" />
@@ -570,7 +570,7 @@ try {
         <div class="swiper-wrapper">
           {industries.map(item => (
             <div class="swiper-slide">
-              <a href={item.href} class="group relative block h-[337px] max-lg:h-[211px] rounded-[12px] overflow-hidden bg-bg-secondary">
+              <a href={item.href} class="group relative block h-[337px] max-lg:h-[211px] rounded-medium-small overflow-hidden bg-bg-secondary">
                 <img src={item.img} alt={item.title} class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" loading="lazy" />
                 <span class="absolute top-6 left-6 text-h6 text-text-primary max-w-[140px]">{item.title}</span>
                 <span class="absolute bottom-6 right-6 size-10 rounded-full bg-btn-black-default group-hover:bg-btn-black-hover flex items-center justify-center transition-colors">
@@ -589,10 +589,10 @@ try {
             <div class="industry-progress absolute left-0 top-0 h-px bg-fg-alternative transition-[width] duration-500"></div>
           </div>
           <div class="flex items-center gap-4 shrink-0">
-            <button class="industry-prev size-8 border border-border-other-2 rounded-[4px] flex items-center justify-center hover:border-border-alternative transition-colors cursor-pointer" aria-label="Previous">
+            <button class="industry-prev size-8 border border-border-other-2 rounded-tiny flex items-center justify-center hover:border-border-alternative transition-colors cursor-pointer" aria-label="Previous">
               <svg class="size-4" viewBox="0 0 16 16" fill="none"><path d="M10 12L6 8l4-4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
             </button>
-            <button class="industry-next size-8 border border-border-other-2 rounded-[4px] flex items-center justify-center hover:border-border-alternative transition-colors cursor-pointer" aria-label="Next">
+            <button class="industry-next size-8 border border-border-other-2 rounded-tiny flex items-center justify-center hover:border-border-alternative transition-colors cursor-pointer" aria-label="Next">
               <svg class="size-4" viewBox="0 0 16 16" fill="none"><path d="M6 4l4 4-4 4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
             </button>
           </div>
@@ -730,7 +730,7 @@ try {
         <SwiperSlider id="resources-slider" slideWidth={389} slideMobileWidth={320} gap={16}>
           {posts.map((p: any) => (
             <div class="swiper-slide" data-res-tag={p.tag}>
-              <a href={p.href} class="group border border-border-other-2 rounded-[4px] flex flex-col overflow-hidden h-[432px] max-lg:h-[380px] hover:border-border-alternative transition-colors">
+              <a href={p.href} class="group border border-border-other-2 rounded-tiny flex flex-col overflow-hidden h-[432px] max-lg:h-[380px] hover:border-border-alternative transition-colors">
                 <div class="h-[220px] max-lg:h-[204px] shrink-0 overflow-hidden bg-bg-secondary">
                   <img src={p.img} alt={p.title} class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" loading="lazy" />
                 </div>

@@ -100,7 +100,7 @@ const event: EventTemplateProps = {
 
         <!-- Tag -->
         <span class:list={[
-          "inline-flex items-center px-2 py-2 rounded-[4px] text-small text-text-primary leading-none whitespace-nowrap shrink-0",
+          "inline-flex items-center px-2 py-2 rounded-tiny text-small text-text-primary leading-none whitespace-nowrap shrink-0",
           event.tag === 'future' ? 'bg-fg-other-2' : 'bg-fg-other-1',
         ]}>
           {event.tag === 'future' ? 'Future event' : 'Past event'}
@@ -184,13 +184,13 @@ const event: EventTemplateProps = {
 
         <div class="flex flex-col items-start justify-center gap-4 shrink-0 w-[10rem] max-lg:flex-row max-lg:items-center max-lg:justify-between max-lg:w-full">
           <span class="text-regular text-text-primary">Mar 31, 2025</span>
-          <span class="inline-flex items-center px-2 py-2 rounded-[4px] text-small text-text-primary leading-none whitespace-nowrap bg-fg-other-1">
+          <span class="inline-flex items-center px-2 py-2 rounded-tiny text-small text-text-primary leading-none whitespace-nowrap bg-fg-other-1">
             Past event
           </span>
         </div>
 
         <div class="flex flex-1 gap-4 items-start min-w-0 max-lg:flex-col max-lg:gap-6 max-lg:w-full">
-          <a href="/events/template" class="bg-bg-secondary rounded-[4px] overflow-hidden shrink-0 w-[390px] h-[216px] max-lg:w-full max-lg:h-auto max-lg:aspect-video block">
+          <a href="/events/template" class="bg-bg-secondary rounded-tiny overflow-hidden shrink-0 w-[390px] h-[216px] max-lg:w-full max-lg:h-auto max-lg:aspect-video block">
             <img
               src="https://www.figma.com/api/mcp/asset/369a3018-acfd-4c71-96f3-b777f78f905a"
               alt="Related event"
@@ -259,7 +259,7 @@ const event: EventTemplateProps = {
   <!-- Tag: self-stretch, w-[126px] -->
   <div class="flex items-center self-stretch shrink-0 w-[126px] mr-12">
     <span class:list={[
-      "inline-flex items-center w-full h-full justify-center px-2 rounded-[4px] text-small text-text-primary leading-none whitespace-nowrap",
+      "inline-flex items-center w-full h-full justify-center px-2 rounded-tiny text-small text-text-primary leading-none whitespace-nowrap",
       event.tag === 'future' ? 'bg-fg-other-2' : 'bg-fg-other-1',
     ]}>
       {event.tag === 'future' ? 'Future event' : 'Past event'}

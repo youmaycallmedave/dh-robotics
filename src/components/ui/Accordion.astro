@@ -23,7 +23,7 @@ const isBoxed = variant === 'boxed'
 const isRows = variant === 'rows'
 
 const itemBorder = isBoxed
-  ? `border ${borderClass ?? 'border-border-other-2'} rounded-[4px]`
+  ? `border ${borderClass ?? 'border-border-other-2'} rounded-tiny`
   : isRows
     ? `border-t ${borderClass ?? 'border-border-other-2'} last:border-b`
     : `border-b ${borderClass ?? 'border-border-other-2'}`

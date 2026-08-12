@@ -112,7 +112,7 @@ const otherEvents = otherRaw.map((e: any) => ({
         <div id="event-meta-trigger" class="mx-auto max-w-[998px] flex items-center justify-between gap-4 mb-12 max-lg:flex-col max-lg:items-start max-lg:gap-6 max-lg:mb-10">
 
           <span class:list={[
-            "inline-flex items-center px-2 py-2 rounded-[4px] text-small text-text-primary leading-none whitespace-nowrap shrink-0",
+            "inline-flex items-center px-2 py-2 rounded-tiny text-small text-text-primary leading-none whitespace-nowrap shrink-0",
             tag === 'future' ? 'bg-fg-other-2' : 'bg-fg-other-1',
           ]}>
             {tag === 'future' ? 'Future event' : 'Past event'}
@@ -191,7 +191,7 @@ const otherEvents = otherRaw.map((e: any) => ({
               <div class="flex flex-col items-start justify-center gap-4 shrink-0 w-[10rem] max-lg:flex-row max-lg:items-center max-lg:gap-2 max-lg:w-auto">
                 <span class="text-regular text-text-primary">{e.date}</span>
                 <span class:list={[
-                  "inline-flex items-center px-2 py-2 rounded-[4px] text-small text-text-primary leading-none whitespace-nowrap",
+                  "inline-flex items-center px-2 py-2 rounded-tiny text-small text-text-primary leading-none whitespace-nowrap",
                   e.tag === 'future' ? 'bg-fg-other-2' : 'bg-fg-other-1',
                 ]}>
                   {e.tag === 'future' ? 'Future event' : 'Past event'}
@@ -199,7 +199,7 @@ const otherEvents = otherRaw.map((e: any) => ({
               </div>
 
               <div class="flex flex-1 gap-4 items-start min-w-0 max-lg:flex-col max-lg:w-full">
-                <a href={e.href} class="bg-bg-secondary rounded-[4px] overflow-hidden shrink-0 w-[390px] h-[216px] max-lg:w-full max-lg:h-auto max-lg:aspect-video block">
+                <a href={e.href} class="bg-bg-secondary rounded-tiny overflow-hidden shrink-0 w-[390px] h-[216px] max-lg:w-full max-lg:h-auto max-lg:aspect-video block">
                   {e.image
                     ? <img src={e.image} alt={e.title} class="w-full h-full object-cover transition-transform duration-700 ease-in-out lg:group-hover:scale-110" loading="lazy" />
                     : <div class="w-full h-full bg-bg-secondary" />
@@ -256,7 +256,7 @@ const otherEvents = otherRaw.map((e: any) => ({
     <div class="bg-bg-primary border border-border-other-2 flex items-center justify-between pl-4 pr-2 py-2 pointer-events-auto w-fit">
       <div class="flex items-center self-stretch shrink-0 w-[126px] mr-12">
         <span class:list={[
-          "inline-flex items-center w-full h-full justify-center px-2 rounded-[4px] text-small text-text-primary leading-none whitespace-nowrap",
+          "inline-flex items-center w-full h-full justify-center px-2 rounded-tiny text-small text-text-primary leading-none whitespace-nowrap",
           tag === 'future' ? 'bg-fg-other-2' : 'bg-fg-other-1',
         ]}>
           {tag === 'future' ? 'Future event' : 'Past event'}

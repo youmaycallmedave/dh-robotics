@@ -44,7 +44,7 @@ const {
       {industries.map((industry) => (
         <div class="swiper-slide slide-item w-[calc(100%-48px)]">
 
-          <div class="slide-image-wrap relative w-full overflow-hidden rounded-[4px] bg-bg-secondary max-lg:aspect-[4/3]">
+          <div class="slide-image-wrap relative w-full overflow-hidden rounded-tiny bg-bg-secondary max-lg:aspect-[4/3]">
             <img
               src={industry.imageUrl}
               alt={industry.title}
@@ -79,12 +79,12 @@ const {
       <div class="ind-progress absolute left-0 top-0 h-px bg-text-primary transition-all duration-500" style={`width: ${(1 / industries.length * 100).toFixed(0)}%`}></div>
     </div>
     <div class="flex gap-4 shrink-0">
-      <button class="ind-prev size-8 border border-border-other-2 rounded-[4px] flex items-center justify-center text-text-secondary hover:text-text-primary hover:border-text-primary transition-colors" aria-label="Previous">
+      <button class="ind-prev size-8 border border-border-other-2 rounded-tiny flex items-center justify-center text-text-secondary hover:text-text-primary hover:border-text-primary transition-colors" aria-label="Previous">
         <svg width="8" height="12" viewBox="0 0 8 12" fill="none" aria-hidden="true">
           <path d="M6 10L2 6L6 2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
         </svg>
       </button>
-      <button class="ind-next size-8 border border-border-other-2 rounded-[4px] flex items-center justify-center text-text-secondary hover:text-text-primary hover:border-text-primary transition-colors" aria-label="Next">
+      <button class="ind-next size-8 border border-border-other-2 rounded-tiny flex items-center justify-center text-text-secondary hover:text-text-primary hover:border-text-primary transition-colors" aria-label="Next">
         <svg width="8" height="12" viewBox="0 0 8 12" fill="none" aria-hidden="true">
           <path d="M2 2L6 6L2 10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
         </svg>

@@ -80,13 +80,13 @@ const languages = [
 
         <!-- Language (desktop) -->
         <div class="relative max-lg:hidden" data-lang-wrap>
-          <button id="lang-btn" class="flex items-center gap-1 px-2 py-1 rounded-[4px] text-small-medium text-text-primary hover:bg-bg-secondary transition-colors duration-150 uppercase" aria-expanded="false">
+          <button id="lang-btn" class="flex items-center gap-1 px-2 py-1 rounded-tiny text-small-medium text-text-primary hover:bg-bg-secondary transition-colors duration-150 uppercase" aria-expanded="false">
             EN
             <svg class="lang-chevron size-4 transition-transform duration-200" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
           </button>
-          <div id="lang-panel" class="absolute top-full left-0 mt-2 w-[200px] bg-bg-primary border border-border-other-2 rounded-[4px] shadow-[0_12px_40px_rgba(10,15,21,0.12)] p-2 hidden z-50">
+          <div id="lang-panel" class="absolute top-full left-0 mt-2 w-[200px] bg-bg-primary border border-border-other-2 rounded-tiny shadow-[0_12px_40px_rgba(10,15,21,0.12)] p-2 hidden z-50">
             {languages.map(l => (
-              <button class="w-full flex items-center gap-3 px-2 py-2 rounded-[4px] hover:bg-bg-secondary transition-colors duration-150 text-left">
+              <button class="w-full flex items-center gap-3 px-2 py-2 rounded-tiny hover:bg-bg-secondary transition-colors duration-150 text-left">
                 <span class="text-large leading-none">{l.flag}</span>
                 <span class="flex-1 text-regular text-text-primary">{l.label}</span>
                 {l.active && (
@@ -101,7 +101,7 @@ const languages = [
       <!-- Desktop nav -->
       <nav class="flex items-center gap-1 max-lg:hidden">
         <div class="nav-wrap" data-menu="products">
-          <button class="nav-btn flex items-center gap-1 px-2 py-1 rounded-[4px] text-small-medium text-text-primary hover:bg-bg-secondary transition-colors duration-150 cursor-pointer whitespace-nowrap" aria-expanded="false">
+          <button class="nav-btn flex items-center gap-1 px-2 py-1 rounded-tiny text-small-medium text-text-primary hover:bg-bg-secondary transition-colors duration-150 cursor-pointer whitespace-nowrap" aria-expanded="false">
             Products
             <svg class="nav-chevron size-4 transition-transform duration-200" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
           </button>
@@ -109,16 +109,16 @@ const languages = [
 
         {megaMenus.map(menu => (
           <div class="nav-wrap" data-menu={menu.id}>
-            <button class="nav-btn flex items-center gap-1 px-2 py-1 rounded-[4px] text-small-medium text-text-primary hover:bg-bg-secondary transition-colors duration-150 cursor-pointer whitespace-nowrap" aria-expanded="false">
+            <button class="nav-btn flex items-center gap-1 px-2 py-1 rounded-tiny text-small-medium text-text-primary hover:bg-bg-secondary transition-colors duration-150 cursor-pointer whitespace-nowrap" aria-expanded="false">
               {menu.label}
               <svg class="nav-chevron size-4 transition-transform duration-200" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
             </button>
           </div>
         ))}
 
-        <a href="/about" class="flex items-center px-2 py-1 rounded-[4px] text-small-medium text-text-primary hover:bg-bg-secondary transition-colors duration-150 whitespace-nowrap">About</a>
+        <a href="/about" class="flex items-center px-2 py-1 rounded-tiny text-small-medium text-text-primary hover:bg-bg-secondary transition-colors duration-150 whitespace-nowrap">About</a>
         <!-- DEV-only quick link -->
-        <a href="/sitemap" class="flex items-center px-2 py-1 rounded-[4px] text-small-medium text-text-primary hover:bg-bg-secondary transition-colors duration-150 whitespace-nowrap">Sitemap</a>
+        <a href="/sitemap" class="flex items-center px-2 py-1 rounded-tiny text-small-medium text-text-primary hover:bg-bg-secondary transition-colors duration-150 whitespace-nowrap">Sitemap</a>
       </nav>
 
       <div class="flex items-center gap-4 shrink-0 max-lg:gap-3">
@@ -133,7 +133,7 @@ const languages = [
           </svg>
         </a>
 
-        <button id="burger-btn" class="lg:hidden border border-border-other-2 rounded-[4px] p-3 flex items-center justify-center hover:border-border-alternative transition-colors duration-200" aria-label="Menu" aria-expanded="false">
+        <button id="burger-btn" class="lg:hidden border border-border-other-2 rounded-tiny p-3 flex items-center justify-center hover:border-border-alternative transition-colors duration-200" aria-label="Menu" aria-expanded="false">
           <svg id="burger-icon" class="size-4 text-text-primary" viewBox="0 0 16 16" fill="none" aria-hidden="true">
             <path d="M2 4h12M2 8h12M2 12h12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
           </svg>
@@ -180,7 +180,7 @@ const languages = [
               ))}
             </div>
 
-            <div class="shrink-0 w-[600px] max-w-full h-[365px] relative overflow-hidden rounded-[4px] bg-bg-secondary">
+            <div class="shrink-0 w-[600px] max-w-full h-[365px] relative overflow-hidden rounded-tiny bg-bg-secondary">
               {menu.items.map((item, i) => (
                 <a
                   href={item.href}
@@ -243,7 +243,7 @@ const languages = [
             <div class="flex flex-col gap-4">
               {menu.items.map(item => (
                 <a href={item.href} class="flex items-center gap-4">
-                  <span class="size-12 shrink-0 rounded-[4px] overflow-hidden bg-bg-secondary block">
+                  <span class="size-12 shrink-0 rounded-tiny overflow-hidden bg-bg-secondary block">
                     <img src={item.img} alt="" class="w-full h-full object-cover" loading="lazy" />
                   </span>
                   <span class="text-medium text-text-primary">{item.title}</span>

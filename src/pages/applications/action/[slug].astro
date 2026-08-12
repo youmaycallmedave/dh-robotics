@@ -86,7 +86,7 @@ function getYoutubeId(url: string): string | null {
                 ]}
               >
                 <div class:list={[
-                  'w-[112px] h-[63px] rounded-[4px] flex items-center justify-center border transition-colors duration-200',
+                  'w-[112px] h-[63px] rounded-tiny flex items-center justify-center border transition-colors duration-200',
                   isActive
                     ? 'border-[#d7000f] border-[1.6px] bg-bg-primary shadow-[0_0_0_3px_rgba(215,0,15,0.24)]'
                     : 'border-border-other-2 bg-bg-primary hover:border-text-primary',
@@ -157,7 +157,7 @@ function getYoutubeId(url: string): string | null {
 
                       <!-- Video or image block -->
                       {hasMedia && (
-                        <div class="w-full aspect-video bg-bg-secondary rounded-[4px] overflow-hidden relative">
+                        <div class="w-full aspect-video bg-bg-secondary rounded-tiny overflow-hidden relative">
                           {ytId ? (
                             <iframe
                               src={`https://www.youtube.com/embed/${ytId}`}
