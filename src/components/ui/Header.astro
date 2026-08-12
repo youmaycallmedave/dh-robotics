@@ -103,7 +103,13 @@ const productMenu: ProductMenuItem[] = [
     title: 'Intelligent Flexible Motion System',
     desc: 'A modular transport platform that moves parts flexibly through the whole production cell.',
     href: '/products',
-    img: '/images/menu/products-all.png',
+    // В макете у этих карточек переиспользованы рендеры Smart Actuators — своих ещё нет
+    cards: [
+      { label: 'Annular Line',                    href: '/products', img: '/images/menu/electric-grippers.png' },
+      { label: 'Logistics Line',                  href: '/products', img: '/images/menu/servo-electric-cylinders.png' },
+      { label: 'Docking Line',                    href: '/products', img: '/images/menu/voice-coil-actuators.png' },
+      { label: 'Wireless Power Supply Solution',  href: '/products', img: '/images/menu/servo-drives.png' },
+    ],
   },
   {
     key: 'hexapods',
@@ -111,7 +117,9 @@ const productMenu: ProductMenuItem[] = [
     title: 'Hexapods',
     desc: 'Six-axis positioning systems for sub-micron alignment and precision manipulation.',
     href: '/products',
-    img: '/images/service-technology-product1.webp',
+    cards: [
+      { label: 'DHEX-100-50 Hexapod', href: '/products', img: '/images/menu/hexapod.png' },
+    ],
   },
   {
     key: 'sensor',
@@ -119,7 +127,11 @@ const productMenu: ProductMenuItem[] = [
     title: 'Sensor',
     desc: 'Force, torque and position sensing that gives every motion system real-time feedback.',
     href: '/products',
-    img: '/images/service-technology-product2.webp',
+    // В макете переиспользованы рендеры Dexterous Hand — своих ещё нет
+    cards: [
+      { label: 'Contact Displacement Sensor', href: '/products', img: '/images/menu/hand-3finger.png' },
+      { label: 'Laser Displacement Sensor',   href: '/products', img: '/images/menu/hand-5finger.png' },
+    ],
   },
   {
     key: 'precision-stage',
@@ -127,7 +139,13 @@ const productMenu: ProductMenuItem[] = [
     title: 'Precision Motorized Stage',
     desc: 'Motorized stages engineered for repeatable, high-accuracy positioning in the lab and the line.',
     href: '/products',
-    img: '/images/service-technology-product3.webp',
+    // В макете переиспользованы рендеры Smart Actuators — своих ещё нет
+    cards: [
+      { label: 'Motorized Linear Stage',            href: '/products', img: '/images/menu/electric-grippers.png' },
+      { label: 'Motorized Rotary Stage',            href: '/products', img: '/images/menu/servo-electric-cylinders.png' },
+      { label: 'Motorized Goniometer Stage',        href: '/products', img: '/images/menu/voice-coil-actuators.png' },
+      { label: 'Motorized Horizontal Lifting Stage', href: '/products', img: '/images/menu/servo-drives.png' },
+    ],
   },
 ]
 
@@ -341,7 +359,20 @@ const languages = [
             <div data-product-card={p.key} class:list={[i === 0 ? '' : 'hidden']}>
 
               {p.cards ? (
-                <div class:list={['grid gap-2', gridClass(p.cards.length), p.cards.some(c => c.desc) ? '' : 'h-[295px]']}>
+                <div class="flex flex-col gap-3">
+
+                  <!-- Полоса над сеткой: название категории и ссылка «view more» -->
+                  <div class="flex items-center justify-between h-4">
+                    <p class="text-regular-medium text-text-primary whitespace-nowrap">{p.title}</p>
+                    <a href={p.href} class="group/vm flex items-center gap-2 text-text-primary">
+                      <span class="text-[12px] leading-4 uppercase text-trim-off">view more</span>
+                      <svg width="4" height="8" viewBox="0 0 4.5 9.5" fill="none" aria-hidden="true" class="shrink-0 transition-transform duration-200 group-hover/vm:translate-x-0.5">
+                        <path d="M0.75 8.75L3.09253 6.366C3.51351 5.93733 3.75 5.35607 3.75 4.75C3.75 4.14393 3.51351 3.56267 3.09253 3.134L0.75 0.75" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                      </svg>
+                    </a>
+                  </div>
+
+                  <div class:list={['grid gap-2', gridClass(p.cards.length), p.cards.some(c => c.desc) ? '' : 'h-[295px]']}>
                   {p.cards.map((c, ci) => (
                     c.desc ? (
                       <!-- Карточка продукта: иконка 80x80, серия, описание -->
@@ -376,6 +407,7 @@ const languages = [
                       </a>
                     )
                   ))}
+                  </div>
                 </div>
               ) : (
                 <div class="h-[365px] relative overflow-clip rounded-small bg-bg-secondary">
