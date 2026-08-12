@@ -572,9 +572,9 @@ const languages = [
     <div class="global-padding flex flex-col">
 
       <div class="mobile-section border-b border-border-other-2">
-        <button class="mobile-section-btn flex items-center justify-between w-full text-text-primary py-5" aria-expanded="false">
-          <span class="text-h6">Products</span>
-          <svg class="mobile-chevron size-6 text-text-primary transition-transform duration-200 shrink-0" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <button class="mobile-section-btn flex items-center justify-between w-full text-text-primary h-14" aria-expanded="false">
+          <span class="text-regular-medium text-trim-off">Products</span>
+          <svg class="mobile-chevron size-4 text-text-primary transition-transform duration-200 shrink-0" viewBox="0 0 24 24" fill="none" aria-hidden="true">
             <path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
           </svg>
         </button>
@@ -592,20 +592,20 @@ const languages = [
 
       {megaMenus.map(menu => (
         <div class="mobile-section border-b border-border-other-2">
-          <button class="mobile-section-btn flex items-center justify-between w-full text-text-primary py-5" aria-expanded="false">
-            <span class="text-h6">{menu.label}</span>
-            <svg class="mobile-chevron size-6 text-text-primary transition-transform duration-200 shrink-0" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <button class="mobile-section-btn flex items-center justify-between w-full text-text-primary h-14" aria-expanded="false">
+            <span class="text-regular-medium text-trim-off">{menu.label}</span>
+            <svg class="mobile-chevron size-4 text-text-primary transition-transform duration-200 shrink-0" viewBox="0 0 24 24" fill="none" aria-hidden="true">
               <path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
             </svg>
           </button>
           <div class="mobile-section-content hidden pb-5">
             <div class="flex flex-col gap-4">
               {menu.items.map(item => (
-                <a href={item.href} class="flex items-center gap-4">
-                  <span class="size-12 shrink-0 rounded-tiny overflow-hidden bg-bg-secondary block">
+                <a href={item.href} class="flex items-center gap-4 h-14">
+                  <span class="size-10 shrink-0 rounded-tiny overflow-hidden bg-bg-secondary block">
                     <img src={item.img} alt="" class="w-full h-full object-cover" loading="lazy" />
                   </span>
-                  <span class="text-medium text-text-primary">{item.title}</span>
+                  <span class="text-regular-medium text-text-primary text-trim-off">{item.title}</span>
                 </a>
               ))}
             </div>
@@ -613,13 +613,13 @@ const languages = [
         </div>
       ))}
 
-      <a href="/about" class="text-trim-off text-h6 text-text-primary py-5 block border-b border-border-other-2">About</a>
-      <a href="/sitemap" class="text-trim-off text-h6 text-text-primary py-5 block border-b border-border-other-2">Sitemap</a>
+      <a href="/about" class="text-trim-off text-regular-medium text-text-primary h-14 flex items-center border-b border-border-other-2">About</a>
+      <a href="/sitemap" class="text-trim-off text-regular-medium text-text-primary h-14 flex items-center border-b border-border-other-2">Sitemap</a>
 
       <div class="mobile-section border-b border-border-other-2">
-        <button class="mobile-section-btn flex items-center justify-between w-full text-text-primary py-5" aria-expanded="false">
-          <span class="text-h6 uppercase">EN</span>
-          <svg class="mobile-chevron size-6 text-text-primary transition-transform duration-200 shrink-0" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <button class="mobile-section-btn flex items-center justify-between w-full text-text-primary h-14" aria-expanded="false">
+          <span class="text-regular-medium text-trim-off uppercase">EN</span>
+          <svg class="mobile-chevron size-4 text-text-primary transition-transform duration-200 shrink-0" viewBox="0 0 24 24" fill="none" aria-hidden="true">
             <path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
           </svg>
         </button>
@@ -640,22 +640,22 @@ const languages = [
       <div class="pt-8 pb-10 flex flex-col gap-6">
         <div class="flex flex-col gap-1">
           <p class="text-tiny text-text-secondary">Phone</p>
-          <a href="tel:+8618814357627" class="text-h5 text-text-primary">+86 18814357627</a>
+          <a href="tel:+8618814357627" class="text-large-medium text-text-primary">+86 18814357627</a>
         </div>
         <div class="flex flex-col gap-1">
           <p class="text-tiny text-text-secondary">E-mail</p>
-          <a href="mailto:info@dh-robotics.com" class="text-h5 text-text-primary">info@dh-robotics.com</a>
+          <a href="mailto:info@dh-robotics.com" class="text-large-medium text-text-primary">info@dh-robotics.com</a>
         </div>
         <div class="flex flex-col gap-3">
           <p class="text-tiny text-text-secondary">Social media</p>
           <div class="flex items-center gap-2">
-            <a href="https://www.linkedin.com/company/dh-robotics" target="_blank" rel="noopener noreferrer" class="border border-border-other-2 rounded-small p-3 flex items-center justify-center hover:border-border-alternative transition-colors duration-200" aria-label="LinkedIn">
+            <a href="https://www.linkedin.com/company/dh-robotics" target="_blank" rel="noopener noreferrer" class="size-10 shrink-0 border border-border-other-2 rounded-full flex items-center justify-center hover:border-border-alternative transition-colors duration-200" aria-label="LinkedIn">
               <svg class="size-6 text-text-primary" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
             </a>
-            <a href="https://www.youtube.com/@dh-robotics" target="_blank" rel="noopener noreferrer" class="border border-border-other-2 rounded-small p-3 flex items-center justify-center hover:border-border-alternative transition-colors duration-200" aria-label="YouTube">
+            <a href="https://www.youtube.com/@dh-robotics" target="_blank" rel="noopener noreferrer" class="size-10 shrink-0 border border-border-other-2 rounded-full flex items-center justify-center hover:border-border-alternative transition-colors duration-200" aria-label="YouTube">
               <svg class="size-6 text-text-primary" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.95-1.96C18.88 4 12 4 12 4s-6.88 0-8.59.46A2.78 2.78 0 0 0 1.46 6.42 29 29 0 0 0 1 12a29 29 0 0 0 .46 5.58 2.78 2.78 0 0 0 1.95 1.96C5.12 20 12 20 12 20s6.88 0 8.59-.46a2.78 2.78 0 0 0 1.96-1.96A29 29 0 0 0 23 12a29 29 0 0 0-.46-5.58zM9.75 15.02V8.98L15.5 12l-5.75 3.02z"/></svg>
             </a>
-            <a href="https://www.facebook.com/dhrobotics" target="_blank" rel="noopener noreferrer" class="border border-border-other-2 rounded-small p-3 flex items-center justify-center hover:border-border-alternative transition-colors duration-200" aria-label="Facebook">
+            <a href="https://www.facebook.com/dhrobotics" target="_blank" rel="noopener noreferrer" class="size-10 shrink-0 border border-border-other-2 rounded-full flex items-center justify-center hover:border-border-alternative transition-colors duration-200" aria-label="Facebook">
               <svg class="size-6 text-text-primary" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
             </a>
           </div>
