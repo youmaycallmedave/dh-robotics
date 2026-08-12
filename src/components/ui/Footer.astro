@@ -1,191 +1,211 @@
 ---
+// Footer — Figma: desktop 10076:19787, mobile 10678:32562
+// Тёмная тема (#0a0f15), скругление верхних углов 16px, три блока с разделителями rgba(255,255,255,0.08)
+
+const productsPrimary = [
+  { label: 'All products', href: '/products' },
+  { label: 'Electric Grippers', href: '/products' },
+  { label: 'Rotary Electric Grippers', href: '/products' },
+  { label: 'Servo Drive', href: '/products' },
+  { label: 'Linear Coil Actuator', href: '/products' },
+  { label: 'Servo Electric Cylinder', href: '/products' },
+]
+
+const productsSecondary = [
+  { label: 'Servo Electric Cylinder', href: '/products' },
+  { label: 'Dexterous Hand', href: '/products' },
+  { label: 'iFM intelligent Flexible Motion System', href: '/products' },
+  { label: 'Hexapods', href: '/products' },
+]
+
+const applications = [
+  { label: 'All Applications', href: '/applications' },
+  { label: 'Industry', href: '/applications' },
+  { label: 'Processes', href: '/applications/action' },
+]
+
+const support = [
+  { label: 'Download Center', href: '/explore/downloads' },
+  { label: 'Software', href: '/support/software' },
+  { label: 'Support Hub', href: '/support' },
+  { label: 'FAQ', href: '/explore/faq' },
+  { label: 'Technology', href: '/support/technology' },
+]
+
+const explore = [
+  { label: 'News', href: '/news' },
+  { label: 'Events', href: '/events' },
+  { label: 'Case', href: '/cases' },
+]
+
+const social = [
+  { label: 'Linkedin', href: 'https://www.linkedin.com/company/dh-robotics' },
+  { label: 'Youtube', href: 'https://www.youtube.com/@dh-robotics' },
+  { label: 'Facebook', href: 'https://www.facebook.com/dhrobotics' },
+]
 ---
 
-<footer class="border-t border-border-other-2 bg-bg-primary">
-  <div class="global-padding pt-[72px] pb-10 max-lg:pt-14 max-lg:pb-10">
-    <div class="mx-auto max-w-[1200px] flex flex-col gap-14 max-lg:gap-0">
+<footer class="bg-bg-alternative rounded-t-medium overflow-clip">
+  <div class="px-10 pt-20 pb-10 max-lg:px-4 max-lg:pt-12 max-lg:pb-9">
+    <div class="mx-auto max-w-[1200px] flex flex-col gap-20 max-lg:gap-9">
 
-      <!-- TOP ROW: Logo+desc+subscription | Phone+Email | Up -->
-      <div class="flex items-start justify-between gap-10 max-lg:flex-col max-lg:gap-0">
+      <!-- ── Блок 1: логотип + подписка | телефон/почта | Up ───────── -->
+      <div class="flex items-start justify-between max-lg:flex-col max-lg:gap-4">
 
-        <!-- Left: Logo row + desc + subscription -->
-        <div class="flex flex-col gap-6 shrink-0 w-[422px] max-lg:w-full">
-          <div class="flex items-start gap-6">
+        <div class="w-[389px] shrink-0 flex flex-col gap-6 max-lg:w-full">
+          <div class="flex items-center gap-6 w-full">
             <a href="/" aria-label="DH-Robotics" class="shrink-0">
-              <img src="/logotype-dh-robotics.svg" alt="DH-Robotics" class="h-[63px] w-auto" />
+              <img src="/logotype-dh-robotics-white.svg" alt="DH-Robotics" class="h-[63px] w-[85px]" />
             </a>
-            <p class="text-tiny text-text-primary">
+            <p class="flex-1 min-w-0 text-tiny text-text-alternate">
               DH-Robotics is a high-tech company which is dedicated on providing core components of precision and motion controls for industrial intelligent manufacturing scenarios.
             </p>
           </div>
-          <!-- Subscription: desktop only -->
-          <div class="flex gap-4 items-end max-lg:hidden">
-            <div class="flex-1 flex flex-col gap-0.5">
-              <p class="text-small text-text-primary mb-1">Get the latest news from DH-Robotics</p>
-              <div class="flex items-center border-b border-border-other-2 py-4">
+
+          <form class="flex gap-4 items-end w-full" data-subscribe>
+            <div class="flex-1 min-w-0 flex flex-col gap-0.5">
+              <label for="footer-email" class="text-small text-text-alternate w-full">Get the latest news from DH-Robotics</label>
+              <div class="flex items-center gap-4 border-b border-border-other-1 py-3 w-full">
                 <input
+                  id="footer-email"
                   type="email"
+                  required
                   placeholder="Enter your e-mail..."
-                  class="flex-1 bg-transparent text-regular text-text-primary placeholder:text-text-secondary outline-none"
+                  class="flex-1 min-w-0 bg-transparent text-regular text-text-alternate placeholder:text-text-alternate placeholder:opacity-48 outline-none"
                 />
               </div>
             </div>
-            <button class="bg-btn-black-default p-2 rounded-[2px] flex items-center justify-center shrink-0 size-10" aria-label="Subscribe">
-              <svg class="size-6" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                <path d="M5 12h14M13 6l6 6-6 6" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            <button
+              type="submit"
+              aria-label="Subscribe"
+              class="shrink-0 flex size-10 items-center justify-center rounded-full bg-btn-white-default text-text-primary transition-colors duration-200 hover:bg-btn-white-hover cursor-pointer"
+            >
+              <svg width="24" height="24" viewBox="0 0 4.5 9.5" fill="none" aria-hidden="true" class="size-6 p-1.5">
+                <path d="M0.75 8.75L3.09253 6.366C3.51351 5.93733 3.75 5.35607 3.75 4.75C3.75 4.14393 3.51351 3.56267 3.09253 3.134L0.75 0.75" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
               </svg>
             </button>
+          </form>
+        </div>
+
+        <div class="flex flex-col gap-6 justify-center max-lg:gap-6">
+          <div class="flex flex-col gap-4">
+            <p class="text-tiny text-black-500">Phone</p>
+            <a
+              href="tel:+8618814357627"
+              class="footer-link footer-link-large font-primary font-medium text-[2.5rem] leading-[1em] tracking-[-0.0625rem] text-text-alternate whitespace-nowrap max-lg:text-[2rem]"
+            ><span>+86 18814357627</span></a>
+          </div>
+          <div class="flex flex-col gap-4">
+            <p class="text-tiny text-black-500">E-mail</p>
+            <a
+              href="mailto:info@dh-robotics.com"
+              class="footer-link footer-link-large font-primary font-medium text-[2.5rem] leading-[1em] tracking-[-0.0625rem] text-text-alternate whitespace-nowrap max-lg:text-[2rem]"
+            ><span>info@dh-robotics.com</span></a>
           </div>
         </div>
 
-        <!-- Center: Phone + Email (desktop only) -->
-        <div class="flex flex-col gap-6 max-lg:hidden">
-          <div class="flex flex-col gap-5">
-            <p class="text-tiny text-text-secondary">Phone</p>
-            <a href="tel:+8618814357627" class="footer-link footer-link-large text-h3 text-text-primary whitespace-nowrap"><span>+86 18814357627</span></a>
-          </div>
-          <div class="flex flex-col gap-5">
-            <p class="text-tiny text-text-secondary">E-mail</p>
-            <a href="mailto:info@dh-robotics.com" class="footer-link footer-link-large text-h3 text-text-primary whitespace-nowrap"><span>info@dh-robotics.com</span></a>
-          </div>
-        </div>
-
-        <!-- Right: Up (desktop only) -->
-        <div class="flex flex-col gap-3 max-lg:hidden">
-          <p class="text-tiny text-text-secondary">Up</p>
-          <button id="scroll-to-top" class="border border-border-other-2 rounded-[8px] p-3 flex items-center justify-center hover:border-border-alternative transition-colors duration-200 cursor-pointer" aria-label="Scroll to top">
-            <svg class="size-6 text-text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 15l-6-6-6 6"/></svg>
+        <div class="flex flex-col gap-3 shrink-0">
+          <p class="text-tiny text-text-alternate">Up</p>
+          <button
+            id="scroll-to-top"
+            aria-label="Scroll to top"
+            class="flex size-12 items-center justify-center rounded-full border border-white/8 text-text-alternate transition-colors duration-200 hover:border-white/30 cursor-pointer"
+          >
+            <svg width="24" height="24" viewBox="0 0 4.5 9.5" fill="none" aria-hidden="true" class="size-6 p-1.5 -rotate-90">
+              <path d="M0.75 8.75L3.09253 6.366C3.51351 5.93733 3.75 5.35607 3.75 4.75C3.75 4.14393 3.51351 3.56267 3.09253 3.134L0.75 0.75" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
           </button>
         </div>
-
-        <!-- Mobile: subscription + phone + email + up -->
-        <div class="lg:hidden w-full mt-10 flex flex-col gap-10">
-          <div class="flex gap-4 items-end">
-            <div class="flex-1 flex flex-col gap-0.5">
-              <p class="text-small text-text-primary mb-1">Get the latest news from DH-Robotics</p>
-              <div class="flex items-center border-b border-border-other-2 py-4">
-                <input type="email" placeholder="Enter your e-mail..." class="flex-1 bg-transparent text-regular text-text-primary placeholder:text-text-secondary outline-none" />
-              </div>
-            </div>
-            <button class="bg-btn-black-default p-2 rounded-[2px] flex items-center justify-center shrink-0 size-10" aria-label="Subscribe">
-              <svg class="size-6" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                <path d="M5 12h14M13 6l6 6-6 6" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-              </svg>
-            </button>
-          </div>
-          <div class="flex flex-col gap-4">
-            <p class="text-tiny text-text-secondary">Phone</p>
-            <a href="tel:+8618814357627" class="footer-link footer-link-large text-h5 text-text-primary whitespace-nowrap"><span>+86 18814357627</span></a>
-          </div>
-          <div class="flex flex-col gap-4">
-            <p class="text-tiny text-text-secondary">E-mail</p>
-            <a href="mailto:info@dh-robotics.com" class="footer-link footer-link-large text-h5 text-text-primary whitespace-nowrap"><span>info@dh-robotics.com</span></a>
-          </div>
-          <div class="flex flex-col gap-3">
-            <p class="text-tiny text-text-secondary">Up</p>
-            <button id="scroll-to-top-mobile" class="border border-border-other-2 rounded-[8px] p-3 w-fit flex items-center justify-center hover:border-border-alternative transition-colors duration-200 cursor-pointer" aria-label="Scroll to top">
-              <svg class="size-6 text-text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 15l-6-6-6 6"/></svg>
-            </button>
-          </div>
-        </div>
-
       </div>
 
-      <!-- NAV SECTION -->
-      <nav class="border-t border-border-other-2 pt-14 flex items-start justify-between gap-4
-                  max-lg:flex-wrap max-lg:gap-4 max-lg:pt-14 max-lg:mt-10">
+      <!-- ── Блок 2: колонки ссылок ───────────────────────────────── -->
+      <nav class="border-t border-white/8 pt-20 flex items-start justify-between gap-4 max-lg:grid max-lg:grid-cols-2 max-lg:gap-x-4 max-lg:gap-y-9 max-lg:pt-9">
 
-        <!-- Products col 1 -->
-        <div class="flex flex-col gap-2 max-lg:w-[calc(50%-8px)]">
+        <div class="flex flex-col gap-2">
           <p class="text-tiny text-text-secondary">Products</p>
           <div class="flex flex-col">
-            <a href="/products" class="footer-link text-small-medium text-text-primary py-2 block"><span>All products</span></a>
-            <a href="/products" class="footer-link text-small-medium text-text-primary py-2 block"><span>Electric Grippers</span></a>
-            <a href="/products" class="footer-link text-small-medium text-text-primary py-2 block"><span>Rotary Electric Grippers</span></a>
-            <a href="/products" class="footer-link text-small-medium text-text-primary py-2 block"><span>Servo Drive</span></a>
-            <a href="/products" class="footer-link text-small-medium text-text-primary py-2 block"><span>Linear Coil Actuator</span></a>
-            <a href="/products" class="footer-link text-small-medium text-text-primary py-2 block"><span>Servo Electric Cylinder</span></a>
+            {productsPrimary.map((l) => (
+              <a href={l.href} class="footer-link text-small-medium text-text-alternate py-2 block"><span>{l.label}</span></a>
+            ))}
           </div>
         </div>
 
-        <!-- Products col 2 (no label, offset to align with links) -->
-        <div class="flex flex-col max-lg:w-[calc(50%-8px)]">
-          <div class="h-[24px] max-lg:h-0 shrink-0"></div>
+        <!-- Вторая колонка продуктов — без заголовка, со смещением под первую -->
+        <div class="flex flex-col pt-4 max-lg:pt-0">
           <div class="flex flex-col">
-            <a href="/products" class="footer-link text-small-medium text-text-primary py-2 block"><span>Servo Electric Cylinder</span></a>
-            <a href="/products" class="footer-link text-small-medium text-text-primary py-2 block"><span>Dexterous Hand</span></a>
-            <a href="/products" class="footer-link text-small-medium text-text-primary py-2 block"><span>iFM intelligent Flexible Motion System</span></a>
-            <a href="/products" class="footer-link text-small-medium text-text-primary py-2 block"><span>Hexapods</span></a>
+            {productsSecondary.map((l) => (
+              <a href={l.href} class="footer-link text-small-medium text-text-alternate py-2 block"><span>{l.label}</span></a>
+            ))}
           </div>
         </div>
 
-        <!-- Applications -->
-        <div class="flex flex-col gap-2 max-lg:w-[calc(50%-8px)]">
+        <div class="flex flex-col gap-2">
           <p class="text-tiny text-text-secondary">Applications</p>
           <div class="flex flex-col">
-            <a href="/applications" class="footer-link text-small-medium text-text-primary py-2 block"><span>All Applications</span></a>
-            <a href="/applications" class="footer-link text-small-medium text-text-primary py-2 block"><span>Industry</span></a>
-            <a href="/applications/action" class="footer-link text-small-medium text-text-primary py-2 block"><span>Processes</span></a>
+            {applications.map((l) => (
+              <a href={l.href} class="footer-link text-small-medium text-text-alternate py-2 block"><span>{l.label}</span></a>
+            ))}
           </div>
         </div>
 
-        <!-- Support -->
-        <div class="flex flex-col gap-2 max-lg:w-[calc(50%-8px)]">
+        <div class="flex flex-col gap-2 lg:w-[141px]">
           <p class="text-tiny text-text-secondary">Support</p>
           <div class="flex flex-col">
-            <a href="/support" class="footer-link text-small-medium text-text-primary py-2 block"><span>All Support</span></a>
-            {/* HIDDEN (draft): Technology — restore when page is ready */}
-            {/* <a href="/support/technology" class="footer-link text-small-medium text-text-primary py-2 block"><span>Technology</span></a> */}
-            <a href="/support/software" class="footer-link text-small-medium text-text-primary py-2 block"><span>User Control Software</span></a>
+            {support.map((l) => (
+              <a href={l.href} class="footer-link text-small-medium text-text-alternate py-2 block"><span>{l.label}</span></a>
+            ))}
           </div>
         </div>
 
-        <!-- Explore -->
-        <div class="flex flex-col gap-2 max-lg:w-[calc(50%-8px)]">
+        <div class="flex flex-col gap-2">
           <p class="text-tiny text-text-secondary">Explore</p>
           <div class="flex flex-col">
-            <a href="/news" class="footer-link text-small-medium text-text-primary py-2 block"><span>News</span></a>
-            <a href="/events" class="footer-link text-small-medium text-text-primary py-2 block"><span>Events</span></a>
-            <a href="/explore/faq" class="footer-link text-small-medium text-text-primary py-2 block"><span>FAQ</span></a>
-            <a href="/cases" class="footer-link text-small-medium text-text-primary py-2 block"><span>Case</span></a>
-            <a href="/explore/downloads" class="footer-link text-small-medium text-text-primary py-2 block"><span>Download Center</span></a>
+            {explore.map((l) => (
+              <a href={l.href} class="footer-link text-small-medium text-text-alternate py-2 block"><span>{l.label}</span></a>
+            ))}
           </div>
         </div>
 
-        <!-- Company + Get in Touch -->
-        <div class="flex flex-col gap-6 max-lg:w-[calc(50%-8px)]">
+        <div class="flex flex-col gap-6 justify-center">
           <div class="flex flex-col gap-2">
             <p class="text-tiny text-text-secondary">Company</p>
-            <a href="/about" class="footer-link text-small-medium text-text-primary py-2 block"><span>About us</span></a>
+            <div class="flex flex-col">
+              <a href="/about" class="footer-link text-small-medium text-text-alternate py-2 block"><span>About us</span></a>
+            </div>
           </div>
           <div class="flex flex-col gap-2">
             <p class="text-tiny text-text-secondary">Get in Touch</p>
-            <a href="/contact" class="footer-link text-small-medium text-text-primary py-2 block"><span>Contact us</span></a>
+            <div class="flex flex-col">
+              <a href="/contact" class="footer-link text-small-medium text-text-alternate py-2 block"><span>Contact us</span></a>
+            </div>
           </div>
         </div>
 
-        <!-- Social media -->
-        <div class="flex flex-col gap-2 max-lg:w-[calc(50%-8px)]">
+        <div class="flex flex-col gap-2">
           <p class="text-tiny text-text-secondary">Social media</p>
           <div class="flex flex-col">
-            <a href="https://www.linkedin.com/company/dh-robotics" target="_blank" rel="noopener noreferrer" class="footer-link text-small-medium text-text-primary py-2 block"><span>Linkedin</span></a>
-            <a href="https://www.youtube.com/@dh-robotics" target="_blank" rel="noopener noreferrer" class="footer-link text-small-medium text-text-primary py-2 block"><span>Youtube</span></a>
-            <a href="https://www.facebook.com/dhrobotics" target="_blank" rel="noopener noreferrer" class="footer-link text-small-medium text-text-primary py-2 block"><span>Facebook</span></a>
+            {social.map((l) => (
+              <a href={l.href} target="_blank" rel="noopener noreferrer" class="footer-link text-small-medium text-text-alternate py-2 block"><span>{l.label}</span></a>
+            ))}
           </div>
         </div>
-
       </nav>
 
-      <!-- BOTTOM -->
-      <div class="border-t border-border-other-2 pt-14 flex items-center justify-between gap-4
-                  max-lg:flex-col max-lg:items-center max-lg:gap-6 max-lg:pt-8 max-lg:mt-10">
-        <p class="text-tiny text-text-primary whitespace-nowrap max-lg:text-center">© 2017-2026 DH-Robotics Technology Co., Ltd. all rights reserved.</p>
-        <div class="flex items-center gap-6 flex-wrap max-lg:justify-center">
-          <a href="/privacy-policy" class="footer-link text-tiny text-text-primary whitespace-nowrap"><span>Privacy Policy</span></a>
-          <span class="text-tiny text-text-primary">Terms of Service</span>
-          <a href="/sitemap" class="footer-link text-tiny text-text-primary whitespace-nowrap"><span>Sitemap</span></a>
+      <!-- ── Блок 3: копирайт ─────────────────────────────────────── -->
+      <div class="border-t border-white/8 pt-12 flex items-start justify-between gap-6 max-lg:flex-col max-lg:gap-6 max-lg:pt-9">
+        <p class="text-tiny text-text-alternate whitespace-nowrap max-lg:whitespace-normal">
+          © 2017-2026 DH-Robotics Technology Co., Ltd. all rights reserved.
+        </p>
+
+        <div class="flex gap-6 items-start justify-center whitespace-nowrap">
+          <a href="/privacy-policy" class="footer-link text-tiny text-text-alternate"><span>Privacy Policy</span></a>
+          <span class="text-tiny text-text-alternate">Terms of Service</span>
+          <a href="/sitemap" class="footer-link text-tiny text-text-alternate"><span>Sitemap</span></a>
         </div>
-        <p class="text-tiny text-text-primary whitespace-nowrap max-lg:text-center">created by <a href="https://celerart.com/" target="_blank" rel="noopener noreferrer" class="footer-link"><span>celerart</span></a></p>
+
+        <p class="text-tiny text-text-alternate text-right lg:w-[358px] max-lg:text-left">
+          created by <a href="https://celerart.com/" target="_blank" rel="noopener noreferrer" class="footer-link"><span>celerart</span></a>
+        </p>
       </div>
 
     </div>
@@ -221,9 +241,6 @@
 
 <script>
   document.getElementById('scroll-to-top')?.addEventListener('click', () => {
-    window.scrollTo({ top: 0, behavior: 'smooth' })
-  })
-  document.getElementById('scroll-to-top-mobile')?.addEventListener('click', () => {
     window.scrollTo({ top: 0, behavior: 'smooth' })
   })
 </script>

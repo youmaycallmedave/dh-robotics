@@ -8,6 +8,7 @@ import { productType } from './product'
 import { downloadType } from './download'
 import { industryType } from './industry'
 import { actionType } from './action'
+import { supportResourceType } from './supportResource'
 
 export const schemaTypes = [
   newsType,
@@ -20,4 +21,5 @@ export const schemaTypes = [
   downloadType,
   industryType,
   actionType,
+  supportResourceType,
 ]

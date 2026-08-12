@@ -1,0 +1,614 @@
+---
+// Support Hub — Figma 04. Support → "Support Hub / Desktop" (11656:73386) + "Support Hub / Mobile" (11805:53329)
+// Контент — заглушка из макета ("How-to video series (to be populated over time)"),
+// структура готова под подключение Sanity: достаточно заменить `resources` на client.fetch().
+
+const TYPES = ['Video tutorials', 'Articles', 'Webinars'] as const
+const SERIES = ['CS Series', 'EC Series', 'EA Series'] as const
+const CATEGORIES = ['Programming', 'Interface & Communication', 'Safety', 'Hardware'] as const
+
+type Resource = {
+  title: string
+  type: (typeof TYPES)[number]
+  series: (typeof SERIES)[number]
+  category: (typeof CATEGORIES)[number]
+  href: string
+  image?: string
+}
+
+// 24 карточки — чтобы работала пагинация (12 на страницу, как в макете)
+const PATTERN: Array<[Resource['type'], Resource['series'], Resource['category']]> = [
+  ['Video tutorials', 'CS Series', 'Programming'],
+  ['Articles', 'CS Series', 'Programming'],
+  ['Video tutorials', 'EC Series', 'Interface & Communication'],
+  ['Articles', 'EA Series', 'Safety'],
+  ['Webinars', 'CS Series', 'Hardware'],
+  ['Articles', 'EC Series', 'Programming'],
+  ['Video tutorials', 'EA Series', 'Hardware'],
+  ['Articles', 'CS Series', 'Interface & Communication'],
+  ['Webinars', 'EC Series', 'Safety'],
+  ['Articles', 'EA Series', 'Programming'],
+  ['Video tutorials', 'CS Series', 'Safety'],
+  ['Articles', 'EC Series', 'Hardware'],
+]
+
+const resources: Resource[] = [...PATTERN, ...PATTERN].map(([type, series, category], i) => ({
+  title: 'Empowering the metal industry with cobots',
+  type,
+  series,
+  category,
+  href: '/support',
+  ...(i === -1 ? { image: '' } : {}),
+}))
+
+const PER_PAGE = 12
+
+const tagStyles: Record<Resource['type'], string> = {
+  'Video tutorials': 'bg-fg-other-5',
+  Articles: 'bg-fg-alternative',
+  Webinars: 'bg-fg-tertiary',
+}
+---
+
+<!-- Hero -->
+<section class="bg-bg-primary px-10 pt-[120px] pb-20 max-lg:px-4 max-lg:py-[120px]">
+  <div class="mx-auto w-full max-w-[672px] flex flex-col gap-6 items-center text-center max-lg:gap-10">
+    <div class="flex flex-col gap-10 items-center w-full max-lg:gap-6">
+      <h1 class="font-primary font-medium text-[3.5rem] leading-[1em] tracking-[-0.0625rem] text-text-primary w-full">
+        Support Hub
+      </h1>
+      <p class="text-h6-regular leading-[1.167em]! text-text-primary w-full">
+        How-to video series (to be populated over time)
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- Filters + cards -->
+<div id="hub" class="bg-bg-primary px-10 pb-40 max-lg:px-4 max-lg:pb-20">
+  <div class="mx-auto w-full max-w-[1200px] flex gap-4 items-start max-lg:flex-col max-lg:gap-0">
+
+    <!-- ── Sidebar (desktop) / bottom sheet (mobile) ───────────────── -->
+    <div
+      id="hub-filters"
+      class="w-[288px] shrink-0 flex flex-col gap-6 max-lg:hidden max-lg:fixed max-lg:inset-x-0 max-lg:top-0 max-lg:bottom-0 max-lg:z-40 max-lg:w-full max-lg:bg-bg-primary max-lg:overflow-y-auto max-lg:gap-0"
+    >
+      <!-- Заголовок: desktop «Filters + CLEAR ALL», mobile «Filter + ✕» -->
+      <div class="flex items-center justify-between w-full max-lg:px-4 max-lg:pt-[60px] max-lg:pb-6">
+        <p class="text-h6 text-text-primary whitespace-nowrap max-lg:text-[2.5rem] max-lg:leading-[1em]">
+          <span class="max-lg:hidden">Filters</span>
+          <span class="hidden max-lg:inline">Filter</span>
+        </p>
+
+        <button
+          type="button"
+          data-clear-all
+          class="max-lg:hidden flex items-center justify-center gap-2 rounded-full border border-border-other-2 px-4 py-2 text-small-medium text-trim-off uppercase text-text-primary transition-colors duration-150 hover:border-border-alternative cursor-pointer"
+        >
+          <span class="text-trim-off">clear all</span>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true" class="shrink-0">
+            <path d="M18.75 5.25L5.25 18.75" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M18.75 18.75L5.25 5.25" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+
+        <button
+          type="button"
+          data-filters-close
+          aria-label="Close filters"
+          class="hidden max-lg:flex size-10 shrink-0 items-center justify-center rounded-full border border-border-other-2 text-text-primary cursor-pointer"
+        >
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M18.75 5.25L5.25 18.75" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M18.75 18.75L5.25 5.25" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+      </div>
+
+      <div class="flex flex-col gap-2 w-full max-lg:px-4 max-lg:pb-[104px]">
+
+        <!-- Тип материала — пилюли -->
+        <div class="flex flex-col gap-4 rounded-medium-small border border-border-other-2 p-5 w-full">
+          <p class="text-small text-text-primary w-full" data-showing>Showing 0 of {resources.length}</p>
+          <div class="flex flex-col gap-2 items-start">
+            <button
+              type="button"
+              data-type="All"
+              data-active="true"
+              class="hub-type rounded-full px-4 py-3 text-regular-medium transition-colors duration-150 cursor-pointer"
+            >
+              <span class="text-trim-off">All</span>
+            </button>
+            {TYPES.map((t) => (
+              <button
+                type="button"
+                data-type={t}
+                class="hub-type rounded-full px-4 py-3 text-regular-medium transition-colors duration-150 cursor-pointer"
+              >
+                <span class="text-trim-off">{t}</span>
+              </button>
+            ))}
+          </div>
+        </div>
+
+        <!-- Cobot Series -->
+        <details open class="hub-group group rounded-medium-small border border-border-other-2 px-5 pb-0 group-open:pb-5 w-full">
+          <summary class="flex items-center py-5 w-full list-none [&::-webkit-details-marker]:hidden">
+            <p class="flex-1 text-medium-medium text-text-primary">Cobot Series:</p>
+            <span class="shrink-0 size-6 flex items-center justify-center text-text-primary">
+              <svg width="4.5" height="9.5" viewBox="0 0 4.5 9.5" fill="none" aria-hidden="true" class="rotate-90 transition-transform duration-200 group-open:-rotate-90">
+                <path d="M0.75 8.75L3.09253 6.366C3.51351 5.93733 3.75 5.35607 3.75 4.75C3.75 4.14393 3.51351 3.56267 3.09253 3.134L0.75 0.75" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </span>
+          </summary>
+          <label class="flex items-center py-2 w-full cursor-pointer">
+            <span class="flex items-center gap-3">
+              <input type="checkbox" data-series="All" checked class="hub-check peer sr-only" />
+              <span class="hub-box"></span>
+              <span class="text-regular-medium text-text-primary text-trim-off">All</span>
+            </span>
+          </label>
+          {SERIES.map((s) => (
+            <label class="flex items-center py-2 w-full cursor-pointer">
+              <span class="flex items-center gap-3">
+                <input type="checkbox" data-series={s} class="hub-check peer sr-only" />
+                <span class="hub-box"></span>
+                <span class="text-regular-medium text-text-primary text-trim-off">{s}</span>
+              </span>
+            </label>
+          ))}
+        </details>
+
+        <!-- Categories -->
+        <details open class="hub-group group rounded-medium-small border border-border-other-2 px-5 pb-0 group-open:pb-5 w-full">
+          <summary class="flex items-center py-5 w-full list-none border-t border-border-other-2 [&::-webkit-details-marker]:hidden">
+            <p class="flex-1 text-medium-medium text-text-primary">Categories</p>
+            <span class="shrink-0 size-6 flex items-center justify-center text-text-primary">
+              <svg width="4.5" height="9.5" viewBox="0 0 4.5 9.5" fill="none" aria-hidden="true" class="rotate-90 transition-transform duration-200 group-open:-rotate-90">
+                <path d="M0.75 8.75L3.09253 6.366C3.51351 5.93733 3.75 5.35607 3.75 4.75C3.75 4.14393 3.51351 3.56267 3.09253 3.134L0.75 0.75" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </span>
+          </summary>
+          <label class="flex items-center py-2 w-full cursor-pointer">
+            <span class="flex items-center gap-3">
+              <input type="checkbox" data-category="All" checked class="hub-check peer sr-only" />
+              <span class="hub-box"></span>
+              <span class="text-regular-medium text-text-primary text-trim-off">All</span>
+            </span>
+          </label>
+          {CATEGORIES.map((c) => (
+            <label class="flex items-center py-2 w-full cursor-pointer">
+              <span class="flex items-center gap-3">
+                <input type="checkbox" data-category={c} class="hub-check peer sr-only" />
+                <span class="hub-box"></span>
+                <span class="text-regular-medium text-text-primary text-trim-off">{c}</span>
+              </span>
+            </label>
+          ))}
+        </details>
+      </div>
+
+      <!-- Нижняя панель мобильного фильтра -->
+      <div class="hidden max-lg:flex fixed bottom-0 left-0 w-full items-center justify-between gap-4 bg-bg-primary px-4 py-4 border-t border-border-other-2">
+        <button
+          type="button"
+          data-clear-all
+          class="flex items-center justify-center gap-2 rounded-full border border-border-other-2 px-4 py-3 text-small-medium text-trim-off uppercase text-text-primary cursor-pointer"
+        >
+          <span class="text-trim-off">clear all</span>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true" class="shrink-0">
+            <path d="M18.75 5.25L5.25 18.75" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M18.75 18.75L5.25 5.25" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+        <button
+          type="button"
+          data-filters-apply
+          class="flex items-center justify-center gap-2 rounded-full bg-btn-blue-default px-6 py-3 text-small-medium text-trim-off uppercase text-text-alternate transition-colors duration-150 hover:bg-btn-blue-hover cursor-pointer"
+        >
+          <span class="text-trim-off">apply</span>
+          <svg width="16" height="16" viewBox="0 0 4.5 9.5" fill="none" aria-hidden="true" class="shrink-0">
+            <path d="M0.75 8.75L3.09253 6.366C3.51351 5.93733 3.75 5.35607 3.75 4.75C3.75 4.14393 3.51351 3.56267 3.09253 3.134L0.75 0.75" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- ── Cards column ────────────────────────────────────────────── -->
+    <div class="flex-1 min-w-0 flex flex-col gap-4 max-lg:gap-8 items-center">
+
+      <!-- Tags + sort -->
+      <div class="flex gap-4 items-start w-full max-lg:flex-wrap">
+
+        <!-- Mobile: FILTER -->
+        <button
+          type="button"
+          data-filters-open
+          class="hidden max-lg:flex max-lg:flex-1 max-lg:min-w-0 order-1 items-center justify-center gap-2 rounded-full border border-border-other-2 pl-4 pr-2 py-2 text-small-medium text-trim-off uppercase text-text-primary cursor-pointer"
+        >
+          <span class="text-trim-off">filter</span>
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true" class="shrink-0">
+            <path d="M3.94541 4.5H20.0546C20.1999 4.5 20.3421 4.54221 20.4638 4.62149C20.5856 4.70077 20.6817 4.81371 20.7405 4.94658C20.7993 5.07946 20.8182 5.22655 20.7949 5.36998C20.7717 5.51341 20.7073 5.64699 20.6095 5.7545L14.445 12.5355C14.3195 12.6735 14.25 12.8534 14.25 13.04V18.3486C14.25 18.4721 14.2195 18.5936 14.1613 18.7025C14.103 18.8114 14.0188 18.9042 13.916 18.9726L10.916 20.9727C10.8031 21.048 10.6718 21.0912 10.5362 21.0977C10.4006 21.1043 10.2658 21.0739 10.1461 21.0099C10.0264 20.9458 9.92636 20.8505 9.8566 20.734C9.78684 20.6176 9.75 20.4844 9.75 20.3486V13.04C9.75 12.8534 9.68046 12.6735 9.55496 12.5355L3.39046 5.7545C3.29272 5.64699 3.22832 5.51341 3.20507 5.36998C3.18183 5.22655 3.20075 5.07946 3.25953 4.94658C3.31831 4.81371 3.41442 4.70077 3.53618 4.62149C3.65795 4.54221 3.80012 4.5 3.94541 4.5V4.5Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+
+        <!-- Активные фильтры-чипы -->
+        <div id="hub-tags" class="flex-1 min-w-0 flex gap-2 items-center flex-wrap lg:order-1 order-3 max-lg:basis-full max-lg:flex-nowrap max-lg:overflow-x-auto max-lg:-mx-4 max-lg:px-4 max-lg:pb-1 max-lg:empty:hidden"></div>
+
+        <!-- Sort by -->
+        <div class="relative shrink-0 lg:order-2 order-2 max-lg:w-[128px]" id="hub-sort">
+          <button
+            type="button"
+            data-sort-trigger
+            aria-expanded="false"
+            class="flex w-full items-center justify-center gap-6 rounded-full border border-border-other-2 pl-4 pr-2 py-2 text-small-medium text-trim-off uppercase text-text-primary transition-colors duration-150 hover:border-border-alternative cursor-pointer max-lg:gap-2"
+          >
+            <span class="text-trim-off">Sort by</span>
+            <span class="shrink-0 size-6 flex items-center justify-center">
+              <svg width="4.5" height="9.5" viewBox="0 0 4.5 9.5" fill="none" aria-hidden="true" class="rotate-90 transition-transform duration-200" data-sort-caret>
+                <path d="M0.75 8.75L3.09253 6.366C3.51351 5.93733 3.75 5.35607 3.75 4.75C3.75 4.14393 3.51351 3.56267 3.09253 3.134L0.75 0.75" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </span>
+          </button>
+          <div
+            data-sort-menu
+            class="absolute right-0 top-[calc(100%+8px)] z-20 hidden w-[200px] flex-col rounded-medium-small border border-border-other-2 bg-bg-primary p-2"
+          >
+            <button type="button" data-sort="newest" data-active="true" class="hub-sort-opt rounded-[8px] px-3 py-2 text-left text-regular text-text-primary transition-colors duration-150 hover:bg-fg-other-4 cursor-pointer">Newest first</button>
+            <button type="button" data-sort="oldest" class="hub-sort-opt rounded-[8px] px-3 py-2 text-left text-regular text-text-primary transition-colors duration-150 hover:bg-fg-other-4 cursor-pointer">Oldest first</button>
+            <button type="button" data-sort="az" class="hub-sort-opt rounded-[8px] px-3 py-2 text-left text-regular text-text-primary transition-colors duration-150 hover:bg-fg-other-4 cursor-pointer">A → Z</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Cards + pagination -->
+      <div class="flex flex-col gap-12 items-center w-full">
+
+        <div id="hub-grid" class="grid grid-cols-3 auto-rows-fr gap-x-4 gap-y-8 w-full max-lg:grid-cols-1 max-lg:gap-4">
+          {resources.map((r, i) => (
+            <article
+              class="hub-card group/card w-full h-full flex flex-col rounded-medium-small border border-border-other-2 overflow-clip bg-bg-primary transition-colors duration-200 hover:border-border-alternative"
+              data-index={i}
+              data-type={r.type}
+              data-series={r.series}
+              data-category={r.category}
+            >
+              <a href={r.href} class="relative block h-[180px] w-full overflow-clip bg-[#67646d]">
+                <!-- Плейсхолдер из макета: белая плашка с логотипом под изображением -->
+                <span class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 h-[194px] w-[348px] overflow-clip rounded-t-[24px] border-[0.827px] border-[#f4f3f5] bg-bg-primary">
+                  <img
+                    src="/logotype-dh-robotics.svg"
+                    alt=""
+                    aria-hidden="true"
+                    class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 h-[39.68px] w-auto"
+                  />
+                </span>
+                {r.image && (
+                  <img
+                    src={r.image}
+                    alt={r.title}
+                    class="absolute inset-0 h-full w-full object-cover transition-transform duration-500 lg:group-hover/card:scale-105"
+                  />
+                )}
+              </a>
+
+              <div class="flex flex-1 flex-col gap-6 px-6 pt-6 pb-8 w-full">
+                <div class="flex flex-col gap-4 w-full">
+                  <span class:list={['flex w-fit items-center justify-center gap-2 px-2 py-1', tagStyles[r.type]]}>
+                    <span class="text-tiny-medium text-text-alternate text-trim-off whitespace-nowrap">{r.type}</span>
+                    {r.type === 'Articles' ? (
+                      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true" class="shrink-0">
+                        <path d="M12.5 14H3.49951C3.3669 14 3.23973 13.9473 3.14596 13.8536C3.05219 13.7598 2.99951 13.6326 2.99951 13.5V2.5C2.99951 2.36739 3.05219 2.24021 3.14596 2.14645C3.23973 2.05268 3.3669 2 3.49951 2H9.5L13 5.5V13.5C13 13.5657 12.9871 13.6307 12.9619 13.6913C12.9368 13.752 12.9 13.8071 12.8536 13.8536C12.8071 13.9 12.752 13.9368 12.6913 13.9619C12.6307 13.9871 12.5657 14 12.5 14Z" stroke="white" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M9.5 2V5.5H13.0005" stroke="white" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M6 8.5H10" stroke="white" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M6 10.5H10" stroke="white" stroke-linecap="round" stroke-linejoin="round"/>
+                      </svg>
+                    ) : (
+                      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true" class="shrink-0">
+                        <path d="M1.5 3.75H9.5C10.0304 3.75 10.5391 3.96071 10.9142 4.33579C11.2893 4.71086 11.5 5.21957 11.5 5.75V11.75C11.5 11.8826 11.4473 12.0098 11.3536 12.1036C11.2598 12.1973 11.1326 12.25 11 12.25H3C2.46957 12.25 1.96086 12.0393 1.58579 11.6642C1.21071 11.2891 1 10.7804 1 10.25V4.25C1 4.11739 1.05268 3.99021 1.14645 3.89645C1.24021 3.80268 1.36739 3.75 1.5 3.75V3.75Z" stroke="white" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M11.5 7L15 5V11L11.5 9" stroke="white" stroke-linecap="round" stroke-linejoin="round"/>
+                      </svg>
+                    )}
+                  </span>
+
+                  <h3 class="text-large-medium text-text-primary w-full">
+                    <a href={r.href} class="transition-colors duration-150 hover:text-text-tertiary">{r.title}</a>
+                  </h3>
+                </div>
+
+                <div class="mt-auto flex gap-3 items-start w-full">
+                  <div class="flex-1 min-w-0 flex flex-col gap-2">
+                    <p class="text-tiny text-text-secondary w-full">Series:</p>
+                    <p class="text-tiny-medium text-text-primary w-full">{r.series}</p>
+                  </div>
+                  <div class="flex-1 min-w-0 flex flex-col gap-2">
+                    <p class="text-tiny text-text-secondary w-full">Categories:</p>
+                    <p class="text-tiny-medium text-text-primary w-full">{r.category}</p>
+                  </div>
+                </div>
+              </div>
+            </article>
+          ))}
+        </div>
+
+        <!-- Пустое состояние -->
+        <div id="hub-empty" class="hidden w-full flex-col gap-4 items-center justify-center py-[97px]">
+          <div class="relative size-16">
+            <svg width="64" height="64" viewBox="0 0 64 64" fill="none" aria-hidden="true">
+              <path d="M29 49.9993C40.598 49.9993 50 40.5973 50 28.9993C50 17.4014 40.598 7.99935 29 7.99935C17.402 7.99935 8 17.4014 8 28.9993C8 40.5973 17.402 49.9993 29 49.9993Z" stroke="#D7000F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M43.8483 43.8496L55.9985 55.9998" stroke="#D7000F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <span class="absolute left-10 top-0 size-6 rounded-full border-2 border-border-primary bg-bg-quaternary flex items-center justify-center">
+              <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+                <path d="M2.5 2.5L9.5 9.5M9.5 2.5L2.5 9.5" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
+              </svg>
+            </span>
+          </div>
+          <p class="font-primary font-medium text-[2rem] leading-[1em] tracking-[-0.0625rem] text-text-primary text-center w-full">No results found for this sorting</p>
+        </div>
+
+        <!-- Пагинация -->
+        <div id="hub-pagination" class="flex justify-center gap-16 items-start w-full max-lg:gap-10">
+          <button
+            type="button"
+            data-page-prev
+            class="font-primary font-medium text-[2.5rem] leading-[1em] tracking-[-0.0625rem] text-text-secondary opacity-40 transition-opacity duration-150 disabled:cursor-default enabled:cursor-pointer enabled:opacity-100 enabled:text-text-primary whitespace-nowrap"
+            disabled
+          >
+            ← Preview
+          </button>
+          <button
+            type="button"
+            data-page-next
+            class="font-primary font-medium text-[2.5rem] leading-[1em] tracking-[-0.0625rem] text-text-primary transition-opacity duration-150 disabled:opacity-40 disabled:text-text-secondary disabled:cursor-default enabled:cursor-pointer whitespace-nowrap"
+          >
+            Next →
+          </button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  /* Чекбокс из макета: 24×24, radius 4, активный — синий с галочкой */
+  .hub-box {
+    width: 24px;
+    height: 24px;
+    flex-shrink: 0;
+    border-radius: 4px;
+    border: 1px solid var(--color-border-other-2);
+    background-color: transparent;
+    background-repeat: no-repeat;
+    background-position: center;
+    transition: background-color 0.15s ease, border-color 0.15s ease;
+  }
+  .hub-check:checked + .hub-box {
+    background-color: var(--color-btn-blue-default);
+    border-color: var(--color-btn-blue-default);
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16' fill='none'%3E%3Cpath d='M13.5 4.50031L6.5 11.5L3 8.00031' stroke='white' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  }
+  .hub-check:focus-visible + .hub-box {
+    outline: 2px solid var(--color-border-tertiary);
+    outline-offset: 2px;
+  }
+
+  /* Пилюли типа материала */
+  .hub-type {
+    border: 1px solid var(--color-border-other-2);
+    color: var(--color-text-primary);
+    background-color: transparent;
+  }
+  .hub-type[data-active='true'] {
+    background-color: var(--color-btn-blue-default);
+    border-color: var(--color-btn-blue-default);
+    color: var(--color-text-alternate);
+  }
+
+  .hub-sort-opt[data-active='true'] {
+    background-color: var(--color-fg-other-4);
+  }
+
+  /* details без нативного маркера */
+  .hub-group summary::-webkit-details-marker { display: none; }
+</style>
+
+<script>
+  const root = document.getElementById('hub')
+  if (root) {
+    const PER_PAGE = 12
+
+    const cards = Array.from(root.querySelectorAll<HTMLElement>('.hub-card'))
+    const grid = document.getElementById('hub-grid')!
+    const empty = document.getElementById('hub-empty')!
+    const tagsBox = document.getElementById('hub-tags')!
+    const pagination = document.getElementById('hub-pagination')!
+    const prevBtn = root.querySelector<HTMLButtonElement>('[data-page-prev]')!
+    const nextBtn = root.querySelector<HTMLButtonElement>('[data-page-next]')!
+    const showing = root.querySelectorAll<HTMLElement>('[data-showing]')
+    const typeBtns = Array.from(root.querySelectorAll<HTMLElement>('.hub-type'))
+    const seriesChecks = Array.from(root.querySelectorAll<HTMLInputElement>('input[data-series]'))
+    const catChecks = Array.from(root.querySelectorAll<HTMLInputElement>('input[data-category]'))
+    const panel = document.getElementById('hub-filters')!
+
+    let page = 0
+    let sort: 'newest' | 'oldest' | 'az' = 'newest'
+
+    const activeType = () => typeBtns.find((b) => b.dataset.active === 'true')?.dataset.type ?? 'All'
+    const picked = (list: HTMLInputElement[], key: 'series' | 'category') =>
+      list.filter((c) => c.checked && c.dataset[key] !== 'All').map((c) => c.dataset[key]!)
+
+    function matches(card: HTMLElement) {
+      const type = activeType()
+      if (type !== 'All' && card.dataset.type !== type) return false
+
+      const series = picked(seriesChecks, 'series')
+      if (series.length && !series.includes(card.dataset.series!)) return false
+
+      const cats = picked(catChecks, 'category')
+      if (cats.length && !cats.includes(card.dataset.category!)) return false
+
+      return true
+    }
+
+    function renderTags() {
+      const chips: Array<{ label: string; clear: () => void }> = []
+
+      const type = activeType()
+      if (type !== 'All') {
+        chips.push({ label: type, clear: () => setType('All') })
+      }
+      seriesChecks
+        .filter((c) => c.checked && c.dataset.series !== 'All')
+        .forEach((c) => chips.push({ label: c.dataset.series!, clear: () => { c.checked = false; syncAll(seriesChecks, 'series'); apply() } }))
+      catChecks
+        .filter((c) => c.checked && c.dataset.category !== 'All')
+        .forEach((c) => chips.push({ label: c.dataset.category!, clear: () => { c.checked = false; syncAll(catChecks, 'category'); apply() } }))
+
+      tagsBox.innerHTML = ''
+      chips.forEach((chip) => {
+        const btn = document.createElement('button')
+        btn.type = 'button'
+        btn.className =
+          'flex shrink-0 items-center justify-center gap-2 rounded-full border border-border-other-2 px-4 py-2 text-small-medium text-trim-off uppercase text-text-primary transition-colors duration-150 hover:border-border-alternative cursor-pointer'
+        btn.innerHTML = `<span class="text-trim-off">${chip.label}</span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true" class="shrink-0"><path d="M18.75 5.25L5.25 18.75" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M18.75 18.75L5.25 5.25" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>`
+        btn.addEventListener('click', chip.clear)
+        tagsBox.appendChild(btn)
+      })
+    }
+
+    function apply(resetPage = true) {
+      if (resetPage) page = 0
+
+      let visible = cards.filter(matches)
+
+      if (sort === 'oldest') visible = visible.slice().reverse()
+      if (sort === 'az') {
+        visible = visible
+          .slice()
+          .sort((a, b) => (a.querySelector('h3')?.textContent ?? '').localeCompare(b.querySelector('h3')?.textContent ?? ''))
+      }
+
+      const pages = Math.max(1, Math.ceil(visible.length / PER_PAGE))
+      if (page > pages - 1) page = pages - 1
+
+      const from = page * PER_PAGE
+      const slice = visible.slice(from, from + PER_PAGE)
+
+      cards.forEach((c) => { c.hidden = true })
+      slice.forEach((c) => { c.hidden = false; grid.appendChild(c) })
+
+      empty.classList.toggle('hidden', visible.length > 0)
+      empty.classList.toggle('flex', visible.length === 0)
+      grid.classList.toggle('hidden', visible.length === 0)
+      pagination.classList.toggle('hidden', visible.length === 0)
+
+      showing.forEach((el) => { el.textContent = `Showing ${visible.length} of ${cards.length}` })
+
+      prevBtn.disabled = page === 0
+      nextBtn.disabled = page >= pages - 1
+
+      renderTags()
+    }
+
+    function setType(value: string) {
+      typeBtns.forEach((b) => { b.dataset.active = String(b.dataset.type === value) })
+      apply()
+    }
+
+    // «All» и остальные чекбоксы взаимоисключающие
+    function syncAll(list: HTMLInputElement[], key: 'series' | 'category') {
+      const all = list.find((c) => c.dataset[key] === 'All')!
+      const rest = list.filter((c) => c.dataset[key] !== 'All')
+      const anyPicked = rest.some((c) => c.checked)
+      all.checked = !anyPicked
+    }
+
+    typeBtns.forEach((b) => b.addEventListener('click', () => setType(b.dataset.type!)))
+
+    ;[
+      [seriesChecks, 'series'] as const,
+      [catChecks, 'category'] as const,
+    ].forEach(([list, key]) => {
+      list.forEach((check) => {
+        check.addEventListener('change', () => {
+          if (check.dataset[key] === 'All' ) {
+            list.forEach((c) => { c.checked = c.dataset[key] === 'All' })
+          } else {
+            syncAll(list, key)
+          }
+          apply()
+        })
+      })
+    })
+
+    root.querySelectorAll<HTMLElement>('[data-clear-all]').forEach((btn) =>
+      btn.addEventListener('click', () => {
+        typeBtns.forEach((b) => { b.dataset.active = String(b.dataset.type === 'All') })
+        ;[[seriesChecks, 'series'], [catChecks, 'category']].forEach(([list, key]) => {
+          ;(list as HTMLInputElement[]).forEach((c) => { c.checked = c.dataset[key as string] === 'All' })
+        })
+        apply()
+      })
+    )
+
+    prevBtn.addEventListener('click', () => { page = Math.max(0, page - 1); apply(false); root.scrollIntoView({ behavior: 'smooth', block: 'start' }) })
+    nextBtn.addEventListener('click', () => { page += 1; apply(false); root.scrollIntoView({ behavior: 'smooth', block: 'start' }) })
+
+    // Sort by
+    const sortWrap = document.getElementById('hub-sort')!
+    const sortTrigger = sortWrap.querySelector<HTMLButtonElement>('[data-sort-trigger]')!
+    const sortMenu = sortWrap.querySelector<HTMLElement>('[data-sort-menu]')!
+    const sortCaret = sortWrap.querySelector<HTMLElement>('[data-sort-caret]')!
+
+    function toggleSort(open: boolean) {
+      sortMenu.classList.toggle('hidden', !open)
+      sortMenu.classList.toggle('flex', open)
+      sortCaret.classList.toggle('-rotate-90', open)
+      sortCaret.classList.toggle('rotate-90', !open)
+      sortTrigger.setAttribute('aria-expanded', String(open))
+    }
+
+    sortTrigger.addEventListener('click', (e) => {
+      e.stopPropagation()
+      toggleSort(sortMenu.classList.contains('hidden'))
+    })
+    document.addEventListener('click', (e) => {
+      if (!sortWrap.contains(e.target as Node)) toggleSort(false)
+    })
+    sortWrap.querySelectorAll<HTMLElement>('.hub-sort-opt').forEach((opt) =>
+      opt.addEventListener('click', () => {
+        sortWrap.querySelectorAll<HTMLElement>('.hub-sort-opt').forEach((o) => { o.dataset.active = String(o === opt) })
+        sort = opt.dataset.sort as typeof sort
+        toggleSort(false)
+        apply()
+      })
+    )
+
+    // Мобильная панель фильтров
+    const openBtn = root.querySelector<HTMLElement>('[data-filters-open]')
+    const closeBtns = root.querySelectorAll<HTMLElement>('[data-filters-close], [data-filters-apply]')
+
+    function setPanel(open: boolean) {
+      const header = document.getElementById('site-header')
+
+      if (open && header) {
+        // шапка авто-прячется при скролле — на время фильтра возвращаем её и ставим панель под неё
+        header.style.transform = 'translateY(0)'
+        panel.style.top = `${header.offsetHeight}px`
+      } else {
+        panel.style.top = ''
+      }
+
+      panel.classList.toggle('max-lg:hidden', !open)
+      panel.classList.toggle('max-lg:flex', open)
+      document.body.style.overflow = open ? 'hidden' : ''
+    }
+
+    openBtn?.addEventListener('click', () => setPanel(true))
+    closeBtns.forEach((b) => b.addEventListener('click', () => setPanel(false)))
+
+    apply()
+  }
+</script>
