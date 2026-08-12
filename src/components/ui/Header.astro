@@ -89,9 +89,9 @@ const megaMenus: Mega[] = [
     id: 'applications',
     label: 'Applications',
     items: [
-      { key: 'all',        title: 'Applications', desc: 'Explore how DH-Robotics powers automation across industries and tasks.', img: '/images/applications-hero.webp',       href: '/applications' },
-      { key: 'industries', title: 'Industries',   desc: 'Medical, automotive, electronics, food & beverage and more.',            img: '/images/applications-medical.webp',    href: '/applications' },
-      { key: 'tasks',      title: 'Tasks',        desc: 'Grabbing, clamping, transport, assembly and other core operations.',     img: '/images/service-technology-hero.webp', href: '/applications' },
+      { key: 'all',       title: 'Applications', desc: 'DH-Robotics specializes in high-precision electric gripping and motion control for advanced industrial assembly and lab automation.', img: '/images/applications-hero.webp',       href: '/applications' },
+      { key: 'industry',  title: 'Industry',     desc: 'Medical, automotive, electronics, food & beverage and more.',                                                                        img: '/images/applications-medical.webp',    href: '/applications' },
+      { key: 'processes', title: 'Processes',    desc: 'Grabbing, clamping, transport, assembly and other core operations.',                                                                 img: '/images/service-technology-hero.webp', href: '/applications/action' },
     ],
   },
   {
@@ -102,8 +102,7 @@ const megaMenus: Mega[] = [
       { key: 'downloads',   title: 'Download Center', desc: 'Product datasheets, manuals, and technical documentation.', img: '/images/download hero.webp',           href: '/explore/downloads' },
       { key: 'software',    title: 'Software',        desc: 'DH-Robotics ServoStudio and other control software.',       img: '/images/service-content-1.webp',       href: '/support/software' },
       { key: 'faq',         title: 'FAQ',             desc: 'Quick answers to common questions about our products.',     img: '/images/service-technology-book.webp', href: '/explore/faq' },
-      // HIDDEN (draft): Technology — restore when the page is ready
-      // { key: 'technology', title: 'Technology', desc: 'The precision motion control tech behind our products.', img: '/images/service-technology-core.webp', href: '/support/technology' },
+      { key: 'technology',  title: 'Technology',      desc: 'The precision motion control tech behind our products.',    img: '/images/service-technology-core.webp', href: '/support/technology' },
     ],
   },
   {
@@ -319,8 +318,8 @@ const languages = [
   {megaMenus.map(menu => (
     <div class="nav-panel absolute left-0 right-0 top-full hidden" data-panel={menu.id}>
       <div class="global-padding">
-        <div class="mx-auto max-w-[1200px]">
-          <div class="w-[800px] max-w-full bg-bg-primary rounded-[6px] shadow-[0_20px_50px_rgba(10,15,21,0.14)] border border-border-other-2 flex gap-4 p-4">
+        <div class="mx-auto w-[800px] max-w-full">
+          <div class="bg-bg-primary rounded-medium-small shadow-[0_20px_50px_rgba(10,15,21,0.14)] flex gap-4 items-start p-4">
 
             <div class="flex-1 min-w-0 self-start flex flex-col gap-5 pl-4 border-l border-border-secondary">
               {menu.items.map((item, i) => (
@@ -331,7 +330,7 @@ const languages = [
               ))}
             </div>
 
-            <div class="shrink-0 w-[600px] max-w-full h-[365px] relative overflow-hidden rounded-tiny bg-bg-secondary">
+            <div class="shrink-0 w-[600px] max-w-full h-[365px] relative overflow-hidden rounded-small bg-bg-secondary">
               {menu.items.map((item, i) => (
                 <a
                   href={item.href}
@@ -340,7 +339,7 @@ const languages = [
                 >
                   <img src={item.img} alt={item.title} class="absolute inset-0 w-full h-full object-cover" />
                   <div class="mega-glow absolute inset-0"></div>
-                  <div class="absolute bottom-4 left-4 w-[240px] flex flex-col gap-4">
+                  <div class="absolute bottom-4 left-4 w-[228px] flex flex-col gap-4 justify-center">
                     <div class="flex flex-col gap-4">
                       <p class="text-h5 text-text-primary">{item.title}</p>
                       <p class="text-tiny-medium text-text-primary">{item.desc}</p>
@@ -507,13 +506,14 @@ const languages = [
 <style>
   .nav-scrim { background: rgba(10, 15, 21, 0.28); }
 
-  .mega-item { color: var(--color-text-secondary); }
+  /* Figma text/secondary в меню — #36404c (black-800), а не токен text-secondary проекта (#657084) */
+  .mega-item { color: var(--color-black-800); }
   .mega-item:hover, .mega-item.is-active { color: var(--color-text-primary); }
   .mega-item.is-active::before {
     content: '';
     position: absolute;
     left: -17px; top: 50%; transform: translateY(-50%);
-    width: 2px; height: 9px; background: var(--color-fg-alternative);
+    width: 1px; height: 9px; background: var(--color-fg-alternative);
   }
 
   /* White glow bottom-left so the dark title/description stay readable over any image */
