@@ -1,7 +1,41 @@
 ---
 type NavColumn = { group?: string; links: { label: string; href: string }[] }
-type MegaItem = { key: string; title: string; desc: string; img: string; href: string }
+// Таб мега-меню: либо hero-картинка с описанием, либо сетка карточек.
+// В Applications это разные вещи — Industry и Processes показывают сетки (Figma 01.1 Menu).
+type TileCard = { label: string; href: string; img?: string; icon?: string }
+type MegaItem = {
+  key: string
+  title: string
+  desc: string
+  img: string
+  href: string
+  tiles?: TileCard[]
+}
 type Mega = { id: string; label: string; items: MegaItem[] }
+
+// Иконки задач уже лежат в проекте — переиспользуем их
+const processTiles: TileCard[] = [
+  { label: 'Grabbing',             href: '/applications/action', icon: '/images/icon-task-grabbing.svg' },
+  { label: 'Clamping',             href: '/applications/action', icon: '/images/icon-task-clamping.svg' },
+  { label: 'Counterpoint',         href: '/applications/action', icon: '/images/icon-task-counterpoint.svg' },
+  { label: 'Transport',            href: '/applications/action', icon: '/images/icon-task-transport.svg' },
+  { label: 'Rotation',             href: '/applications/action', icon: '/images/icon-task-rotation.png' },
+  { label: 'Assembly',             href: '/applications/action', icon: '/images/icon-task-assembly.svg' },
+  { label: 'Loading & unloading',  href: '/applications/action', icon: '/images/icon-task-loading.svg' },
+  { label: 'Opening & closing lid', href: '/applications/action', icon: '/images/icon-task-opening.svg' },
+]
+
+// В макете под все восемь отраслей зациклены четыре изображения — заглушки
+const industryTiles: TileCard[] = [
+  { label: 'Medical automation', href: '/applications', img: '/images/menu/industry-1.png' },
+  { label: 'Electronics',        href: '/applications', img: '/images/menu/industry-2.png' },
+  { label: 'Automotive',         href: '/applications', img: '/images/menu/industry-3.png' },
+  { label: 'Automation',         href: '/applications', img: '/images/menu/industry-4.png' },
+  { label: 'Machining',          href: '/applications', img: '/images/menu/industry-1.png' },
+  { label: 'Robot New Retail',   href: '/applications', img: '/images/menu/industry-2.png' },
+  { label: 'Education Research', href: '/applications', img: '/images/menu/industry-3.png' },
+  { label: 'New energy',         href: '/applications', img: '/images/menu/industry-4.png' },
+]
 
 // Products mega-menu — Figma 01.1 Menu → "Product Menu / Desktop" (11667:76739)
 // Левый рельс переключает правую карточку; Smart Actuators раскрывается в подсписок.
@@ -158,8 +192,8 @@ const megaMenus: Mega[] = [
     label: 'Applications',
     items: [
       { key: 'all',       title: 'Applications', desc: 'DH-Robotics specializes in high-precision electric gripping and motion control for advanced industrial assembly and lab automation.', img: '/images/applications-hero.webp',       href: '/applications' },
-      { key: 'industry',  title: 'Industry',     desc: 'Medical, automotive, electronics, food & beverage and more.',                                                                        img: '/images/applications-medical.webp',    href: '/applications' },
-      { key: 'processes', title: 'Processes',    desc: 'Grabbing, clamping, transport, assembly and other core operations.',                                                                 img: '/images/service-technology-hero.webp', href: '/applications/action' },
+      { key: 'industry',  title: 'Industry',     desc: 'Medical, automotive, electronics, food & beverage and more.',        img: '/images/applications-medical.webp',    href: '/applications',        tiles: industryTiles },
+      { key: 'processes', title: 'Processes',    desc: 'Grabbing, clamping, transport, assembly and other core operations.', img: '/images/service-technology-hero.webp', href: '/applications/action', tiles: processTiles },
     ],
   },
   {
@@ -454,11 +488,62 @@ const languages = [
               ))}
             </div>
 
-            <div class="shrink-0 w-[600px] max-w-full h-[365px] relative overflow-hidden rounded-small bg-bg-secondary">
-              {menu.items.map((item, i) => (
+            <div class="shrink-0 w-[600px] max-w-full min-h-[365px] relative">
+              {menu.items.filter(it => it.tiles).map(item => (
+                <!-- Таб с сеткой: заголовок, ссылка view more и карточки 148px -->
+                <div
+                  class="mega-preview absolute inset-0 flex flex-col gap-3 opacity-0 pointer-events-none transition-opacity duration-200"
+                  data-preview={item.key}
+                >
+                  <div class="flex items-center justify-between h-4">
+                    <p class="text-regular-medium text-text-primary whitespace-nowrap">{item.title}</p>
+                    <a href={item.href} class="group/vm flex items-center gap-2 text-text-primary">
+                      <span class="text-[12px] leading-4 uppercase text-trim-off">view more</span>
+                      <svg width="4" height="8" viewBox="0 0 4.5 9.5" fill="none" aria-hidden="true" class="shrink-0 transition-transform duration-200 group-hover/vm:translate-x-0.5">
+                        <path d="M0.75 8.75L3.09253 6.366C3.51351 5.93733 3.75 5.35607 3.75 4.75C3.75 4.14393 3.51351 3.56267 3.09253 3.134L0.75 0.75" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                      </svg>
+                    </a>
+                  </div>
+
+                  <div class="flex flex-wrap gap-2 items-start content-start">
+                    {item.tiles!.map(t => (
+                      <a
+                        href={t.href}
+                        class:list={[
+                          'group/t flex w-[148px] shrink-0 flex-col justify-between rounded-small bg-bg-other p-3 transition-colors duration-200 hover:bg-bg-secondary',
+                          t.icon ? 'h-[148px]' : 'h-[167px]',
+                        ]}
+                      >
+                        {t.img ? (
+                          <>
+                            <span class="h-20 w-full relative overflow-clip rounded-tiny bg-bg-primary shrink-0">
+                              <img src={t.img} alt="" aria-hidden="true" class="absolute left-0 top-1/2 -translate-y-1/2 h-[92px] w-[140px] max-w-none object-cover" />
+                            </span>
+                            <span class="text-small-medium text-text-primary w-full">{t.label}</span>
+                          </>
+                        ) : (
+                          <>
+                            <span class="text-small-medium text-text-primary w-full">{t.label}</span>
+                            <span class="flex items-center justify-between w-full">
+                              <img src={t.icon} alt="" aria-hidden="true" class="size-12 shrink-0" />
+                              <span class="size-8 flex items-center justify-center text-text-primary transition-transform duration-200 group-hover/t:translate-x-1">
+                                <svg width="4" height="8" viewBox="0 0 4.5 9.5" fill="none" aria-hidden="true">
+                                  <path d="M0.75 8.75L3.09253 6.366C3.51351 5.93733 3.75 5.35607 3.75 4.75C3.75 4.14393 3.51351 3.56267 3.09253 3.134L0.75 0.75" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
+                              </span>
+                            </span>
+                          </>
+                        )}
+                      </a>
+                    ))}
+                  </div>
+                </div>
+              ))}
+
+              {menu.items.filter(it => !it.tiles).map((item, i) => (
                 <a
                   href={item.href}
-                  class:list={['mega-preview absolute inset-0 block transition-opacity duration-200', i === 0 ? 'opacity-100' : 'opacity-0 pointer-events-none']}
+                  class:list={['mega-preview absolute inset-0 block overflow-hidden rounded-small bg-bg-secondary transition-opacity duration-200', i === 0 ? 'opacity-100' : 'opacity-0 pointer-events-none']}
                   data-preview={item.key}
                 >
                   <img src={item.img} alt={item.title} class="absolute inset-0 w-full h-full object-cover" />
