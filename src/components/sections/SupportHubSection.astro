@@ -3,6 +3,8 @@
 // Контент — заглушка из макета ("How-to video series (to be populated over time)"),
 // структура готова под подключение Sanity: достаточно заменить `resources` на client.fetch().
 
+import { client, urlFor } from '../../lib/sanity'
+
 const TYPES = ['Video tutorials', 'Articles', 'Webinars'] as const
 const SERIES = ['CS Series', 'EC Series', 'EA Series'] as const
 const CATEGORIES = ['Programming', 'Interface & Communication', 'Safety', 'Hardware'] as const
@@ -32,14 +34,39 @@ const PATTERN: Array<[Resource['type'], Resource['series'], Resource['category']
   ['Articles', 'EC Series', 'Hardware'],
 ]
 
-const resources: Resource[] = [...PATTERN, ...PATTERN].map(([type, series, category], i) => ({
+// Заглушки из макета — показываем, пока в Sanity нет ни одного материала
+const placeholders: Resource[] = [...PATTERN, ...PATTERN].map(([type, series, category]) => ({
   title: 'Empowering the metal industry with cobots',
   type,
   series,
   category,
   href: '/support',
-  ...(i === -1 ? { image: '' } : {}),
 }))
+
+const typeLabels: Record<string, Resource['type']> = {
+  video: 'Video tutorials',
+  article: 'Articles',
+  webinar: 'Webinars',
+}
+
+const fromSanity = await client.fetch(`
+  *[_type == "supportResource" && defined(slug.current)] | order(order asc, date desc) {
+    title, "slug": slug.current, resourceType, categories, coverImage,
+    "series": series[]->title
+  }
+`)
+
+const resources: Resource[] = fromSanity.length
+  ? fromSanity.map((r: any) => ({
+      title: r.title,
+      type: typeLabels[r.resourceType] ?? 'Articles',
+      // фильтры работают по одному значению — берём первое, если указано несколько
+      series: (r.series?.[0] ?? 'CS Series') as Resource['series'],
+      category: (r.categories?.[0] ?? 'Programming') as Resource['category'],
+      href: `/support/${r.slug}`,
+      image: r.coverImage ? urlFor(r.coverImage).width(576).height(360).url() : undefined,
+    }))
+  : placeholders
 
 const PER_PAGE = 12
 

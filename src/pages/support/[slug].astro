@@ -1,0 +1,145 @@
+---
+// Support Hub — внутренняя страница материала
+// Figma 04. Support → "Support Hub — Template / Desktop" (11663:76031)
+import Layout from '../../layouts/Layout.astro'
+import Breadcrumbs from '../../components/ui/Breadcrumbs.astro'
+import PostContent from '../../components/ui/PostContent.astro'
+import { client, urlFor } from '../../lib/sanity'
+import { mapContent } from '../../lib/portableText'
+
+export async function getStaticPaths() {
+  const slugs = await client.fetch(`*[_type == "supportResource" && defined(slug.current)]{ "slug": slug.current }`)
+  return slugs.map((s: { slug: string }) => ({ params: { slug: s.slug } }))
+}
+
+const { slug } = Astro.params
+
+const raw = await client.fetch(`
+  *[_type == "supportResource" && slug.current == $slug][0] {
+    title, slug, resourceType, categories, date, excerpt, coverImage, content,
+    "series": series[]->title
+  }
+`, { slug })
+
+if (!raw) return Astro.redirect('/support')
+
+const typeLabels: Record<string, string> = {
+  video: 'Video tutorials',
+  article: 'Articles',
+  webinar: 'Webinars',
+}
+
+const typeStyles: Record<string, string> = {
+  video: 'bg-fg-other-5',
+  article: 'bg-fg-alternative',
+  webinar: 'bg-fg-tertiary',
+}
+
+const typeKey = (raw.resourceType ?? 'article') as keyof typeof typeLabels
+const typeLabel = typeLabels[typeKey] ?? 'Articles'
+
+const content = mapContent(raw.content ?? [])
+const heroImage = raw.coverImage ? urlFor(raw.coverImage).width(795).url() : null
+const seriesLabel = (raw.series ?? []).join(', ') || '—'
+const categoriesLabel = (raw.categories ?? []).join(', ') || '—'
+const shareUrl = `https://dh-robotics.vercel.app/support/${slug}`
+---
+
+<Layout title={raw.title}>
+  <Breadcrumbs crumbs={[{ label: 'Support Hub', href: '/support' }, { label: raw.title }]} />
+
+  <section class="bg-bg-primary pt-page pb-none">
+
+    <!-- Тег + заголовок -->
+    <div class="global-padding mb-10 max-lg:mb-8">
+      <div class="mx-auto max-w-[999px] flex flex-col items-center gap-14 max-lg:items-start max-lg:gap-8">
+        <span class:list={['flex w-fit items-center justify-center gap-2 px-2 py-1', typeStyles[typeKey] ?? 'bg-fg-alternative']}>
+          <span class="text-tiny-medium text-text-alternate text-trim-off whitespace-nowrap">{typeLabel}</span>
+          {typeKey === 'article' ? (
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true" class="shrink-0">
+              <path d="M12.5 14H3.49951C3.3669 14 3.23973 13.9473 3.14596 13.8536C3.05219 13.7598 2.99951 13.6326 2.99951 13.5V2.5C2.99951 2.36739 3.05219 2.24021 3.14596 2.14645C3.23973 2.05268 3.3669 2 3.49951 2H9.5L13 5.5V13.5C13 13.5657 12.9871 13.6307 12.9619 13.6913C12.9368 13.752 12.9 13.8071 12.8536 13.8536C12.8071 13.9 12.752 13.9368 12.6913 13.9619C12.6307 13.9871 12.5657 14 12.5 14Z" stroke="white" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M9.5 2V5.5H13.0005" stroke="white" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M6 8.5H10" stroke="white" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M6 10.5H10" stroke="white" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          ) : (
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true" class="shrink-0">
+              <path d="M1.5 3.75H9.5C10.0304 3.75 10.5391 3.96071 10.9142 4.33579C11.2893 4.71086 11.5 5.21957 11.5 5.75V11.75C11.5 11.8826 11.4473 12.0098 11.3536 12.1036C11.2598 12.1973 11.1326 12.25 11 12.25H3C2.46957 12.25 1.96086 12.0393 1.58579 11.6642C1.21071 11.2891 1 10.7804 1 10.25V4.25C1 4.11739 1.05268 3.99021 1.14645 3.89645C1.24021 3.80268 1.36739 3.75 1.5 3.75V3.75Z" stroke="white" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M11.5 7L15 5V11L11.5 9" stroke="white" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          )}
+        </span>
+
+        <h1 class="text-h2 mob-h3 text-text-primary text-center max-lg:text-left">{raw.title}</h1>
+      </div>
+    </div>
+
+    <!-- Мета: серии, категории, share -->
+    <div class="global-padding mb-12 max-lg:mb-10">
+      <div class="mx-auto max-w-[795px] flex items-center justify-between gap-6 max-lg:flex-col max-lg:items-start max-lg:gap-8">
+        <div class="flex flex-1 min-w-0 gap-3 items-start max-lg:w-full">
+          <div class="flex-1 min-w-0 flex flex-col gap-2">
+            <p class="text-tiny text-text-secondary">Series:</p>
+            <p class="text-tiny-medium text-text-primary">{seriesLabel}</p>
+          </div>
+          <div class="flex-1 min-w-0 flex flex-col gap-2">
+            <p class="text-tiny text-text-secondary">Categories:</p>
+            <p class="text-tiny-medium text-text-primary">{categoriesLabel}</p>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-4 shrink-0">
+          <span class="text-tiny-medium text-text-primary">Share:</span>
+          <div class="flex items-center gap-2">
+            <div class="relative">
+              <button id="share-copy-btn" class="size-12 border border-border-other-2 rounded-tiny flex items-center justify-center hover:border-border-alternative transition-colors duration-200 cursor-pointer" aria-label="Copy link">
+                <svg class="size-6 text-text-primary" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                  <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                  <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </button>
+              <div id="share-copy-toast" class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-2 bg-fg-alternative text-text-alternate text-tiny whitespace-nowrap rounded-tiny opacity-0 pointer-events-none transition-opacity duration-200">Link copied</div>
+            </div>
+            <a href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(shareUrl)}`} target="_blank" rel="noopener noreferrer" class="size-12 border border-border-other-2 rounded-tiny flex items-center justify-center hover:border-border-alternative transition-colors duration-200" aria-label="Share on LinkedIn">
+              <svg class="size-6 text-text-primary" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+            </a>
+            <a href={`https://twitter.com/intent/tweet?url=${encodeURIComponent(shareUrl)}`} target="_blank" rel="noopener noreferrer" class="size-12 border border-border-other-2 rounded-tiny flex items-center justify-center hover:border-border-alternative transition-colors duration-200" aria-label="Share on X">
+              <svg class="size-6 text-text-primary" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+            </a>
+            <a href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`} target="_blank" rel="noopener noreferrer" class="size-12 border border-border-other-2 rounded-tiny flex items-center justify-center hover:border-border-alternative transition-colors duration-200" aria-label="Share on Facebook">
+              <svg class="size-6 text-text-primary" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Контент -->
+    <div class="global-padding pb-page">
+      <div class="mx-auto max-w-[795px] flex flex-col gap-[72px] max-lg:gap-14">
+        {heroImage && (
+          <div class="bg-bg-secondary overflow-hidden rounded-small w-full h-[398px] max-lg:h-auto max-lg:aspect-video">
+            <img src={heroImage} alt={raw.title} class="w-full h-full object-cover" />
+          </div>
+        )}
+
+        <PostContent blocks={content} />
+      </div>
+    </div>
+  </section>
+</Layout>
+
+<script>
+  const btn = document.getElementById('share-copy-btn')
+  const toast = document.getElementById('share-copy-toast')
+  let timer: ReturnType<typeof setTimeout>
+
+  btn?.addEventListener('click', async () => {
+    try { await navigator.clipboard.writeText(window.location.href) } catch {}
+    if (!toast) return
+    clearTimeout(timer)
+    toast.classList.remove('opacity-0')
+    toast.classList.add('opacity-100')
+    timer = setTimeout(() => { toast.classList.remove('opacity-100'); toast.classList.add('opacity-0') }, 2000)
+  })
+</script>

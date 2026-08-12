@@ -2,8 +2,8 @@
 import Layout from '../../layouts/Layout.astro'
 import Breadcrumbs from '../../components/ui/Breadcrumbs.astro'
 import { client, urlFor } from '../../lib/sanity'
-import type { PostBlock } from '../../types/post'
 import PostContent from '../../components/ui/PostContent.astro'
+import { mapContent } from '../../lib/portableText'
 import SwiperSlider from '../../components/ui/SwiperSlider.astro'
 import 'swiper/css'
 
@@ -24,58 +24,6 @@ if (!raw) return Astro.redirect('/news')
 
 function formatDate(iso: string) {
   return new Date(iso).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
-}
-
-// Map Sanity Portable Text → PostBlock[]
-function mapContent(sanityContent: any[]): PostBlock[] {
-  if (!sanityContent) return []
-  const blocks: PostBlock[] = []
-  let textBlock: { type: 'text'; heading?: string; paragraphs: string[] } | null = null
-  let listBlock: { type: 'list'; intro?: string; items: string[]; ordered: boolean } | null = null
-
-  function flushText() { if (textBlock) { blocks.push(textBlock); textBlock = null } }
-  function flushList() { if (listBlock) { blocks.push(listBlock); listBlock = null } }
-
-  for (const b of sanityContent) {
-    if (b._type === 'block') {
-      const text = b.children?.map((c: any) => c.text).join('') ?? ''
-      if (!text) continue
-
-      // List items
-      if (b.listItem === 'bullet' || b.listItem === 'number') {
-        const ordered = b.listItem === 'number'
-        flushText()
-        if (!listBlock || listBlock.ordered !== ordered) {
-          flushList()
-          listBlock = { type: 'list', items: [], ordered }
-        }
-        listBlock.items.push(text)
-        continue
-      }
-
-      flushList()
-
-      // Headings
-      if (['h2','h3','h4'].includes(b.style)) {
-        flushText()
-        textBlock = { type: 'text', heading: text, paragraphs: [] }
-      } else {
-        if (!textBlock) textBlock = { type: 'text', paragraphs: [] }
-        textBlock.paragraphs.push(text)
-      }
-    } else if (b._type === 'image') {
-      flushText(); flushList()
-      blocks.push({ type: 'image', src: urlFor(b).width(795).url(), alt: b.alt ?? '' })
-    } else if (b._type === 'videoEmbed') {
-      flushText(); flushList()
-      blocks.push({ type: 'video', src: b.thumbnail ? urlFor(b.thumbnail).width(795).url() : '', alt: b.url ?? '' })
-    } else if (b._type === 'callout') {
-      flushText(); flushList()
-      blocks.push({ type: 'callout', text: b.text ?? '' })
-    }
-  }
-  flushText(); flushList()
-  return blocks
 }
 
 const content = mapContent(raw.content ?? [])
