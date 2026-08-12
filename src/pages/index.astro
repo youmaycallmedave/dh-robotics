@@ -1176,7 +1176,7 @@ try {
       const head = document.querySelector<HTMLElement>('.proven-head')
       const HEAD_TOP = 96
       const HEAD_GAP = 56
-      const HEAD_OVERLAP = 40  // насколько фото наезжает на заголовок
+      const HEAD_OVERLAP_MAX = 40  // потолок нахлёста фото на заголовок, px
 
       // The heading is pinned higher than the cards, so its track has to end early —
       // otherwise it stays put after the stack releases and the photos ride over it.
@@ -1191,8 +1191,11 @@ try {
         }
         const headH = head.getBoundingClientRect().height
 
-        // Карточка приходит выше низа заголовка — в макете фото слегка заходит на него
-        const top = Math.max(0, HEAD_TOP + headH - HEAD_OVERLAP)
+        // Фото заходит на заголовок максимум на половину его высоты
+        const titleEl = head.querySelector('h2')
+        const titleH = titleEl ? titleEl.getBoundingClientRect().height : 0
+        const overlap = Math.min(HEAD_OVERLAP_MAX, titleH * 0.5)
+        const top = Math.max(0, HEAD_TOP + headH - overlap)
         stage.style.setProperty('--proven-top', `${top}px`)
 
         const cardTop = top
