@@ -479,7 +479,7 @@ const languages = [
         <div class="mx-auto w-[800px] max-w-full">
           <div class="bg-bg-primary rounded-medium-small shadow-[0_20px_50px_rgba(10,15,21,0.14)] flex gap-4 items-start p-4">
 
-            <div class="flex-1 min-w-0 self-start flex flex-col gap-5 pl-4 border-l border-border-secondary">
+            <div class="w-[136px] shrink-0 self-start flex flex-col gap-5 pl-4 border-l border-border-secondary">
               {menu.items.map((item, i) => (
                 <button
                   class:list={['mega-item text-tiny-medium text-trim-off text-left whitespace-nowrap transition-colors duration-150 relative cursor-pointer', i === 0 ? 'is-active' : '']}
@@ -488,11 +488,11 @@ const languages = [
               ))}
             </div>
 
-            <div class="shrink-0 w-[600px] max-w-full min-h-[365px] relative">
+            <div class="flex-1 min-w-0">
               {menu.items.filter(it => it.tiles).map(item => (
                 <!-- Таб с сеткой: заголовок, ссылка view more и карточки 148px -->
                 <div
-                  class="mega-preview absolute inset-0 flex flex-col gap-3 opacity-0 pointer-events-none transition-opacity duration-200"
+                  class="mega-preview hidden flex-col gap-3" data-layout="grid"
                   data-preview={item.key}
                 >
                   <div class="flex items-center justify-between h-4">
@@ -543,7 +543,7 @@ const languages = [
               {menu.items.filter(it => !it.tiles).map((item, i) => (
                 <a
                   href={item.href}
-                  class:list={['mega-preview absolute inset-0 block overflow-hidden rounded-small bg-bg-secondary transition-opacity duration-200', i === 0 ? 'opacity-100' : 'opacity-0 pointer-events-none']}
+                  class:list={['mega-preview relative h-[365px] overflow-hidden rounded-small bg-bg-secondary', i === 0 ? 'block' : 'hidden']}
                   data-preview={item.key}
                 >
                   <img src={item.img} alt={item.title} class="absolute inset-0 w-full h-full object-cover" />
@@ -578,13 +578,53 @@ const languages = [
             <path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
           </svg>
         </button>
-        <div class="mobile-section-content hidden pb-5">
+        <!-- Список категорий: миниатюра 40, название, шеврон (Figma menu-cards 343x56) -->
+        <div class="mobile-section-content hidden pb-5 flex-col gap-0.5">
           {productMenu.map(item => (
             <>
-              <a href={item.href} class="text-medium text-text-primary py-2 block">{item.title}</a>
-              {item.children?.map(child => (
-                <a href={child.href} class="text-medium text-text-secondary py-2 pl-4 block">{child.label}</a>
-              ))}
+              {item.children ? (
+                <button
+                  type="button"
+                  data-mobile-sub={item.key}
+                  aria-expanded="false"
+                  class="flex h-14 w-full items-center gap-4 pl-2 pr-4 text-left cursor-pointer"
+                >
+                  <span class="size-10 shrink-0 overflow-hidden rounded-tiny bg-bg-other block">
+                    {(item.img ?? item.cards?.[0]?.img) && (
+                      <img src={item.img ?? item.cards![0].img} alt="" aria-hidden="true" class="h-full w-full object-cover" loading="lazy" />
+                    )}
+                  </span>
+                  <span class="flex-1 min-w-0 text-regular-medium text-text-primary text-trim-off">{item.title}</span>
+                  <svg width="16" height="16" viewBox="0 0 4.5 9.5" fill="none" aria-hidden="true" class="mobile-sub-caret size-4 shrink-0 rotate-90 transition-transform duration-200">
+                    <path d="M0.75 8.75L3.09253 6.366C3.51351 5.93733 3.75 5.35607 3.75 4.75C3.75 4.14393 3.51351 3.56267 3.09253 3.134L0.75 0.75" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </button>
+              ) : (
+                <a href={item.href} class="flex h-14 w-full items-center gap-4 pl-2 pr-4">
+                  <span class="size-10 shrink-0 overflow-hidden rounded-tiny bg-bg-other block">
+                    {(item.img ?? item.cards?.[0]?.img) && (
+                      <img src={item.img ?? item.cards![0].img} alt="" aria-hidden="true" class="h-full w-full object-cover" loading="lazy" />
+                    )}
+                  </span>
+                  <span class="flex-1 min-w-0 text-regular-medium text-text-primary text-trim-off">{item.title}</span>
+                  <svg width="16" height="16" viewBox="0 0 4.5 9.5" fill="none" aria-hidden="true" class="size-4 shrink-0 text-text-secondary">
+                    <path d="M0.75 8.75L3.09253 6.366C3.51351 5.93733 3.75 5.35607 3.75 4.75C3.75 4.14393 3.51351 3.56267 3.09253 3.134L0.75 0.75" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </a>
+              )}
+
+              {item.children && (
+                <div data-mobile-sublist={item.key} class="hidden flex-col gap-0.5 pl-10">
+                  {item.children.map(child => (
+                    <a href={child.href} class="flex h-14 w-full items-center gap-4 pl-2 pr-4">
+                      <span class="flex-1 min-w-0 text-regular-medium text-text-secondary text-trim-off">{child.label}</span>
+                      <svg width="16" height="16" viewBox="0 0 4.5 9.5" fill="none" aria-hidden="true" class="size-4 shrink-0 text-text-secondary">
+                        <path d="M0.75 8.75L3.09253 6.366C3.51351 5.93733 3.75 5.35607 3.75 4.75C3.75 4.14393 3.51351 3.56267 3.09253 3.134L0.75 0.75" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                      </svg>
+                    </a>
+                  ))}
+                </div>
+              )}
             </>
           ))}
         </div>
@@ -818,9 +858,9 @@ const languages = [
         items.forEach(i => i.classList.toggle('is-active', i === item))
         previews.forEach(p => {
           const on = p.dataset.preview === item.dataset.item
-          p.classList.toggle('opacity-100', on)
-          p.classList.toggle('opacity-0', !on)
-          p.classList.toggle('pointer-events-none', !on)
+          // display, а не прозрачность: панель должна расти под контент таба
+          p.classList.toggle('hidden', !on)
+          p.classList.toggle(p.dataset.layout === 'grid' ? 'flex' : 'block', on)
         })
       }
       item.addEventListener('mouseenter', activate)
@@ -1111,4 +1151,21 @@ const languages = [
     window.addEventListener('resize', sync)
     new ResizeObserver(sync).observe(hdr)
   }
+</script>
+
+<script>
+  // Мобильное меню: раскрытие вложенного списка (Smart Actuators)
+  document.querySelectorAll<HTMLElement>('[data-mobile-sub]').forEach(btn => {
+    const list = document.querySelector<HTMLElement>(`[data-mobile-sublist="${btn.dataset.mobileSub}"]`)
+    if (!list) return
+
+    btn.addEventListener('click', () => {
+      const open = btn.getAttribute('aria-expanded') === 'true'
+      btn.setAttribute('aria-expanded', String(!open))
+      list.classList.toggle('hidden', open)
+      list.classList.toggle('flex', !open)
+      btn.querySelector('.mobile-sub-caret')?.classList.toggle('-rotate-90', !open)
+      btn.querySelector('.mobile-sub-caret')?.classList.toggle('rotate-90', open)
+    })
+  })
 </script>
